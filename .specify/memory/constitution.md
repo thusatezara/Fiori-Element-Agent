@@ -1,50 +1,119 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Version change: unversioned template -> 1.0.0 (draft)
+- Added principles:
+  - I. 명세 우선과 추적성
+  - II. 검증 가능한 요구사항과 명시적 불확실성
+  - III. SAP 표준 우선과 Clean Core
+  - IV. 안전하고 통제 가능한 Agent 실행
+  - V. 증거 기반 품질과 완료
+- Added sections:
+  - 기술 및 운영 제약
+  - 개발 워크플로와 품질 게이트
+- Removed sections: none
+- Follow-up TODOs:
+  - TODO(RATIFICATION_DATE): 사용자가 초안을 승인할 때 최초 비준일을 확정한다.
+-->
+
+# Fiori Elements Agent Constitution
+
+**Status**: Ratified
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. 명세 우선과 추적성
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+사용자 동작, 외부 계약 또는 데이터 의미를 변경하는 작업은 구현 전에 승인 가능한 Spec을
+가져야 한다. 각 기능 요구사항은 Plan의 설계 결정과 Tasks의 실행 항목으로 추적할 수 있어야
+한다. 구현 과정에서 범위나 동작이 바뀌면 코드와 함께 관련 Spec, Plan 및 Tasks를 갱신해야
+한다. 문서에 근거가 없는 기능을 완료된 요구사항으로 간주해서는 안 된다.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+근거: 요구사항부터 구현 결과까지의 연결을 유지해야 Agent가 빠뜨리거나 임의로 확장한 변경을
+사람이 검토할 수 있다.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### II. 검증 가능한 요구사항과 명시적 불확실성
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+모든 기능 요구사항은 관찰 가능한 결과 또는 인수 조건을 포함해야 한다. 성능, 보안, 사용성처럼
+해석이 달라질 수 있는 기준은 측정 방법이나 판정 조건을 함께 정의해야 한다. 저장소와 제공 자료로
+확인되지 않은 업무 규칙, 권한, 데이터 의미 및 외부 시스템 동작은 사실로 작성하지 않고 가정 또는
+미결정 사항으로 표시해야 한다. 결과를 실질적으로 바꾸는 미결정 사항은 구현 전에 사용자가
+결정해야 한다.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+근거: 검증할 수 없는 요구사항과 숨은 가정은 구현 완료 여부를 판단할 수 없게 만든다.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### III. SAP 표준 우선과 Clean Core
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Fiori Elements의 표준 기능, 메타데이터와 annotation, SAP가 제공하는 공개·지원 API 및 공식
+extension point를 우선해야 한다. Custom extension 또는 비표준 통합은 표준 방식으로 요구사항을
+충족할 수 없을 때만 허용하며, 해당 Plan에 대안 검토, 선택 이유, 업그레이드 영향 및 검증 방법을
+기록해야 한다. SAP 제품 버전, OData 버전, 백엔드 구현 방식 및 배포 환경은 확인된 프로젝트
+제약이나 승인된 Plan 없이 전역 원칙으로 가정해서는 안 된다.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+근거: 표준 우선 설계는 유지보수 비용과 업그레이드 위험을 줄이면서 기술 선택을 실제 환경에 맞게
+유지한다.
+
+### IV. 안전하고 통제 가능한 Agent 실행
+
+Agent와 자동화는 요청된 범위와 최소 권한 안에서만 동작해야 한다. 데이터 삭제, 이력 손실,
+프로덕션 변경, 배포, 자격 증명 사용 또는 외부 시스템에 영향을 주는 작업은 대상과 영향을 확인하고
+사용자의 명시적 권한을 받아야 한다. 비밀정보는 코드, 문서, 로그 및 예제에 저장해서는 안 된다.
+중요한 자동화 결과는 입력, 변경 파일, 실행한 검증 및 남은 위험을 사람이 추적할 수 있어야 한다.
+
+근거: Agent의 실행 속도보다 사용자의 통제권, 복구 가능성 및 감사 가능성이 우선한다.
+
+### V. 증거 기반 품질과 완료
+
+변경한 범위에는 적용 가능한 테스트, 정적 분석, 빌드 또는 실행 검증이 있어야 한다. 작업 완료
+보고에는 실행한 검증과 결과를 포함해야 하며, 검증하지 못한 항목은 이유와 후속 확인 방법을
+기록해야 한다. 실패한 필수 검증이나 충족되지 않은 인수 조건이 있으면 관련 Task를 완료로
+표시해서는 안 된다. 생성된 코드와 사람이 작성한 코드는 동일한 품질 기준을 적용받는다.
+
+근거: 완료 선언은 작업량이나 파일 생성 여부가 아니라 재현 가능한 검증 증거에 기반해야 한다.
+
+## 기술 및 운영 제약
+
+- 프로젝트 문서와 사용자 대상 설명은 한국어로 작성한다. 코드, 명령어, 파일명, 경로, API 이름,
+  설정 키 및 기술 식별자는 정확성을 위해 영어 원문을 유지한다.
+- `.agents/skills/*/SKILL.md`를 실행 기준으로 사용하며, `SKILL.ko.md`는 학습용 참고본으로만
+  사용한다.
+- 기능별 기술 선택은 해당 Spec과 Plan에 기록한다. 프로젝트 전체에 영향을 주는 기술 제약은
+  Constitution 개정을 통해서만 비타협 원칙으로 승격한다.
+- 외부 API, 데이터 소스, SAP 서비스 및 사용자 권한에 대한 계약은 구현 전에 출처와 함께
+  문서화한다.
+- 의존성 추가와 Custom extension은 목적, 대안, 유지보수 영향 및 검증 방법을 Plan에 기록한다.
+
+## 개발 워크플로와 품질 게이트
+
+1. 새 기능은 `specify → clarify/checklist → plan → tasks → analyze → implement → converge` 흐름을
+   기본으로 한다. 단계 생략은 변경 위험이 낮고 산출물의 목적이 다른 방식으로 충족됐다는 근거가
+   있을 때만 허용하며 그 이유를 기록한다.
+2. Spec Gate: 범위, 사용자 스토리, 기능 요구사항, 인수 조건, edge case, 가정 및 미결정 사항을
+   검토할 수 있어야 한다.
+3. Plan Gate: 모든 설계 결정은 승인된 Spec과 이 Constitution을 충족해야 하며, 비표준 SAP 확장은
+   대안과 영향 분석을 포함해야 한다.
+4. Tasks Gate: 구현이 필요한 각 요구사항과 성공 기준은 하나 이상의 실행 가능한 Task에 연결되어야
+   하며 Task는 대상 파일과 완료 조건을 명시해야 한다.
+5. Analyze Gate: CRITICAL finding은 구현 전에 해결해야 한다. HIGH finding을 유예하려면 영향과
+   후속 Task를 기록해야 한다.
+6. Implementation Gate: 완료 처리한 Task는 관련 코드, 문서 및 검증 결과와 일치해야 한다.
+7. Convergence Gate: 구현 후 남은 요구사항 차이는 신규 Task로 기록하거나, 차이가 없다는 분석
+   결과를 남겨야 한다.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+이 Constitution은 프로젝트의 Spec, Plan, Tasks 및 관행보다 우선한다. 충돌이 발견되면 하위
+산출물을 수정하거나 명시적인 Constitution 개정을 제안해야 하며, 원칙을 작업 편의에 맞게
+재해석해서는 안 된다.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+개정안은 변경 이유, 영향을 받는 원칙과 산출물, 필요한 migration 또는 후속 작업을 포함해야 한다.
+사용자의 승인을 받은 개정만 적용한다. 버전은 다음 규칙을 따른다.
+
+- MAJOR: 기존 원칙을 제거하거나 호환되지 않게 재정의한 경우
+- MINOR: 원칙이나 필수 품질 게이트를 추가하거나 실질적으로 확장한 경우
+- PATCH: 의미를 바꾸지 않는 설명 보완, 표현 정리 또는 오타 수정
+
+Plan과 Analyze 단계에서는 Constitution 준수 여부를 확인해야 한다. 구현 완료 보고 또는 코드 리뷰는
+적용한 원칙, 예외 승인 및 검증 증거를 확인해야 한다. 승인된 예외는 범위, 책임자, 만료 또는 재검토
+조건을 문서화해야 한다.
+
+**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE): 초안 승인 시 확정 | **Last Amended**: 2026-09-04
