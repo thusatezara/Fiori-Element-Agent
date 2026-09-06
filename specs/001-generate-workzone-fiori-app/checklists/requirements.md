@@ -13,7 +13,7 @@
 
 ## 요구사항 완전성
 
-- [ ] `[NEEDS CLARIFICATION]` 표시가 남아 있지 않다.
+- [x] `[NEEDS CLARIFICATION]` 표시가 남아 있지 않다.
 - [x] 기능 요구사항은 관찰하거나 테스트할 수 있는 결과를 정의한다.
 - [x] 성공 기준은 측정 가능한 판정 조건을 포함한다.
 - [x] 성공 기준은 구체적인 구현 절차에 의존하지 않는다.
@@ -31,8 +31,9 @@
 
 ## 검토 메모
 
-- 미결정 1: OData 서비스 정보의 첫 번째 버전 입력 방식을 확정해야 한다.
-- 미결정 2: 부족한 annotation을 생성할지 보고만 할지 확정해야 한다.
-- 미결정 3: `.mtar` 생성을 필수 완료 조건으로 할지 환경 의존 선택 검증으로 둘지 확정해야 한다.
-- 위 세 항목이 해소되면 `[NEEDS CLARIFICATION]` 항목을 다시 검증하고 Plan 준비 상태를 판정한다.
+- 해소됨: OData V4 Service Root URL을 직접 입력하고 `$metadata`를 검증한다.
+- 해소됨: UI 표현 annotation은 local annotation에서 관리하고 backend 서비스 계약은 대체하지 않는다.
+- 해소됨: `mbt build`를 통한 `.mtar` 생성을 필수 완료 조건으로 하고 `cf deploy`는 별도 Feature로 분리한다.
+- 해소됨: Standard 범위 밖 요구사항은 C 확장안에 따라 분류별 후속 Feature로 전달하고 모든 필수 요구사항이 검증될 때까지 전체 작업을 완료로 표시하지 않는다.
+- 해소됨: 인증 없는 `$metadata` 조회만 시도하고 `401` 또는 `403`이면 `BLOCKED_BY_AUTH`로 기록하여 별도 인증 Feature로 전달한다.
 
