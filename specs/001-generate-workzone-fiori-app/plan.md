@@ -69,11 +69,10 @@ Agent는 Core CLI의 JSON 결과만을 근거로 승인과 후속 작업을 조�
 ## 실행 수명주기
 
 1. `assess`: 입력 schema와 URL 정책을 검증하고 `$metadata`를 조회한 뒤 각 요구사항을 분류한다.
-2. `approve`: 사람이 확인할 canonical approval summary와 SHA-256 digest를 기록한다.
+2. `approve`: 사람이 확인할 canonical approval summary의 `approvalDigest`를 승인 상태에 기록한다.
 3. `generate`: 승인 digest가 현재 요청과 일치할 때 같은 volume의 staging 디렉터리에 프로젝트를 생성한다.
-4. `verify`: 구조, manifest, annotation, launchpad/MTA 설정을 검사하고 `mbt build`를 실행한다.
-5. `finalize`: 필수 검증 통과 후에만 staging 결과를 새 대상 또는 확인된 빈 대상에 반영한다.
-6. `resume`: 중단된 run의 상태와 입력 digest를 검사하여 안전한 단계부터 재개한다.
+4. `verify`: 구조, manifest, annotation, launchpad/MTA 설정과 `mbt build`를 검증한다. 모든 필수 검증이 통과하면 같은 명령의 원자적 마지막 단계에서 staging 결과를 새 대상 또는 확인된 빈 대상에 finalize한다.
+5. `resume`: 중단된 run의 상태와 입력 digest를 검사하여 안전한 단계부터 재개한다.
 
 ## 프로젝트 구조
 
@@ -88,6 +87,7 @@ specs/001-generate-workzone-fiori-app/
 ├── quickstart.md
 ├── contracts/
 │   ├── cli-contract.md
+│   ├── cli-envelope.schema.json
 │   ├── generation-request.schema.json
 │   ├── assessment-report.schema.json
 │   ├── feature-handoff.schema.json
@@ -175,10 +175,10 @@ tests/
 ## 검증 전략
 
 - Contract: 모든 입력/출력 JSON이 `contracts/*.schema.json`을 통과해야 한다.
-- Unit: 분류 규칙, URL 정책, canonical digest, 상태 전이, path 안전성을 table-driven test로 검증한다.
+- Unit: 분류 규칙, URL 정책, canonical serialization 기반 `approvalDigest`, 상태 전이, path 안전성을 table-driven test로 검증한다.
 - Integration: OData V4 metadata fixture, 401/403, redirect, timeout, malformed XML을 재현한다.
 - Generator: 생성된 `manifest.json`, local annotation reference, navigation, launchpad/MTA 설정을 구조적으로 검사한다.
-- E2E: 임시 디렉터리에서 `assess → approve → generate → verify → finalize`와 중단 후 `resume`을 검증한다.
+- E2E: 임시 디렉터리에서 `assess → approve → generate → verify(성공 시 finalize)`와 중단 후 `resume`을 검증한다.
 - Build: 설치된 환경에서는 `mbt build` 성공과 `.mtar` 존재를 확인한다. 도구가 없으면 성공으로 간주하지 않는다.
 
 ## Phase 0/1 산출물

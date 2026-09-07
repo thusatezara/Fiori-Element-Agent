@@ -40,8 +40,10 @@
 
 - `url`: 사용자가 입력한 service root 또는 `$metadata` URL
 - `mainEntity`: main entity set 이름
-- `metadataDigest`: 조회된 metadata bytes의 SHA-256; assess 후 기록
 - credential 또는 authorization field는 두지 않는다.
+
+`metadataDigest`는 사용자 입력이 아니다. `assess`가 `$metadata`를 조회한 뒤 응답 bytes에서
+SHA-256을 계산하여 `AssessmentReport`에 기록한다.
 
 ## Requirement
 
@@ -76,8 +78,13 @@
 - `runId`, `requestDigest`, `metadataDigest`
 - 요구사항별 classification/status 요약
 - 생성 예정 파일·후속 handoff·blocker 목록
-- `canonicalDigest`: canonical JSON의 SHA-256
-- `approvedDigest`: 사용자가 승인한 digest. 실행 직전 `canonicalDigest`와 같아야 한다.
+
+`AssessmentReport.approvalSummary`가 위 내용을 구조화하여 포함하고,
+`AssessmentReport.approvalDigest`는 이 summary를 canonical JSON으로 직렬화해 계산한 SHA-256이다.
+
+사용자는 `approvalDigest`를 승인 명령에 전달한다. 승인되면 같은 값을 `RunState.approvalDigest`에
+기록하며 별도의 `canonicalDigest` 또는 `approvedDigest` 필드는 사용하지 않는다. 실행 직전 현재
+승인 요약에서 다시 계산한 `approvalDigest`와 저장된 값이 같아야 한다.
 
 ## FeatureHandoff
 
@@ -101,6 +108,18 @@
 - `requirements`: 최종 RequirementAssessment[]
 - `validationReportPath`, `handoffPaths`
 - `complete`: 모든 mandatory requirement가 `VERIFIED`이고 필수 validation이 `PASSED`일 때만 true
+
+## CLIEnvelope
+
+모든 Core CLI 명령이 stdout에 쓰는 공통 응답 wrapper다.
+
+- `schemaVersion`, `command`, `ok`
+- `runId`: 입력을 식별할 수 없는 초기 validation 실패에서는 `null`
+- `state`: run 상태를 결정할 수 없는 실패에서는 `null`
+- `data`: 명령별 결과 object 또는 결과가 없을 때 `null`
+- `errors`: 구조화된 오류 목록. `ok`가 `true`이면 비어 있고 `false`이면 최소 1개다.
+
+구체적인 검증 규칙은 `contracts/cli-envelope.schema.json`이 정의한다.
 
 ## RunState
 

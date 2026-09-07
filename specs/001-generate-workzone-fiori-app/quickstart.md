@@ -25,7 +25,7 @@ node dist/cli/main.js verify --run-id <run-id> --json
 node dist/cli/main.js resume --run-id <run-id> --json
 ```
 
-각 명령은 stdout에 단일 JSON envelope를 쓰고 사람이 읽는 진단은 stderr에 쓴다.
+각 명령은 stdout에 `contracts/cli-envelope.schema.json`을 만족하는 단일 JSON envelope를 쓰고 사람이 읽는 진단은 stderr에 쓴다. `verify`는 모든 필수 검증이 성공할 때 같은 workflow 안에서 결과를 최종 대상 경로로 finalize한다.
 
 ## 인수 시나리오
 
@@ -68,7 +68,7 @@ metadata endpoint가 `401` 또는 `403`을 반환하면 credential을 요청·�
 ## 완료 증거
 
 - `npm test` 성공
-- JSON Schema contract test 성공
+- 공통 CLI envelope를 포함한 JSON Schema contract test 성공
 - 생성된 `manifest.json`과 annotation reference 검사 성공
 - 필수 validation이 모두 `PASSED`
 - `.mtar` 경로와 SHA-256 기록

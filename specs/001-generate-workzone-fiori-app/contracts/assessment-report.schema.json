@@ -4,13 +4,39 @@
   "title": "AssessmentReport",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "runId", "requestDigest", "metadataDigest", "assessments", "approvalDigest"],
+  "required": ["schemaVersion", "runId", "requestDigest", "metadataDigest", "assessments", "approvalSummary", "approvalDigest"],
   "properties": {
     "schemaVersion": { "const": "1.0.0" },
     "runId": { "type": "string", "format": "uuid" },
     "requestDigest": { "$ref": "#/$defs/digest" },
     "metadataDigest": { "$ref": "#/$defs/digest" },
     "approvalDigest": { "$ref": "#/$defs/digest" },
+    "approvalSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runId", "requestDigest", "metadataDigest", "requirements", "plannedFiles", "handoffs", "blockers"],
+      "properties": {
+        "runId": { "type": "string", "format": "uuid" },
+        "requestDigest": { "$ref": "#/$defs/digest" },
+        "metadataDigest": { "$ref": "#/$defs/digest" },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["requirementId", "classification", "status"],
+            "properties": {
+              "requirementId": { "type": "string", "minLength": 1 },
+              "classification": { "$ref": "#/$defs/classification" },
+              "status": { "$ref": "#/$defs/status" }
+            }
+          }
+        },
+        "plannedFiles": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "handoffs": { "type": "array", "items": { "type": "string", "format": "uuid" }, "uniqueItems": true },
+        "blockers": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+      }
+    },
     "assessments": {
       "type": "array",
       "items": {

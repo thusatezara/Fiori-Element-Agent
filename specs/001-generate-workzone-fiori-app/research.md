@@ -66,7 +66,7 @@
 
 ## 9. 생성 원자성과 rollback
 
-**Decision**: 대상과 같은 volume의 staging 디렉터리에 생성하고 검증 성공 후 finalize한다. 비어 있지 않은 대상은 변경하지 않는다.
+**Decision**: 대상과 같은 volume의 staging 디렉터리에 생성하고 `verify`의 모든 필수 검증이 성공하면 같은 workflow의 원자적 마지막 단계에서 finalize한다. 별도 `finalize` CLI 명령은 두지 않으며 비어 있지 않은 대상은 변경하지 않는다.
 
 **Rationale**: 실패한 생성이 사용자 파일과 섞이지 않으며 rename 기반 finalize와 진단 보존이 가능하다.
 
