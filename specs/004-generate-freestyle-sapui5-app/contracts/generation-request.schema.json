@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/fiori-agent/freestyle-generation-request.schema.json",
+  "title": "FreeStyle Generation Request",
+  "type": "object",
+  "required": ["handoffVersion", "selectedType", "approvedAt", "serviceSnapshotPath", "outputIntent", "screens", "transitions", "stateFields", "validations"],
+  "properties": {
+    "handoffVersion": { "const": "1.0" },
+    "selectedType": { "const": "FREESTYLE" },
+    "approvedAt": { "type": "string", "format": "date-time" },
+    "serviceSnapshotPath": { "type": "string", "minLength": 1 },
+    "outputIntent": {
+      "type": "object",
+      "required": ["parentDirectory", "projectName"],
+      "properties": {
+        "parentDirectory": { "type": "string", "minLength": 1 },
+        "projectName": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" }
+      },
+      "additionalProperties": false
+    },
+    "screens": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["id", "titleKey", "purpose", "controls", "requirementIds"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]*$" },
+          "titleKey": { "type": "string" },
+          "purpose": { "type": "string", "minLength": 1 },
+          "controls": { "type": "array", "items": { "type": "object" } },
+          "requirementIds": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "transitions": { "type": "array", "maxItems": 15, "items": { "type": "object" } },
+    "stateFields": { "type": "array", "items": { "type": "object" } },
+    "validations": { "type": "array", "items": { "type": "object" } },
+    "operations": { "type": "array", "items": { "type": "object" } }
+  },
+  "additionalProperties": true
+}

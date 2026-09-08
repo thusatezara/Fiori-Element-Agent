@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/fiori-agent/standard-generation-result.schema.json",
+  "title": "Standard Generation Result",
+  "type": "object",
+  "required": ["status", "decision", "files", "checks", "trace"],
+  "properties": {
+    "status": { "enum": ["BLOCKED", "GENERATED", "VALIDATED", "FAILED"] },
+    "projectPath": { "type": ["string", "null"] },
+    "decision": {
+      "type": "object",
+      "required": ["tableType", "objectPage", "editMode", "extensionDecision", "evidence", "prerequisites"],
+      "properties": {
+        "tableType": { "enum": ["GRID", "RESPONSIVE"] },
+        "objectPage": { "type": "boolean" },
+        "editMode": { "enum": ["NONE", "OBJECT_PAGE", "INLINE"] },
+        "extensionDecision": { "enum": ["NONE", "APPROVED", "RECLASSIFY"] },
+        "evidence": { "type": "array", "items": { "type": "object" } },
+        "prerequisites": { "type": "array", "items": { "type": "object" } }
+      },
+      "additionalProperties": true
+    },
+    "files": { "type": "array", "items": { "type": "object" } },
+    "checks": { "type": "array", "items": { "type": "object" } },
+    "trace": { "type": "array", "items": { "type": "object" } }
+  },
+  "additionalProperties": false
+}

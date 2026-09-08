@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/fiori-agent/custom-generation-request.schema.json",
+  "title": "Custom Generation Request",
+  "type": "object",
+  "required": ["handoffVersion", "selectedType", "approvedAt", "serviceSnapshotPath", "outputIntent", "rootContextPath", "regions"],
+  "properties": {
+    "handoffVersion": { "const": "1.0" },
+    "selectedType": { "const": "CUSTOM" },
+    "approvedAt": { "type": "string", "format": "date-time" },
+    "serviceSnapshotPath": { "type": "string", "minLength": 1 },
+    "outputIntent": {
+      "type": "object",
+      "required": ["parentDirectory", "projectName"],
+      "properties": {
+        "parentDirectory": { "type": "string", "minLength": 1 },
+        "projectName": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" }
+      },
+      "additionalProperties": false
+    },
+    "rootContextPath": { "type": "string", "pattern": "^/[A-Za-z_][A-Za-z0-9_]*$" },
+    "regions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["id", "purpose", "kind", "contextPath", "requirementIds"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]*$" },
+          "purpose": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["FILTER", "TABLE", "FORM", "CONTENT", "DIRECT"] },
+          "contextPath": { "type": "string", "minLength": 1 },
+          "annotationPath": { "type": ["string", "null"] },
+          "requirementIds": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "directInteractions": { "type": "array", "maxItems": 1, "items": { "type": "object" } }
+  },
+  "additionalProperties": true
+}

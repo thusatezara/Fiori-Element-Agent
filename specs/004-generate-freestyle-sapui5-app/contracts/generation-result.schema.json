@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/fiori-agent/freestyle-generation-result.schema.json",
+  "title": "FreeStyle Generation Result",
+  "type": "object",
+  "required": ["status", "decision", "files", "checks", "trace"],
+  "properties": {
+    "status": { "enum": ["BLOCKED", "RECLASSIFY", "GENERATED", "VALIDATED", "FAILED"] },
+    "projectPath": { "type": ["string", "null"] },
+    "decision": {
+      "type": "object",
+      "required": ["screens", "transitions", "stateFields", "validations", "reclassification", "prerequisites"],
+      "properties": {
+        "screens": { "type": "array", "items": { "type": "object" } },
+        "transitions": { "type": "array", "items": { "type": "object" } },
+        "stateFields": { "type": "array", "items": { "type": "object" } },
+        "validations": { "type": "array", "items": { "type": "object" } },
+        "reclassification": { "type": ["string", "null"], "enum": ["STANDARD", "CUSTOM", null] },
+        "prerequisites": { "type": "array", "items": { "type": "object" } }
+      },
+      "additionalProperties": true
+    },
+    "files": { "type": "array", "items": { "type": "object" } },
+    "checks": { "type": "array", "items": { "type": "object" } },
+    "trace": { "type": "array", "items": { "type": "object" } }
+  },
+  "additionalProperties": false
+}

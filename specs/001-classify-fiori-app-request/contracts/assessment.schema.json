@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/fiori-agent/assessment.schema.json",
+  "title": "Fiori App Type Assessment",
+  "type": "object",
+  "required": ["assessmentId", "status", "recommendedType", "evidence", "conflicts", "questions", "prerequisites", "trace"],
+  "properties": {
+    "assessmentId": { "type": "string", "format": "uuid" },
+    "status": { "enum": ["UNDECIDED", "RECOMMENDED", "APPROVED"] },
+    "recommendedType": { "type": ["string", "null"], "enum": ["STANDARD", "CUSTOM", "FREESTYLE", null] },
+    "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } },
+    "conflicts": { "type": "array", "items": { "$ref": "#/$defs/conflict" } },
+    "questions": { "type": "array", "maxItems": 3, "items": { "$ref": "#/$defs/question" } },
+    "prerequisites": { "type": "array", "items": { "$ref": "#/$defs/prerequisite" } },
+    "trace": { "type": "array", "items": { "$ref": "#/$defs/trace" } }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "UNDECIDED" } } },
+      "then": { "properties": { "recommendedType": { "type": "null" }, "questions": { "minItems": 1 } } }
+    },
+    {
+      "if": { "properties": { "status": { "enum": ["RECOMMENDED", "APPROVED"] } } },
+      "then": { "properties": { "recommendedType": { "enum": ["STANDARD", "CUSTOM", "FREESTYLE"] } } }
+    }
+  ],
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "required": ["ruleId", "supports", "sourceIds", "explanation"],
+      "properties": {
+        "ruleId": { "type": "string" },
+        "supports": { "enum": ["STANDARD", "CUSTOM", "FREESTYLE", "PREREQUISITE"] },
+        "sourceIds": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "explanation": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "conflict": {
+      "type": "object",
+      "required": ["id", "sourceIds", "explanation"],
+      "properties": {
+        "id": { "type": "string" },
+        "sourceIds": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+        "explanation": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "question": {
+      "type": "object",
+      "required": ["id", "prompt", "reason"],
+      "properties": {
+        "id": { "type": "string" },
+        "prompt": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "prerequisite": {
+      "type": "object",
+      "required": ["id", "kind", "blocking", "description"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "enum": ["BACKEND", "SERVICE", "INPUT", "ENVIRONMENT"] },
+        "blocking": { "type": "boolean" },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "trace": {
+      "type": "object",
+      "required": ["requirementId", "disposition"],
+      "properties": {
+        "requirementId": { "type": "string" },
+        "disposition": { "enum": ["EVIDENCE", "PREREQUISITE", "UNDECIDED", "OUT_OF_SCOPE"] },
+        "targetId": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

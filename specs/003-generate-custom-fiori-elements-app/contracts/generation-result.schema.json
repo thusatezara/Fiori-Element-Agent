@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/fiori-agent/custom-generation-result.schema.json",
+  "title": "Custom Generation Result",
+  "type": "object",
+  "required": ["status", "decision", "files", "checks", "trace"],
+  "properties": {
+    "status": { "enum": ["BLOCKED", "RECLASSIFY", "GENERATED", "VALIDATED", "FAILED"] },
+    "projectPath": { "type": ["string", "null"] },
+    "decision": {
+      "type": "object",
+      "required": ["targetKind", "viewName", "regions", "reclassification", "prerequisites"],
+      "properties": {
+        "targetKind": { "const": "FPM_CUSTOM_PAGE" },
+        "viewName": { "type": "string" },
+        "regions": { "type": "array", "items": { "type": "object" } },
+        "reclassification": { "type": ["string", "null"], "enum": ["STANDARD", "FREESTYLE", null] },
+        "prerequisites": { "type": "array", "items": { "type": "object" } }
+      },
+      "additionalProperties": true
+    },
+    "files": { "type": "array", "items": { "type": "object" } },
+    "checks": { "type": "array", "items": { "type": "object" } },
+    "trace": { "type": "array", "items": { "type": "object" } }
+  },
+  "additionalProperties": false
+}
