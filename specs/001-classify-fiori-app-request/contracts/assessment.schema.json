@@ -12,7 +12,8 @@
     "conflicts": { "type": "array", "items": { "$ref": "#/$defs/conflict" } },
     "questions": { "type": "array", "maxItems": 3, "items": { "$ref": "#/$defs/question" } },
     "prerequisites": { "type": "array", "items": { "$ref": "#/$defs/prerequisite" } },
-    "trace": { "type": "array", "items": { "$ref": "#/$defs/trace" } }
+    "trace": { "type": "array", "items": { "$ref": "#/$defs/trace" } },
+    "alternatives": { "type": "array", "items": { "type": "string" } }
   },
   "allOf": [
     {

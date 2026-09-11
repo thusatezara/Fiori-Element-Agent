@@ -6,17 +6,17 @@
 
 ## Summary
 
-001에서 승인된 `CUSTOM` handoff와 OData V4 service snapshot을 입력받아 `sap.fe.core.fpm` Custom Page를 유일한 시작 target으로 구성한다. 화면 영역은 Page, Filter Bar, Table, Form 등 Fiori elements Building Blocks로 우선 생성하고, 표준 요소로 표현되지 않는 승인된 제한적 interaction만 controller/fragment에 배치한다. Standard List Report를 선행 생성하지 않는다.
+001에서 승인된 `CUSTOM` handoff와 OData V4 service snapshot을 입력받아 `sap.fe.core.fpm` Custom Page를 유일한 시작 target으로 구성한다. 화면 영역은 Page, Filter Bar, Table, Form 등 Fiori elements Building Blocks로 우선 생성하고, 표준 요소로 표현되지 않는 승인된 제한적 interaction만 controller/fragment에 배치한다. Standard List Report를 선행 생성하지 않는다. Custom 결과에도 공통 FLP Sandbox preview surface와 manifest inbound를 생성한다.
 
 ## Technical Context
 
-**Language/Version**: Node.js 20.11 이상, TypeScript 5.x; 생성물은 SAPUI5 OData V4 Custom Page
+**Language/Version**: Node.js 20 이상, ECMAScript modules; 생성물은 SAPUI5 OData V4 Custom Page
 
-**Primary Dependencies**: 001 공통 CLI/domain 및 002 공통 output transaction/template renderer, `zod`, XML/JSON renderer; 생성물은 stable UI5 CLI 4, `sap.fe.core`, `sap.fe.macros`, `@sap/ux-ui5-tooling`
+**Primary Dependencies**: 001 공통 CLI/domain 및 002 공통 output transaction/template renderer, Node.js built-in XML/JSON handling; 생성물은 stable UI5 CLI 4, `sap.fe.core`, `sap.fe.macros`, `@sap/ux-ui5-tooling`
 
 **Storage**: 새 project directory와 generation report; DB 없음
 
-**Testing**: Vitest contract/snapshot tests, XML namespace와 `metaPath` validation, OPA5 smoke journey, UI5 build
+**Testing**: Node.js test runner contract/integration tests, XML namespace와 `metaPath` static validation, optional OPA5 smoke journey, UI5 build
 
 **Target Platform**: 로컬 생성 및 브라우저 FLP sandbox preview
 
@@ -64,13 +64,16 @@ specs/003-generate-custom-fiori-elements-app/
 
 ```text
 src/
-├── cli/commands/generate-custom.ts
-└── generation/custom/
-    ├── decision.ts
-    ├── region-planner.ts
-    ├── building-block-planner.ts
-    ├── direct-region-policy.ts
-    └── generator.ts
+├── cli/commands/generate-custom.mjs
+├── generation/
+│   ├── common/
+│   └── custom/
+│       ├── decision.mjs
+│       ├── region-planner.mjs
+│       ├── building-block-planner.mjs
+│       ├── direct-region-policy.mjs
+│       └── generator.mjs
+└── validation/generated-project.mjs
 templates/custom/
 ├── package.json.hbs
 ├── ui5.yaml.hbs
@@ -80,16 +83,17 @@ templates/custom/
     ├── Component.js.hbs
     ├── ext/view/Main.view.xml.hbs
     ├── ext/controller/Main.controller.js.hbs
+    ├── ext/fragment/DirectRegion.fragment.xml.hbs
     ├── annotations/annotation.xml.hbs
-    └── i18n/i18n.properties.hbs
+    ├── i18n/i18n.properties.hbs
+    └── test/flpSandbox.html.hbs
 tests/
-├── contract/custom-generation.test.ts
-├── integration/custom-generator.test.ts
-├── integration/custom-build.test.ts
-└── unit/custom/
+└── generate.test.mjs
 ```
 
-**Structure Decision**: 002의 공통 atomic generation pipeline을 재사용하되 Custom-specific screen plan과 template은 독립 모듈로 둔다. controller file은 direct interaction이 없으면 최소 shell만 생성한다.
+**Structure Decision**: 002의 공통 atomic generation pipeline과 `src/generation/common/flp-navigation.mjs`를 재사용하되 Custom-specific screen plan과 template은 독립 모듈로 둔다. controller file은 direct interaction이 없으면 최소 shell만 생성한다. FLP intent는 기본 `<entity-set>-display` 또는 공통 CLI의 `--flp-intent`를 사용한다.
+
+**Application Output**: 기본 생성 경로는 `generated/<project-name>/`이며, Custom Page source는 output application 내부의 `webapp/ext/`에 렌더링한다.
 
 ## Complexity Tracking
 

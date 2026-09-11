@@ -1,0 +1,9 @@
+import { readFile } from "node:fs/promises";
+
+const manifest = JSON.parse(await readFile(new URL("../webapp/manifest.json", import.meta.url), "utf8"));
+const view = await readFile(new URL("../webapp/view/View.view.xml", import.meta.url), "utf8");
+const source = await readFile(new URL("../webapp/Component.js", import.meta.url), "utf8");
+if (!manifest["sap.app"]?.id || !manifest["sap.app"]?.dataSources?.mainService?.uri) throw new Error("Missing application or OData service configuration");
+if (!manifest["sap.ui5"]?.routing?.routes?.length || !view.includes("ColumnListItem")) throw new Error("Missing freestyle table and routing");
+if (source.includes("annotation.xml") || source.includes("UI.LineItem")) throw new Error("Freestyle screen must not depend on UI annotations");
+console.log("Validated Freestyle SAPUI5 application, service binding, table, routing, and annotation boundary.");

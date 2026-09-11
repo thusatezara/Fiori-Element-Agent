@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/fiori-agent/001/orchestration-result.schema.json",
+  "title": "Fiori Application Orchestration Result",
+  "type": "object",
+  "required": ["status", "protocol", "assessment", "service", "output", "validation"],
+  "properties": {
+    "status": { "enum": ["GENERATED", "BLOCKED", "FAILED"] },
+    "protocol": {
+      "type": "object",
+      "required": ["entry", "selectedGenerator"],
+      "properties": {
+        "entry": { "const": "001" },
+        "selectedGenerator": { "enum": ["002", "003", "004"] }
+      },
+      "additionalProperties": false
+    },
+    "assessment": {
+      "type": "object",
+      "required": ["protocol", "selectedType", "handoff", "reason"],
+      "properties": {
+        "protocol": { "const": "001" },
+        "selectedType": { "enum": ["STANDARD", "CUSTOM", "FREESTYLE"] },
+        "handoff": { "enum": ["002", "003", "004"] },
+        "reason": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "service": { "type": "object", "required": ["odataVersion", "serviceRoot", "entitySet", "properties"] },
+    "output": {
+      "type": "object",
+      "required": ["directory", "projectName", "files"],
+      "properties": {
+        "directory": { "type": "string", "minLength": 1 },
+        "projectName": { "type": "string", "minLength": 1 },
+        "files": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "validation": {
+      "type": "object",
+      "required": ["staticFiles", "nextCommand"],
+      "properties": {
+        "staticFiles": { "const": "PASS" },
+        "nextCommand": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

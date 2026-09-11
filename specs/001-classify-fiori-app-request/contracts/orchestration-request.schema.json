@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/fiori-agent/001/orchestration-request.schema.json",
+  "title": "Fiori Application Generation Request",
+  "type": "object",
+  "required": ["requestId", "originalText", "serviceSource", "outputIntent"],
+  "properties": {
+    "requestId": { "type": "string", "format": "uuid" },
+    "originalText": { "type": "string", "minLength": 1 },
+    "serviceSource": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "path"],
+          "properties": {
+            "kind": { "const": "FILE" },
+            "path": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "url"],
+          "properties": {
+            "kind": { "const": "URL" },
+            "url": { "type": "string", "pattern": "^https://[^\\s]+$" },
+            "authHeaderEnv": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "entitySet": { "type": ["string", "null"] },
+    "fields": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "answers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["questionId", "value"],
+        "properties": {
+          "questionId": { "type": "string", "minLength": 1 },
+          "value": { "type": ["string", "number", "boolean", "array", "null"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "appIdentity": {
+      "type": ["object", "null"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "applicationId": { "type": "string", "minLength": 1 },
+        "namespace": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "outputIntent": {
+      "type": "object",
+      "required": ["parentDirectory", "projectName"],
+      "properties": {
+        "parentDirectory": { "type": "string", "minLength": 1 },
+        "projectName": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

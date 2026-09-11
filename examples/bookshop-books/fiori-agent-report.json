@@ -1,0 +1,114 @@
+{
+  "generatorVersion": "1.0.0",
+  "protocol": {
+    "entry": "001",
+    "handoff": "002"
+  },
+  "requestSummary": "Books 목록과 상세를 조회하는 Fiori application",
+  "assessment": {
+    "protocol": "001",
+    "selectedType": "STANDARD",
+    "handoff": "002",
+    "reason": "목록·검색·필터·상세 중심의 표준 OData 화면은 Fiori Elements 표준 흐름을 우선한다.",
+    "odataVersion": "4.0",
+    "requestedOverride": null
+  },
+  "service": {
+    "odataVersion": "4.0",
+    "serviceRoot": "https://cc779debtrial-dev-bookshop-srv.cfapps.us10-001.hana.ondemand.com/admin/",
+    "entitySet": "Books",
+    "entityType": "AdminService.Books",
+    "keys": [
+      "ID"
+    ],
+    "properties": [
+      {
+        "name": "createdAt",
+        "type": "Edm.DateTimeOffset",
+        "label": "Created At"
+      },
+      {
+        "name": "createdBy",
+        "type": "Edm.String",
+        "label": "Created By"
+      },
+      {
+        "name": "modifiedAt",
+        "type": "Edm.DateTimeOffset",
+        "label": "Modified At"
+      },
+      {
+        "name": "modifiedBy",
+        "type": "Edm.String",
+        "label": "Modified By"
+      },
+      {
+        "name": "ID",
+        "type": "Edm.Int32",
+        "label": "ID"
+      },
+      {
+        "name": "title",
+        "type": "Edm.String",
+        "label": "Title"
+      },
+      {
+        "name": "descr",
+        "type": "Edm.String",
+        "label": "Descr"
+      },
+      {
+        "name": "author_ID",
+        "type": "Edm.Int32",
+        "label": "Author ID"
+      },
+      {
+        "name": "genre_ID",
+        "type": "Edm.Int32",
+        "label": "Genre ID"
+      },
+      {
+        "name": "stock",
+        "type": "Edm.Int32",
+        "label": "Stock"
+      },
+      {
+        "name": "price",
+        "type": "Edm.Decimal",
+        "label": "Price"
+      },
+      {
+        "name": "currency_code",
+        "type": "Edm.String",
+        "label": "Currency Code"
+      }
+    ],
+    "navigationProperties": [
+      "author",
+      "genre",
+      "currency",
+      "texts",
+      "localized"
+    ],
+    "metadataHash": "e7522a05e3b412f0ba120c57cae7abb8d7a115f25e819ff7208220af6868f55c"
+  },
+  "generated": {
+    "columns": [
+      "ID",
+      "createdAt",
+      "createdBy",
+      "modifiedAt",
+      "modifiedBy",
+      "title",
+      "descr",
+      "author_ID"
+    ],
+    "filters": [
+      "ID",
+      "createdAt",
+      "createdBy",
+      "modifiedAt",
+      "modifiedBy"
+    ]
+  }
+}

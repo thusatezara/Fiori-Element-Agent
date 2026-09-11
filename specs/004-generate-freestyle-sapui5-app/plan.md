@@ -10,13 +10,13 @@
 
 ## Technical Context
 
-**Language/Version**: Node.js 20.11 이상, TypeScript 5.x; 생성물은 JavaScript 기반 SAPUI5 XML View MVC 앱
+**Language/Version**: Node.js 20 이상, ECMAScript modules; 생성물은 JavaScript 기반 SAPUI5 XML View MVC 앱
 
-**Primary Dependencies**: 001 공통 CLI/domain 및 002 공통 generation pipeline, `zod`, XML/JSON renderer; 생성물은 stable UI5 CLI 4, `sap.m`, `sap.ui.core`, `@sap/ux-ui5-tooling`
+**Primary Dependencies**: 001 공통 CLI/domain 및 002 공통 generation pipeline, Node.js built-in XML/JSON handling; 생성물은 stable UI5 CLI 4, `sap.m`, `sap.ui.core`, `@sap/ux-ui5-tooling`
 
 **Storage**: 새 project directory와 generation report; 생성 앱의 임시 UI state는 JSONModel, 업무 데이터는 OData V4 model
 
-**Testing**: Vitest contract/snapshot tests, QUnit controller unit tests, OPA5 navigation/error journeys, UI5 build
+**Testing**: Node.js test runner contract/integration tests, generated QUnit controller unit test scaffold, optional OPA5 navigation/error journeys, UI5 build
 
 **Target Platform**: 로컬 생성 및 브라우저 FLP sandbox preview
 
@@ -64,13 +64,13 @@ specs/004-generate-freestyle-sapui5-app/
 
 ```text
 src/
-├── cli/commands/generate-freestyle.ts
+├── cli/commands/generate-freestyle.mjs
 └── generation/freestyle/
-    ├── flow-planner.ts
-    ├── state-planner.ts
-    ├── validation-planner.ts
-    ├── backend-boundary.ts
-    └── generator.ts
+    ├── flow-planner.mjs
+    ├── state-planner.mjs
+    ├── validation-planner.mjs
+    ├── backend-boundary.mjs
+    └── generator.mjs
 templates/freestyle/
 ├── package.json.hbs
 ├── ui5.yaml.hbs
@@ -79,20 +79,21 @@ templates/freestyle/
     ├── manifest.json.hbs
     ├── Component.js.hbs
     ├── view/View.view.xml.hbs
+    ├── view/Review.view.xml.hbs
     ├── controller/View.controller.js.hbs
+    ├── controller/ErrorHandlers.js.hbs
     ├── model/models.js.hbs
     ├── i18n/i18n.properties.hbs
     └── test/
-        ├── unit/
-        └── integration/
+        ├── unit/Controller.qunit.js.hbs
+        └── integration/FlowJourney.js.hbs
 tests/
-├── contract/freestyle-generation.test.ts
-├── integration/freestyle-generator.test.ts
-├── integration/freestyle-build.test.ts
-└── unit/freestyle/
+└── generate.test.mjs
 ```
 
 **Structure Decision**: screen/transition/state plan을 먼저 검증한 뒤 화면별 XML/controller pair를 생성한다. data access, UI state와 navigation 책임을 파일 단위로 분리한다.
+
+**Application Output**: 기본 생성 경로는 `generated/<project-name>/`이며, 사용자가 지정한 output은 001의 workspace boundary와 collision guard를 따른다.
 
 ## Complexity Tracking
 

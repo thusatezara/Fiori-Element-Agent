@@ -4,7 +4,7 @@
 
 **Created**: 2026-09-08
 
-**Last Updated**: 2026-09-08
+**Last Updated**: 2026-09-10
 
 **Status**: Draft
 
@@ -18,7 +18,7 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 목록 사용 방식
 
 **우선순위 이유**: 검색·필터·목록·상세 조회가 가능한 기본 앱만으로도 사용자는 실제 데이터를 탐색하는 독립적인 업무 가치를 얻는다.
 
-**독립 테스트**: `STD-GRID-01`의 읽기 전용 요청을 제공하고 추천 요약을 승인하여 Grid Table 기반 List Report와 상세 조회가 생성·검증되는지 확인한다.
+**독립 테스트**: `STD-GRID-01`의 읽기 전용 요청을 001 handoff로 제공하여 Grid Table 기반 List Report와 상세 조회가 생성·검증되는지 확인한다.
 
 **인수 시나리오**:
 
@@ -26,7 +26,8 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 목록 사용 방식
 2. **Given** 사용자가 많은 행과 열을 PC에서 연속적으로 탐색하고 열 너비 조정과 가로 탐색이 중요하다고 답했을 때, **When** table 구성을 결정하면, **Then** Grid Table을 추천하고 데이터 규모만이 아닌 사용 환경과 작업 방식에 근거한 이유를 설명한다.
 3. **Given** 사용자가 모바일 접근을 중시하고 검색·필터 후 제한된 결과를 확인한다고 답했을 때, **When** table 구성을 결정하면, **Then** Responsive Table을 추천하고 큰 전체 데이터가 있더라도 해당 선택의 근거를 설명한다.
 4. **Given** 조회 앱 생성 입력이 완전할 때, **When** 사용자가 생성 요약을 검토하면, **Then** 앱 정보, List Report 시작 화면, table, 상세 조회, annotation 반영, 선행 조건과 제외 항목을 확인할 수 있다.
-5. **Given** 조회 앱 생성 요약이 승인되었을 때, **When** Standard 프로젝트를 생성하고 검증하면, **Then** List Report target을 시작점으로 사용하는 조회 앱과 요구사항 추적 결과가 제공되며 필수 검증 실패는 완료로 표시되지 않는다.
+5. **Given** 001에서 Standard handoff와 application 생성 요청이 확인되었을 때, **When** Standard 프로젝트를 생성하고 검증하면, **Then** List Report target을 시작점으로 사용하는 조회 앱과 요구사항 추적 결과가 제공되며 필수 검증 실패는 완료로 표시되지 않는다.
+6. **Given** 생성된 Standard Fiori Elements 앱을 로컬에서 실행할 때, **When** `npm start`를 실행하면, **Then** `fiori run`이 `webapp/test/flpSandbox.html`을 열고 생성된 FLP inbound intent로 앱을 시작한다.
 
 ---
 
@@ -36,14 +37,14 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 목록 사용 방식
 
 **우선순위 이유**: 조회 앱 다음으로 자주 필요한 수정 업무를 별도의 독립 가치로 제공하면서 불필요한 custom code를 피할 수 있다.
 
-**독립 테스트**: `STD-OBJECT-EDIT-01`, `STD-INLINE-01`, `STD-EXT-01`을 각각 사용하여 Standard 수정 지원 여부와 제한적 Extension 필요성이 구분되고, 승인된 수정 흐름이 생성·검증되는지 확인한다.
+**독립 테스트**: `STD-OBJECT-EDIT-01`, `STD-INLINE-01`, `STD-EXT-01`을 각각 사용하여 Standard 수정 지원 여부와 제한적 Extension 필요성이 구분되고, 001 handoff에 포함된 수정 흐름이 생성·검증되는지 확인한다.
 
 **인수 시나리오**:
 
 1. **Given** 사용자가 한 건을 선택하여 상세 화면에서 일반적인 방식으로 수정한다고 답했고 서비스가 필요한 수정 capability를 제공할 때, **When** 수정 방식을 결정하면, **Then** Object Page의 Standard 수정 흐름을 추천하며 Extension을 요구하지 않는다.
 2. **Given** 사용자가 목록에서 일부 field를 직접 수정하기 원할 때, **When** 대상 환경과 서비스가 Standard inline edit 요구사항을 충족하는지 확인하면, **Then** 지원 여부와 제한을 근거로 Standard inline edit 사용 가능성을 결정한다.
 3. **Given** 사용자가 표준 설정과 annotation으로 충족할 수 없는 추가 동작을 요구할 때, **When** 생성 범위를 판정하면, **Then** 공식 Extension으로 제한적으로 충족 가능한지 먼저 확인하고 그 필요성과 유지보수 영향을 설명한다.
-4. **Given** 수정 흐름 생성 요약이 승인되었을 때, **When** 프로젝트를 생성하고 검증하면, **Then** 승인된 Standard 수정 방식과 필요한 Extension만 반영되고 요구사항별 결과가 보고된다.
+4. **Given** 001 handoff에 수정 흐름이 포함되었을 때, **When** 프로젝트를 생성하고 검증하면, **Then** 허용된 Standard 수정 방식과 필요한 Extension만 반영되고 요구사항별 결과가 보고된다.
 
 ---
 
@@ -59,7 +60,7 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 목록 사용 방식
 
 1. **Given** 요구사항이 광범위한 독립 View 또는 복잡한 client 상태 제어를 필요로 할 때, **When** Standard 범위를 판정하면, **Then** 임의 Extension을 생성하지 않고 `CUSTOM` 또는 `FREESTYLE` 재판정을 요청한다.
 2. **Given** 필요한 EntitySet, property, association, action, update 또는 edit capability를 서비스 정보에서 확인할 수 없을 때, **When** 생성을 준비하면, **Then** 존재를 추측하지 않고 누락된 항목을 선행 조건으로 표시한다.
-3. **Given** 생성 요약이 아직 승인되지 않았을 때, **When** 시스템이 프로젝트 생성 가능 여부를 결정하면, **Then** 어떤 프로젝트 파일도 생성하지 않는다.
+3. **Given** 001 handoff 또는 application 생성 요청이 없을 때, **When** 시스템이 프로젝트 생성 가능 여부를 결정하면, **Then** 어떤 프로젝트 파일도 생성하지 않는다.
 
 ### Edge Cases
 
@@ -93,12 +94,15 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 목록 사용 방식
 - **FR-016**: 시스템은 Standard의 제한적 Extension 범위를 넘어서는 요구사항을 `CUSTOM` 또는 `FREESTYLE` 재판정 대상으로 표시해야 한다.
 - **FR-017**: 시스템은 화면 설정, annotation 또는 Extension으로 backend 업무 규칙, authorization, transaction 또는 데이터 무결성을 대신해서는 안 된다.
 - **FR-018**: 시스템은 파일 생성 전에 앱 정보, target, 업무 객체, table 유형, 상세·수정 흐름, annotation, Extension, navigation, 포함·제외 범위와 선행 조건을 요약해야 한다.
-- **FR-019**: 시스템은 사용자가 생성 요약을 명시적으로 승인한 후에만 프로젝트를 생성해야 한다.
+- **FR-019**: 시스템은 001 handoff와 사용자의 application 생성 요청이 확인된 후에만 프로젝트를 생성해야 한다.
 - **FR-020**: 시스템은 기존 파일이나 같은 이름의 기존 결과를 덮어쓰거나 삭제해서는 안 된다.
 - **FR-021**: 시스템은 생성된 애플리케이션의 구조, target, 화면 흐름과 실행 준비 상태를 검증해야 한다.
 - **FR-022**: 시스템은 요구사항별 반영 여부, 생성 파일, 주요 설정, 판정 근거, 검증 결과와 후속 작업을 제공해야 한다.
 - **FR-023**: 시스템은 필수 검증 실패 시 결과를 완료로 표시해서는 안 된다.
 - **FR-024**: 시스템은 실제 SAP 환경에 로그인하거나 배포 또는 콘텐츠 변경을 수행해서는 안 된다.
+- **FR-025**: 시스템은 Standard Fiori Elements 결과에 `webapp/test/flpSandbox.html`과 `fiori run` 기반 `start` script를 생성해야 한다.
+- **FR-026**: 시스템은 앱 manifest의 FLP inbound와 Sandbox application entry를 동일한 `<semantic-object>-<action>` intent로 연결해야 하며, intent가 지정되지 않으면 EntitySet에서 일반적인 기본값을 만들어야 한다.
+- **FR-027**: 시스템은 `--flp-intent`로 지정한 intent를 검증하고, 생성된 Sandbox 파일·manifest inbound·실행 script의 일치 여부를 정적으로 검증해야 한다.
 
 ### 주요 정보 객체 *(Key Entities)*
 
@@ -109,6 +113,7 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 목록 사용 방식
 - **서비스 설명**: 외부 OData 서비스에서 확인한 업무 객체, annotation과 capability이며 이 Feature가 소유하거나 변경하지 않는다.
 - **생성 요약**: target, table, 수정 흐름, annotation, Extension, 포함·제외 범위와 선행 조건에 대한 사전 검토 결과다.
 - **Standard 프로젝트**: List Report target과 metadata·annotation 중심으로 구성되고 승인된 경우에만 제한적 Extension을 포함하는 생성 결과다.
+- **FLP preview configuration**: `webapp/test/flpSandbox.html`, manifest inbound와 `fiori run` 실행 script가 동일한 intent로 연결된 로컬 미리보기 구성이다.
 - **검증 결과**: 요구사항별 반영 여부, 판정 근거와 프로젝트 실행 준비 상태에 대한 확인 결과다.
 
 ## 성공 기준 *(필수)*
@@ -135,6 +140,7 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 목록 사용 방식
 - **SC-005**: 제출된 원문 요구사항과 사용자 답변의 100%가 반영, 재판정, 선행 조건 또는 범위 밖 중 하나로 추적된다.
 - **SC-006**: `STD-APPROVAL-01`과 모든 미승인 사례의 100%에서 새 프로젝트 파일이 생성되지 않는다.
 - **SC-007**: 필수 target, table, 화면 흐름과 실행 검증을 모두 통과한 결과만 완료로 표시된다.
+- **SC-008**: 생성되는 Standard 프로젝트의 100%에서 FLP Sandbox 파일, manifest inbound와 `npm start` intent가 일치하고, `npm run lint`가 누락 또는 불일치를 검출한다.
 
 ## 가정 및 의존성
 
@@ -144,6 +150,7 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 목록 사용 방식
 - 지원되는 table과 edit 기능은 승인된 대상 환경에서 확인하며 특정 SAPUI5 version을 Spec에서 고정하지 않는다.
 - Standard의 Extension은 공식 extension point로 제한하며 표준 기능을 우선한다.
 - 배포 대상과 운영 환경 결정은 별도 Feature에서 다룬다.
+- 로컬 FLP Sandbox는 개발·검증용이며 SAP Build Work Zone의 운영 콘텐츠를 대신하지 않는다.
 
 ## 범위 제외
 

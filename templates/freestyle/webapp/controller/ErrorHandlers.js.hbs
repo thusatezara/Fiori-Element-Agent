@@ -1,0 +1,7 @@
+sap.ui.define(["sap/m/MessageBox"], function (MessageBox) {
+  "use strict";
+  return {
+    showTransportError: function () { MessageBox.error("The OData request could not be completed."); },
+    showValidationError: function () { MessageBox.warning("Please check the entered values."); }
+  };
+});

@@ -1,51 +1,53 @@
-# Research: Fiori 애플리케이션 요청 유형 판정
+# Research: Fiori 애플리케이션 요청 분석·판정·생성
 
-## Decision 1: 첫 구현은 OData V4로 제한
+## Decision 1: 001을 단일 진입점으로 사용
 
-**Decision**: local EDMX와 직접 접근 가능한 OData V4 service URL을 지원한다.
+**Decision**: OData 입력, service inspection, 업무 질문, 유형 판정, generation input, routing과 result aggregation을 001에서 담당한다. legacy Orchestrator Feature는 폐기하고 그 책임을 001에 편입한다.
 
-**Rationale**: Fiori elements Building Blocks와 Custom Page는 OData V4를 기준으로 제공되므로 세 생성 유형이 공유할 수 있는 최소 공통 기반이다. OData V2까지 동시에 지원하면 metadata와 annotation 해석, manifest 및 편집 capability 분기가 MVP 범위를 크게 넓힌다.
+**Rationale**: 자연어 요청부터 유형별 생성까지 하나의 흐름으로 묶어 context loss와 중복 정책을 줄인다. 사용자가 같은 OData 요청을 보내면 항상 001부터 시작할 수 있다.
 
-**Alternatives considered**: V2/V4 동시 지원은 후속 Feature로 연기한다. CAP model 직접 입력은 OData service 계약으로 변환한 뒤 지원한다.
+**Alternatives considered**: legacy Orchestrator를 상위 계층으로 남기는 방식은 001과 service·classification·approval 책임이 겹치고, agent의 진입점이 둘로 분리된다. 유형별 생성 로직을 001에 복사하는 방식은 하위 Feature의 책임 경계를 깨므로 제외한다.
 
-**Source**: [SAP Fiori tools의 OData V4 권장 및 Custom Page 설명](https://help.sap.com/docs/SAP_FIORI_tools/17d50220bcd848aa854c9c182d65b699/7833775ae607430c9d708d9a3a145263.html)
+## Decision 2: service fact와 user intent 분리
 
-## Decision 2: 판정은 설명 가능한 deterministic rules 사용
+**Decision**: OData metadata를 immutable ServiceSnapshot으로 정규화하고, 자연어 요청과 답변을 AppRequest 및 Requirement로 보존한다. Assessment는 두 출처를 evidence와 trace로 연결한다.
 
-**Decision**: 업무 흐름, 화면 배치, metadata 재사용, client 상태 제어 신호를 명시적인 rule로 평가하고 충돌 또는 부족 정보는 `UNDECIDED`로 남긴다.
+**Rationale**: 확인된 property와 사용자의 희망 field를 구분하고, 확인되지 않은 capability를 추측하지 않게 한다. 모든 하위 generator가 동일한 snapshot을 사용할 수 있다.
 
-**Rationale**: 같은 입력에 같은 결과를 제공하고 판정 근거와 테스트 사례를 직접 추적할 수 있다. LLM은 문장 정규화 보조로 확장할 수 있지만 MVP의 필수 의존성이 아니다.
+**Alternatives considered**: 각 generator가 metadata를 다시 읽고 해석하는 방식은 판정과 생성 사이의 drift를 만들 수 있어 제외한다.
 
-**Alternatives considered**: LLM 단독 판정은 설명 가능성과 재현성이 낮아 제외한다. 사용자가 기술 유형을 직접 선택하게 하는 방식은 비기술 사용자 요구와 충돌한다.
+## Decision 3: 질문과 생성 의도 gate
 
-## Decision 3: metadata를 immutable service snapshot으로 정규화
+**Decision**: service facts로 확인할 수 있는 내용은 질문하지 않는다. 결과를 바꾸는 결정이 비어 있으면 최대 3개 업무 질문을 하고, 명확한 Fiori application 생성 요청과 safe default가 있으면 해당 요청을 local 새 output의 generation intent로 사용한다.
 
-**Decision**: EDMX에서 schema, EntitySet, EntityType, property, key, navigation, action/function 및 capability 근거를 추출하고 source hash와 함께 저장한다.
+**Rationale**: 짧은 사용자 요청도 한 번의 작업으로 완료할 수 있게 하면서, 유형·field·edit·external change처럼 중요한 불확실성은 생성 전에 해소한다.
 
-**Rationale**: 사용자 진술과 service 사실을 구분하고 모든 생성기가 동일한 입력을 사용하게 한다. 원본 EDMX도 run directory에 복사하되 URL credential과 header는 기록하지 않는다.
+**Alternatives considered**: 모든 요청에 별도 승인 문장만 요구하면 명확한 생성 요청에도 불필요한 중단이 생긴다. 모든 ambiguity를 추측하면 잘못된 앱이 생성될 수 있어 제외한다.
 
-**Alternatives considered**: 생성기마다 EDMX를 다시 parsing하면 해석 차이와 반복 network access가 생겨 제외한다.
+## Decision 4: deterministic classification과 단일 dispatch
 
-## Decision 4: URL 입력과 local file 입력을 동일 계약으로 처리
+**Decision**: 업무 흐름과 service 사실을 명시적인 rule로 평가하고 STANDARD→002, CUSTOM→003, FREESTYLE→004 registry로 정확히 하나의 child generator를 호출한다.
 
-**Decision**: `--metadata <file>` 또는 `--service-url <url>` 중 하나만 허용한다. URL은 HTTPS를 기본으로 하고 선택적 인증 header는 환경변수 이름으로만 전달한다.
+**Rationale**: 같은 입력에서 재현 가능한 판정과 one-generator invariant를 보장한다. 하위 Feature의 정책을 여러 번 평가하지 않는다.
 
-**Rationale**: offline fixture와 실제 service를 모두 검증하면서 secret을 command history나 결과 파일에 남기지 않는다.
+**Alternatives considered**: 세 generator를 모두 실행해 결과를 비교하는 방식은 불필요한 output과 승인 범위 초과를 만들므로 제외한다.
 
-**Alternatives considered**: username/password CLI argument와 TLS 검증 비활성화는 보안 원칙 때문에 제외한다. SAP destination 연결은 후속 Feature로 둔다.
+## Decision 5: 실행별 artifact와 정적 Spec 분리
 
-## Decision 5: 후속 생성기는 versioned JSON handoff 사용
+**Decision**: runtime request summary, snapshot summary, assessment, handoff, result와 validation은 생성 application의 generation report에 저장한다. 고정 생성 프로토콜은 001과 002~004에만 둔다.
 
-**Decision**: 승인 결과는 `handoffVersion`, `selectedType`, original request, answers, evidence, prerequisites, service snapshot reference, output intent를 포함한다.
+**Rationale**: OData 또는 field가 바뀌어도 정책 Spec이 늘어나지 않고, 어떤 입력과 결정으로 앱을 만들었는지 재현할 수 있다.
 
-**Rationale**: 001과 002~004를 느슨하게 결합하고 contract test로 호환성을 검증할 수 있다.
+**Alternatives considered**: OData마다 specs/<odata>/를 만드는 방식은 정적 정책과 실행 데이터를 섞고 관리 대상이 계속 증가하므로 제외한다.
 
-**Alternatives considered**: process memory 객체만 전달하면 재현과 감사를 할 수 없어 제외한다.
+## Decision 6: local CLI와 fixture 기반 검증
 
-## Decision 6: Node.js 20.11+와 UI5 CLI 4 호환선 사용
+**Decision**: root의 generate command와 local OData fixture로 분석부터 child handoff까지 재현한다. 실제 remote service는 read-only smoke로만 확인하며 backend 변경과 배포를 테스트에 포함하지 않는다.
 
-**Decision**: orchestrator는 Node.js 20.11 이상을 사용하고 생성 프로젝트는 stable UI5 CLI 4 계열과 호환되는 구성을 만든다. 실제 package version은 lockfile로 고정한다.
+**Rationale**: credential 없이 contract, 질문 gate, one-generator routing, no-write와 rerun을 검증할 수 있다.
 
-**Rationale**: UI5 CLI 4는 Node.js 20.11+를 지원하며 UI5 CLI 5는 아직 alpha이므로 첫 결과의 안정성을 우선한다.
+**Source**: project constitution, 002~004 Feature Spec, SAP Fiori tools와 UI5 공식 문서
 
-**Source**: [UI5 CLI 4 요구사항](https://ui5.github.io/cli/v4/pages/CLI/), [UI5 CLI 5 alpha migration](https://ui5.github.io/cli/v5/updates/migrate-v5)
+## Open implementation risk
+
+현재 저장소에는 이 Plan의 root CLI, 001 orchestration module과 002~004 generator 전체가 아직 구현되지 않았다. 문서 통합으로 진입 정책은 정리되었으며, runtime 구현 전에도 Agent가 하위 Spec을 따르는 manual adapter로 동일한 요청을 실행할 수 있다. 재현 가능한 CLI 자동 실행은 tasks.md의 implementation phase 완료 후 보장된다.

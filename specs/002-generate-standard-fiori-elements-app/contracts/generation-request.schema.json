@@ -30,6 +30,7 @@
       "additionalProperties": false
     },
     "editIntent": { "enum": ["READ_ONLY", "OBJECT_PAGE", "INLINE"] },
+    "flpIntent": { "type": ["string", "null"], "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*-[A-Za-z0-9][A-Za-z0-9._-]*$" },
     "extensionRequest": {
       "type": ["object", "null"],
       "properties": {

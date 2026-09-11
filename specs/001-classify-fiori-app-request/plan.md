@@ -1,107 +1,153 @@
-# Implementation Plan: Fiori 애플리케이션 요청 유형 판정
+# Implementation Plan: Fiori 애플리케이션 요청 분석·판정·생성
 
-**Branch**: `001-classify-fiori-app-request` | **Date**: 2026-09-08 | **Spec**: [spec.md](./spec.md)
-
-**Input**: `specs/001-classify-fiori-app-request/spec.md`
+**Branch**: 001-fiori-request-orchestration-and-generation | **Date**: 2026-09-09 | **Spec**: spec.md
 
 ## Summary
 
-사용자의 비기술적 업무 요청과 OData V4 metadata를 정규화한 service snapshot을 입력받아 `STANDARD`, `CUSTOM`, `FREESTYLE` 또는 `UNDECIDED`를 결정하는 로컬 CLI workflow를 구현한다. 판정은 명시적인 규칙과 질문 catalog를 사용하며, 결과 승인 전에는 생성기를 호출하지 않는다. 승인된 결과는 002·003·004가 공통으로 소비하는 versioned JSON handoff로 전달한다.
+001을 OData 기반 Fiori 애플리케이션 생성의 단일 진입 프로토콜로 구현한다. 입력 정규화와 OData metadata inspection을 먼저 수행하고, service 사실과 사용자 요구를 분리하여 유형을 판정한다. 판정 이후에는 runtime generation input을 만들고, STANDARD·CUSTOM·FREESTYLE 중 정확히 하나의 하위 프로토콜로 handoff한다. 생성 결과와 검증 결과는 application output의 generation report로 취합한다.
+
+legacy Orchestrator 계층은 만들지 않는다. legacy 실행 상태, generation input, routing과 result aggregation 책임은 001의 orchestration runtime에 편입한다.
 
 ## Technical Context
 
-**Language/Version**: Node.js 20.11 이상, TypeScript 5.x, ECMAScript modules
+**Language/Version**: Node.js 20 이상, ECMAScript modules
 
-**Primary Dependencies**: `commander`(CLI), `@inquirer/prompts`(대화형 질문), `zod`(runtime contract validation), `fast-xml-parser`(EDMX parsing), Node.js built-in `fetch`
+**Primary Dependencies**: Node.js built-in fetch, fs/promises, path, crypto; generated apps use `@ui5/cli` and `@sap/ux-ui5-tooling`
 
-**Storage**: DB 없음. 명시한 workspace 아래 `.fiori-agent/runs/<run-id>/`에 request, service snapshot, assessment, approval을 JSON으로 저장하며 secret은 저장하지 않는다.
+**Storage**: DB 없음. 생성 application 안의 generation report에 secret이 제거된 request summary, service summary, assessment, handoff, child result와 validation을 저장한다.
 
-**Testing**: Vitest unit/contract/integration tests, fixture EDMX, CLI process tests
+**Target Platform**: Windows, macOS, Linux의 local development environment
 
-**Target Platform**: Windows, macOS, Linux의 로컬 개발 환경
+**Project Type**: Node.js CLI orchestrator와 유형별 Fiori application generator
 
-**Project Type**: 단일 Node.js CLI 애플리케이션과 생성기 모듈
+**Supported Service**: OData V2/V4 metadata와 primitive property 기반 생성. 해석할 수 없는 metadata는 차단한다.
 
-**Performance Goals**: 5 MB 이하 EDMX의 local parsing과 최초 판정을 일반 개발 PC에서 2초 이내 완료하고, 추가 질문은 한 번에 최대 3개만 제시한다.
+**Safety Constraints**: HTTPS 검증 유지, auth header value 비저장, output boundary 외 쓰기 금지, 기존 결과 덮어쓰기 금지, backend·배포 변경 금지
 
-**Constraints**: OData V4 우선 지원, HTTPS 검증 우회 금지, 인증정보·header value 비저장, 승인 전 파일 생성 금지, output root 밖 쓰기 금지
+**Execution Mode**: 사용자가 명시적으로 Fiori application 생성을 요청한 경우, 001의 안전한 기본값으로 generation input을 확정할 수 있으면 동일 요청 안에서 생성·검증까지 진행한다. 결과를 바꾸는 미결정 사항이 있으면 최대 3개의 질문 후 멈춘다.
 
-**Scale/Scope**: 한 실행에서 하나의 service와 하나의 앱 요청, 최대 100 EntitySet과 2,000 property의 metadata
+**Application Output**: 생성 application은 repository root의 `generated/<project-name>/`에 기본 출력한다. 사용자가 `--output`을 지정하면 workspace 내부의 비어 있는 directory만 허용하며, `examples/`는 특정 service를 보존하는 검증 산출물에만 사용한다.
 
 ## Constitution Check
 
-*GATE: Phase 0 이전 및 Phase 1 이후 재검토 완료.*
-
 | 원칙 | 설계 반영 | 결과 |
 |---|---|---|
-| I. 명세 우선과 추적성 | `requirementIds`, rule evidence, handoff schema로 Spec→Plan→Task→결과를 연결한다. | PASS |
-| II. 검증 가능성과 불확실성 | `UNDECIDED` 상태와 질문 catalog를 두고 확인되지 않은 capability를 prerequisite로 기록한다. | PASS |
-| III. SAP 표준 우선과 Clean Core | Standard→Custom→FreeStyle 순서의 최소 자유도 규칙을 사용하고 OData V4 metadata를 사실 근거로 삼는다. | PASS |
-| IV. 안전한 Agent 실행 | 승인 gate, output boundary, atomic directory creation, secret redaction을 적용한다. | PASS |
-| V. 증거 기반 완료 | contract, fixture, CLI integration test 결과가 성공한 경우에만 완료한다. | PASS |
+| I. 명세 우선과 추적성 | 001을 단일 활성 Spec으로 두고 FR·SC·task·run artifact를 연결한다. | PASS |
+| II. 검증 가능한 요구사항 | UNDECIDED, NEEDS_INPUT, BLOCKED와 구조화된 validation criteria를 사용한다. | PASS |
+| III. SAP 표준 우선 | 001은 유형을 판정하고, 세부 구현은 002~004의 표준·공식 extension 정책에 위임한다. | PASS |
+| IV. 안전한 실행 | metadata read-only 확인, secret redaction, output boundary, collision guard를 적용한다. | PASS |
+| V. 증거 기반 품질 | contract, unit, integration, build와 run validation 결과를 완료 기준으로 사용한다. | PASS |
 
-Phase 1 설계 후에도 위 원칙을 위반하는 예외는 없다.
+## Architecture
+
+    Natural-language request
+            │
+            ▼
+    src/cli/index.mjs
+    src/cli/generate.mjs
+    src/cli/commands/
+            │
+            ▼
+    src/orchestration/generate.mjs
+       ├── request normalization
+       ├── service inspection
+       ├── business question gate
+       ├── classification
+       ├── runtime generation input
+       ├── collision / prerequisite gate
+       ├── one-generator handoff registry
+       └── result aggregation
+            │
+            ├── STANDARD ──► src/generation/standard/generator.mjs
+            ├── CUSTOM ────► src/generation/custom/generator.mjs
+            └── FREESTYLE ─► src/generation/freestyle/generator.mjs
+
+001은 하위 generator template을 소유하지 않는다. 공통 contract와 output transaction은 `src/generation/common/`에 두고, 유형별 decision·planner·generator와 template은 각 하위 protocol 경계에 둔다. 001은 `handoff.mjs`의 allowlist에서 정확히 하나의 generator만 호출하고 결과 contract를 검증한다.
 
 ## Project Structure
 
-### Documentation (this feature)
+### Documentation
 
-```text
-specs/001-classify-fiori-app-request/
-├── spec.md
-├── plan.md
-├── research.md
-├── data-model.md
-├── quickstart.md
-├── contracts/
-│   ├── assessment.schema.json
-│   ├── service-snapshot.schema.json
-│   ├── handoff.schema.json
-│   └── cli-contract.md
-└── tasks.md
-```
+    specs/001-classify-fiori-app-request/
+    ├── spec.md
+    ├── plan.md
+    ├── research.md
+    ├── data-model.md
+    ├── quickstart.md
+    ├── traceability.md
+    ├── validation.md
+    ├── checklists/requirements.md
+    └── contracts/
+        ├── service-snapshot.schema.json
+        ├── assessment.schema.json
+        ├── handoff.schema.json
+        ├── orchestration-request.schema.json
+        ├── generation-input.schema.json
+        ├── orchestration-result.schema.json
+        └── cli-contract.md
 
-### Source Code (repository root)
+### Source Code
 
-```text
-package.json
-tsconfig.json
-eslint.config.js
-src/
-├── cli/
-│   ├── index.ts
-│   └── commands/
-│       ├── inspect.ts
-│       ├── classify.ts
-│       └── approve.ts
-├── domain/
-│   ├── request.ts
-│   ├── assessment.ts
-│   ├── handoff.ts
-│   └── errors.ts
-├── odata/
-│   ├── input.ts
-│   ├── fetch-metadata.ts
-│   ├── parse-edmx.ts
-│   └── service-snapshot.ts
-├── classification/
-│   ├── rules.ts
-│   ├── question-catalog.ts
-│   ├── classifier.ts
-│   └── trace.ts
-└── io/
-    ├── run-store.ts
-    ├── safe-path.ts
-    └── redact.ts
-tests/
-├── fixtures/odata-v4/
-├── contract/
-├── integration/
-└── unit/
-```
+    package.json
+    src/
+    ├── cli/
+    │   ├── index.mjs
+    │   ├── generate.mjs
+    │   └── commands/
+    ├── orchestration/
+    │   ├── generate.mjs
+    │   ├── service-inspection.mjs
+    │   ├── assessment.mjs
+    │   └── handoff.mjs
+    ├── generation/
+    │   ├── common/
+    │   ├── standard/
+    │   ├── custom/
+    │   └── freestyle/
+    └── validation/
+    templates/
+    ├── standard/
+    ├── custom/
+    └── freestyle/
+    tests/
+    ├── fixtures/sample-metadata.xml
+    └── generate.test.mjs
 
-**Structure Decision**: 하나의 TypeScript CLI 안에서 OData 입력, 판정, 승인과 후속 생성기의 공통 domain contract를 분리한다. 002~004는 `src/generation/` 아래에 추가되며 001의 immutable handoff와 service snapshot만 소비한다.
+## Key Design Decisions
+
+### Decision 1: 001을 단일 진입점으로 통합
+
+OData 요청 분석과 실행 orchestration을 하나의 001 Feature로 관리한다. 유형 판정과 하위 protocol handoff 사이의 context 손실을 줄이고, 사용자가 어떤 OData 요청을 보내도 항상 동일한 진입 규칙을 적용할 수 있다.
+
+### Decision 2: service facts와 user intent 분리
+
+OData metadata는 immutable ServiceSnapshot으로 정규화하고, 자연어 요청과 답변은 AppRequest 및 Requirement로 보존한다. 판정 결과에는 두 출처의 evidence를 분리해 기록한다.
+
+### Decision 3: runtime input은 protocol handoff
+
+정적 Spec은 정책을 소유하고, OData URL·field·답변·output은 runtime input과 application의 generation report로 전달한다. OData별로 specs 디렉터리를 생성하지 않는다.
+
+### Decision 4: 단일 dispatch registry
+
+STANDARD→002, CUSTOM→003, FREESTYLE→004의 allowlist registry를 사용한다. 한 실행에서 한 target만 호출되도록 adapter가 guard한다.
+
+### Decision 5: 명시적 생성 요청과 질문 gate
+
+사용자가 application 생성을 직접 요청하고 safe default로 결과를 결정할 수 있으면 해당 요청을 local 새 output의 generation input으로 사용한다. 편집·삭제·action·권한·외부 변경 또는 유형 충돌처럼 결과를 바꾸는 정보가 부족하면 생성 전에 질문한다.
+
+### Decision 6: child generator contract 분리
+
+002~004는 각자의 template, UI 정책, build 조건을 소유한다. 001은 child request/result contract를 검증하고 생성 결과를 취합한다. 현재 구현은 Node.js ESM과 dependency-free template renderer를 사용하며, 유형별 정책을 001에 복제하지 않는다.
+
+## Implementation Order
+
+1. project CLI, contract와 safe I/O를 준비한다.
+2. OData V2/V4 input, parser와 ServiceSnapshot을 구현한다.
+3. deterministic classifier와 single handoff를 구현한다.
+4. generation input, collision/prerequisite gate와 atomic output을 구현한다.
+5. 002~004 generator output과 validator를 연결한다.
+6. generic fixture와 실제 OData 예제로 lint/build evidence를 기록한다.
 
 ## Complexity Tracking
 
-Constitution 위반 또는 예외 승인 사항이 없다.
+001 내부의 orchestration 계층은 legacy Orchestrator Feature를 대체하기 위한 통합 경계다. 유형별 UI template과 정책을 복제하지 않으며, 별도 예외 승인은 없다.

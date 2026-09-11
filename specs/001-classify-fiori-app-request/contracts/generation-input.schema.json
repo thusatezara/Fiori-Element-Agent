@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/fiori-agent/generation-input.schema.json",
+  "title": "Fiori Generation Runtime Input",
+  "type": "object",
+  "required": ["protocolVersion", "request", "service", "assessment", "output"],
+  "properties": {
+    "protocolVersion": { "const": "1.0" },
+    "request": { "type": "string", "minLength": 1 },
+    "service": {
+      "type": "object",
+      "required": ["serviceRoot", "odataVersion", "entitySet", "entityType", "properties"],
+      "properties": {
+        "serviceRoot": { "type": "string", "minLength": 1 },
+        "odataVersion": { "type": "string", "minLength": 1 },
+        "entitySet": { "type": "string", "minLength": 1 },
+        "entityType": { "type": "string", "minLength": 1 },
+        "properties": { "type": "array", "minItems": 1, "items": { "type": "object" } }
+      },
+      "additionalProperties": true
+    },
+    "assessment": {
+      "type": "object",
+      "required": ["selectedType", "handoff"],
+      "properties": {
+        "selectedType": { "enum": ["STANDARD", "CUSTOM", "FREESTYLE"] },
+        "handoff": { "enum": ["002", "003", "004"] }
+      },
+      "additionalProperties": true
+    },
+    "output": {
+      "type": "object",
+      "required": ["directory", "projectName"],
+      "properties": {
+        "directory": { "type": "string", "minLength": 1 },
+        "projectName": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "flpIntent": { "type": ["string", "null"], "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*-[A-Za-z0-9][A-Za-z0-9._-]*$" }
+  },
+  "additionalProperties": false
+}

@@ -1,40 +1,42 @@
-# Specification Quality Checklist: Fiori 애플리케이션 요청 유형 판정
+# Specification Quality Checklist: Fiori 애플리케이션 요청 분석·판정·생성
 
-**Purpose**: Plan 작성 전 명세의 완전성과 품질을 검증한다.
-**Created**: 2026-09-08
-**Feature**: [spec.md](../spec.md)
+**Purpose**: 001을 OData Fiori 생성의 단일 진입 Spec으로 사용할 수 있는지 검증
+
+**Created**: 2026-09-09
+
+**Feature**: ../spec.md
 
 ## Content Quality
 
-- [x] 내부 구현 상세 없이 사용자 가치와 산출물 경계를 설명한다.
-- [x] 사용자 가치와 업무 요구에 초점을 둔다.
-- [x] 비기술 이해관계자도 판정 결과와 흐름을 이해할 수 있다.
-- [x] 모든 필수 섹션이 작성되었다.
+- [x] 사용자 가치와 생성 흐름을 설명한다.
+- [x] 001의 책임과 002~004의 책임을 구분한다.
+- [x] 구현 세부사항은 Plan과 Tasks로 분리한다.
+- [x] 사용자 시나리오, edge case, 가정과 범위가 포함된다.
 
 ## Requirement Completeness
 
-- [x] `[NEEDS CLARIFICATION]` marker가 없다.
-- [x] 요구사항이 테스트 가능하고 모호하지 않다.
-- [x] 성공 기준이 측정 가능하다.
-- [x] 성공 기준이 내부 구현 방식에 의존하지 않는다.
-- [x] 모든 주요 인수 시나리오가 정의되었다.
-- [x] Edge case가 식별되었다.
-- [x] 범위와 범위 제외가 명확하다.
-- [x] 가정과 의존성이 식별되었다.
+- [x] 기능 요구사항은 관찰 가능한 결과를 가진다.
+- [x] 요구사항은 service fact, user intent, generation intent를 구분한다.
+- [x] 요청 field와 metadata 대조 조건이 정의된다.
+- [x] 질문·UNDECIDED·BLOCKED 조건이 정의된다.
+- [x] 단일 유형 handoff와 output collision이 정의된다.
+- [x] OData별 정적 Feature Spec을 만들지 않는 조건이 정의된다.
 
-## Feature Readiness
+## Execution Readiness
 
-- [x] 모든 기능 요구사항에 관찰 가능한 판정 조건이 있다.
-- [x] 사용자 시나리오가 주요 판정·확인·승인 흐름을 포함한다.
-- [x] Feature가 측정 가능한 결과를 충족하는지 검증할 수 있다.
-- [x] 출력 유형을 정의하는 필수 기술 용어 외에 내부 구현 설계가 포함되지 않았다.
+- [x] 001이 단일 활성 진입점으로 선언된다.
+- [x] STANDARD→002, CUSTOM→003, FREESTYLE→004 routing이 정의된다.
+- [x] 고정 protocol과 runtime generation input의 경계가 정의된다.
+- [x] 생성 전 질문·생성 의도 gate가 정의된다.
+- [x] 생성 후 validation과 COMPLETED 조건이 정의된다.
+- [x] secret redaction과 backend-no-touch 범위가 정의된다.
+
+## Consistency Review
+
+- [x] legacy orchestration 책임을 001의 spec, plan, tasks, data-model과 contracts에 편입했다.
+- [x] legacy directory는 archive pointer 외 활성 Spec으로 사용하지 않는다.
+- [x] OData 요청이 직접 002~004로 우회하지 않도록 AGENTS.md에 mandatory trigger를 추가했다.
 
 ## Notes
 
-- `STANDARD`, `CUSTOM`, `FREESTYLE`의 정의는 사용자가 확정한 제품 요구사항이므로 구현 상세가 아니라 출력 계약으로 취급했다.
-- 유형 추천, 모호함 해소, 승인·전달을 각각 독립적으로 시연 가능한 세 개의 MVP User Story로 구분했다.
-- 입력 사용자가 List Report, Building Blocks, annotation, MVC를 모를 수 있다는 전제를 반영하고 모든 확인 질문을 업무 언어로 작성했다.
-- 성공 기준에서 참조하는 대표 검증 사례와 기대 결과를 명세 안에 식별자별로 정의했다.
-- `Key Entities`는 데이터베이스 Entity가 아니라 판정 과정에서 생성·전달되는 주요 정보 객체임을 명시했다.
-- 요구사항과 검증 사례는 업무 도메인에 독립적인 표현을 사용하고, 구체적인 업무 대화는 범위를 제한하지 않는 비규범적 예시로 분리했다.
-- 수정 후 검토에서 모든 항목을 충족했다.
+현재 체크리스트는 문서 통합 결과에 대한 검토를 통과했다. 실제 readiness는 tasks.md의 runtime 구현, contract test와 generated application validation 완료 후 다시 확인한다.

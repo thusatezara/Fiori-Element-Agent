@@ -1,0 +1,19 @@
+{
+  "protocolVersion": "1.0",
+  "request": "Create a searchable list and detail application",
+  "service": {
+    "serviceRoot": "https://service.example.test/odata/",
+    "odataVersion": "4.0",
+    "entitySet": "Products",
+    "entityType": "Sample.Service.Product",
+    "properties": ["ID", "name", "description", "price"]
+  },
+  "assessment": {
+    "selectedType": "STANDARD",
+    "handoff": "002"
+  },
+  "output": {
+    "directory": "generated/products",
+    "projectName": "products"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "{{projectName}}",
+  "version": "1.0.0",
+  "private": true,
+  "description": "{{appDescription}}",
+  "scripts": {
+    "start": "ui5 serve --open index.html",
+    "build": "ui5 build --all",
+    "lint": "node scripts/validate.mjs",
+    "test": "qunit -c test/unit/Controller.qunit.js"
+  },
+  "devDependencies": {
+    "@sap/ux-ui5-tooling": "^1.16.0",
+    "@ui5/cli": "^4.0.0",
+    "qunit": "^2.24.1"
+  }
+}

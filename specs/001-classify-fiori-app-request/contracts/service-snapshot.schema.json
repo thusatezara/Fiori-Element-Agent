@@ -27,6 +27,7 @@
     },
     "entityTypes": { "type": "array", "minItems": 1, "items": { "type": "object" } },
     "operations": { "type": "array", "items": { "type": "object" } },
+    "annotations": { "type": "array", "items": { "type": "object" } },
     "capabilities": { "type": "array", "items": { "type": "object" } },
     "warnings": { "type": "array", "items": { "type": "string" } }
   },

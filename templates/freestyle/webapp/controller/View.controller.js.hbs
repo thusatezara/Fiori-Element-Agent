@@ -1,0 +1,17 @@
+sap.ui.define(["sap/ui/core/mvc/Controller", "sap/m/MessageToast"], function (Controller, MessageToast) {
+  "use strict";
+  return Controller.extend("{{namespace}}.controller.View", {
+    onInit: function () {
+      this.getView().getModel("view").setProperty("/currentStep", "main");
+    },
+    onNext: function () {
+      this.getOwnerComponent().getRouter().navTo("review");
+    },
+    onBack: function () {
+      this.getOwnerComponent().getRouter().navTo("main");
+    },
+    onRetry: function () {
+      MessageToast.show("Retry requested");
+    }
+  });
+});

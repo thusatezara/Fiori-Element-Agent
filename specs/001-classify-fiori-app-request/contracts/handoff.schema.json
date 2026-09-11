@@ -3,7 +3,7 @@
   "$id": "https://example.local/fiori-agent/handoff.schema.json",
   "title": "Approved Fiori Generation Handoff",
   "type": "object",
-  "required": ["handoffVersion", "assessmentId", "selectedType", "request", "serviceSnapshotPath", "prerequisites", "outputIntent", "approvedAt"],
+  "required": ["handoffVersion", "assessmentId", "selectedType", "request", "serviceSnapshotPath", "generationInput", "prerequisites", "outputIntent", "requestedAt"],
   "properties": {
     "handoffVersion": { "const": "1.0" },
     "assessmentId": { "type": "string", "format": "uuid" },
@@ -20,6 +20,7 @@
       "additionalProperties": true
     },
     "serviceSnapshotPath": { "type": "string", "pattern": "^(?![A-Za-z]:|/|.*\\.\\.).+$" },
+    "generationInput": { "type": "object" },
     "prerequisites": { "type": "array", "items": { "type": "object" } },
     "outputIntent": {
       "type": "object",
@@ -30,7 +31,7 @@
       },
       "additionalProperties": false
     },
-    "approvedAt": { "type": "string", "format": "date-time" }
+    "requestedAt": { "type": "string", "format": "date-time" }
   },
   "additionalProperties": false
 }

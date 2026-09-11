@@ -1,0 +1,8 @@
+sap.ui.define(["{{namespace}}/controller/View.controller"], function (Controller) {
+  "use strict";
+  QUnit.module("{{projectName}} controller");
+  QUnit.test("controller exposes navigation handlers", function (assert) {
+    assert.strictEqual(typeof Controller.prototype.onNext, "function");
+    assert.strictEqual(typeof Controller.prototype.onBack, "function");
+  });
+});
