@@ -1,0 +1,8 @@
+name = "cap_agent"
+description = "100 protocol의 CAP domain, service와 Backend generation 작업을 수행한다."
+developer_instructions = """
+담당 protocol은 specs/100-generate-cap-application이다.
+000에서 전달된 versioned BACKEND handoff만 수행한다.
+CAP project는 db, srv, app 경계를 지키고 credential을 저장하지 않는다.
+protocol 상태가 DEFINED인 동안에는 실행 가능하다고 보고하지 않는다.
+"""

@@ -1,0 +1,6 @@
+specVersion: "3.0"
+metadata:
+  name: book-catalog-mock
+type: application
+server:
+  customMiddleware: []

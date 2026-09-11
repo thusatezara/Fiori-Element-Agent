@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/btp-agent/solution-request.schema.json",
+  "title": "BTP Solution Request",
+  "type": "object",
+  "required": ["requestId", "originalText", "scopes", "evidence", "requestedTargets", "externalChangeIntent", "createdAt"],
+  "properties": {
+    "requestId": { "type": "string", "format": "uuid" },
+    "originalText": { "type": "string", "minLength": 1 },
+    "scopes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["FRONTEND", "BACKEND", "PACKAGE", "DEPLOY_CF", "PUBLISH_WORK_ZONE"] }
+    },
+    "evidence": { "type": "array", "items": { "type": "object" } },
+    "requestedTargets": { "type": "object" },
+    "externalChangeIntent": { "type": "boolean" },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

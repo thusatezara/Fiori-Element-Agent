@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/btp-agent/solution-plan.schema.json",
+  "title": "BTP Solution Plan",
+  "type": "object",
+  "required": ["planVersion", "planId", "request", "steps", "status", "assumptions", "exclusions", "createdAt"],
+  "properties": {
+    "planVersion": { "const": "1.0" },
+    "planId": { "type": "string", "format": "uuid" },
+    "request": { "type": "object" },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "scope", "protocol", "dependsOn", "approval", "readiness", "blockingReasons", "validationCriteria"]
+      }
+    },
+    "status": { "enum": ["READY", "NEEDS_INPUT", "PARTIALLY_IMPLEMENTED", "BLOCKED"] },
+    "assumptions": { "type": "array", "items": { "type": "string" } },
+    "exclusions": { "type": "array", "items": { "type": "string" } },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

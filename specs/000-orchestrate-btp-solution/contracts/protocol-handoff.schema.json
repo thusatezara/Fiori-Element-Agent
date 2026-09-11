@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/btp-agent/protocol-handoff.schema.json",
+  "title": "BTP Protocol Handoff",
+  "type": "object",
+  "required": ["handoffVersion", "handoffId", "planId", "stepId", "protocol", "request", "inputs", "target", "completedDependencies", "requestedAt"],
+  "properties": {
+    "handoffVersion": { "const": "1.0" },
+    "handoffId": { "type": "string", "format": "uuid" },
+    "planId": { "type": "string", "format": "uuid" },
+    "stepId": { "type": "string", "minLength": 1 },
+    "protocol": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "enum": ["001", "100", "200", "300", "400"] },
+        "version": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "request": { "type": "object" },
+    "inputs": { "type": "object" },
+    "target": { "type": ["object", "null"] },
+    "completedDependencies": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "requestedAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

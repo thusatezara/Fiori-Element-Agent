@@ -1,12 +1,22 @@
-# Fiori Application Agent
+# BTP Solution Agent
 
-이 저장소는 사용자 요청을 매번 새로운 Feature Spec으로 복제하지 않고, 고정된 SDD 생성 프로토콜을 재사용한다.
+이 저장소는 사용자가 Frontend, Backend와 배포 project를 구분하지 않고 요청할 수 있도록 고정된 SDD protocol을 재사용한다. 현재 Frontend 생성은 구현되어 있고 CAP·MTA·Cloud Foundry·Work Zone은 protocol 경계가 정의된 상태다.
 
 ```text
-request → 001 inspect/classify → 002 or 003 or 004 → application → validation
+request → 000 solution plan → 001/100/200/300/400 → validation/report
 ```
 
-## 실행
+## Solution planning
+
+```powershell
+npm run plan -- --request "CAP backend와 Fiori Elements 앱을 만들고 MTA로 구성해줘"
+```
+
+`plan`은 외부 시스템이나 application 파일을 변경하지 않고 scope, dependency, protocol 상태와 prerequisite를 JSON으로 출력한다. 100, 200, 300, 400은 executor가 구현되기 전까지 `DEFINED`/`NOT_IMPLEMENTED`로 보고된다.
+
+프로젝트별 전문 Agent는 `.codex/agents/`에 있고 중앙 `specs/`의 protocol을 참조한다. Spec은 Agent directory에 복제하지 않는다.
+
+## Frontend 생성
 
 ```powershell
 npm run generate -- --request "목록과 상세를 조회하는 Fiori application" --odata-url "https://service.example.test/odata/Products"
