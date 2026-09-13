@@ -30,11 +30,13 @@ export function createStandardDecision(context) {
     const filters = chooseFilters(columns);
     const titleProperty = chooseTitleProperty(columns);
     const descriptionProperty = chooseDescriptionProperty(columns, titleProperty);
+    const exportEnabled = /excel|xlsx|spreadsheet|export|엑셀|내려받|다운로드/i.test(String(context.request));
     return {
         columns,
         filters,
         titleProperty,
         descriptionProperty,
+        exportEnabled,
         tableType: "ResponsiveTable",
         editMode: "Standard Object Page; no inline edit unless capability is confirmed",
         userLanguageSummary: `EntitySet ${context.service.entitySet} is exposed as a searchable List Report with an optional detail Object Page.`,

@@ -21,6 +21,18 @@ export function validateGeneratedProject(profile, files, context) {
     if (profile === "standard" && !JSON.stringify(manifest).includes("ListReport")) {
         throw new Error("Standard application does not contain a List Report target.");
     }
+    if (profile === "standard") {
+        const listReport = Object.values(manifest["sap.ui5"]?.routing?.targets ?? {}).find((target) => target.name === "sap.fe.templates.ListReport");
+        if (listReport?.options?.settings?.initialLoad !== "Disabled") {
+            throw new Error("Standard List Report must wait for the user to execute the initial search.");
+        }
+        if (context?.request && /excel|xlsx|spreadsheet|export|엑셀|내려받|다운로드/i.test(String(context.request))) {
+            const tableSettings = listReport?.options?.settings?.controlConfiguration?.["@com.sap.vocabularies.UI.v1.LineItem"]?.tableSettings;
+            if (tableSettings?.enableExport !== true) {
+                throw new Error("Standard application does not enable the requested Excel export.");
+            }
+        }
+    }
     if (profile === "standard" || profile === "custom") {
         const inbounds = manifest["sap.app"]?.crossNavigation?.inbounds;
         const sandbox = files.get("webapp/test/flpSandbox.html");

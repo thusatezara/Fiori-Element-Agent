@@ -56,6 +56,7 @@ function createValues(context, decision, manifest, annotationXml, extensionPolic
         }), null, 2),
         annotationXml,
         i18nProperties: [`appTitle=${decision.humanizedEntity}`, `appDescription=Fiori application for ${service.entitySet}`, ...decision.columns.map((property) => `${property.name}=${property.label}`)].join("\n"),
+        exportRequested: decision.exportEnabled ? "true" : "false",
         extensionRequested: extensionPolicy.requested ? "true" : "false"
     };
 }

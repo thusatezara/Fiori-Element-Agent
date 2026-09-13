@@ -6,7 +6,7 @@
 
 ## Summary
 
-001에서 승인된 `STANDARD` handoff와 OData V4 service snapshot을 입력받아 List Report를 시작 target으로 하는 독립 SAP Fiori elements 프로젝트를 생성한다. 기본 annotation이 부족하면 local annotation에 최소 `UI.LineItem`, `UI.SelectionFields`, `UI.HeaderInfo`, `UI.Facets`를 생성하며, metadata와 capability가 허용할 때 Object Page edit 또는 inline edit를 구성한다. Extension은 명시적으로 허용된 제한적 요구만 생성한다. 모든 Standard 결과에는 manifest inbound, `webapp/test/flpSandbox.html`과 `fiori run` 기반 FLP preview script를 함께 생성한다.
+001에서 승인된 `STANDARD` handoff와 OData V4 service snapshot을 입력받아 List Report를 시작 target으로 하는 독립 SAP Fiori elements 프로젝트를 생성한다. 기본 annotation이 부족하면 local annotation에 최소 `UI.LineItem`, `UI.SelectionFields`, `UI.HeaderInfo`, `UI.Facets`를 생성하며, metadata와 capability가 허용할 때 Object Page edit 또는 inline edit를 구성한다. 조회는 사용자의 실행 전까지 시작하지 않으며, Excel 다운로드 요청은 표준 table export 설정으로 반영한다. Extension은 명시적으로 허용된 제한적 요구만 생성한다. 모든 Standard 결과에는 manifest inbound, `webapp/test/flpSandbox.html`과 `fiori run` 기반 FLP preview script를 함께 생성한다.
 
 ## Technical Context
 
@@ -101,6 +101,8 @@ tests/
 **Structure Decision**: 생성 과정은 decision → FLP intent plan → in-memory file plan → staging directory render → validation → atomic rename 순서로 수행한다. `src/generation/common/flp-navigation.mjs`가 Standard·Custom generator에서 intent와 Sandbox config를 공통으로 계산한다. Extension template은 기본 생성 경로와 분리한다. 기본 intent는 `<entity-set>-display`이며 CLI의 `--flp-intent`로 명시적으로 변경할 수 있다.
 
 **FLP preview decision**: 로컬 개발용 physical `webapp/test/flpSandbox.html`을 유지하고 `fiori run --open`으로 진입한다. Sandbox config의 application key, `sap.app/crossNavigation.inbounds` key와 `npm start` URL fragment는 같은 intent를 사용한다. 운영 FLP/Work Zone 콘텐츠와 backend는 변경하지 않는다.
+
+**Query/export decision**: List Report의 `initialLoad`를 `Disabled`로 설정해 사용자의 filter 확인과 실행 이후에만 조회한다. Excel 다운로드가 요청되면 `UI.LineItem` table의 `enableExport`를 활성화해 SAP Fiori Elements 표준 export action을 사용하며 Custom controller는 추가하지 않는다.
 
 **Application Output**: 기본 생성 경로는 `generated/<project-name>/`이며, 001이 전달한 explicit `--output`은 workspace boundary와 empty-directory guard를 통과해야 한다.
 

@@ -9,11 +9,12 @@
     "projectPath": { "type": ["string", "null"] },
     "decision": {
       "type": "object",
-      "required": ["tableType", "objectPage", "editMode", "extensionDecision", "evidence", "prerequisites"],
+      "required": ["tableType", "objectPage", "editMode", "exportEnabled", "extensionDecision", "evidence", "prerequisites"],
       "properties": {
         "tableType": { "enum": ["GRID", "RESPONSIVE"] },
         "objectPage": { "type": "boolean" },
         "editMode": { "enum": ["NONE", "OBJECT_PAGE", "INLINE"] },
+        "exportEnabled": { "type": "boolean" },
         "extensionDecision": { "enum": ["NONE", "APPROVED", "RECLASSIFY"] },
         "evidence": { "type": "array", "items": { "type": "object" } },
         "prerequisites": { "type": "array", "items": { "type": "object" } }

@@ -43,7 +43,7 @@ export function createStandardManifest(context, decision, flpNavigation) {
                     config: { routerClass: "sap.f.routing.Router", flexibleColumnLayout: { defaultTwoColumnLayoutType: "TwoColumnsMidExpanded", defaultThreeColumnLayoutType: "ThreeColumnsMidExpanded" } },
                     routes: [{ pattern: ":?query:", name: listRoute, target: listRoute }, { pattern: `${service.entitySet}({key}):?query:`, name: objectRoute, target: [listRoute, objectRoute] }],
                     targets: {
-                        [listRoute]: { type: "Component", id: listRoute, name: "sap.fe.templates.ListReport", options: { settings: { contextPath: `/${service.entitySet}`, variantManagement: "Page", controlConfiguration: { "@com.sap.vocabularies.UI.v1.LineItem": { tableSettings: { type: decision.tableType, selectionMode: "None" } } } } } },
+                        [listRoute]: { type: "Component", id: listRoute, name: "sap.fe.templates.ListReport", options: { settings: { contextPath: `/${service.entitySet}`, variantManagement: "Page", initialLoad: "Disabled", controlConfiguration: { "@com.sap.vocabularies.UI.v1.LineItem": { tableSettings: { type: decision.tableType, selectionMode: "None", enableExport: decision.exportEnabled } } } } } },
                         [objectRoute]: { type: "Component", id: objectRoute, name: "sap.fe.templates.ObjectPage", options: { settings: { editableHeaderContent: false } } }
                     }
                 }

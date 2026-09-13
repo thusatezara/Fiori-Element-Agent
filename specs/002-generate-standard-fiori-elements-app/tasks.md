@@ -25,6 +25,8 @@
 - [x] T016 공통 FLP intent 계산·Sandbox config와 `--flp-intent` CLI 입력을 구현한다.
 - [x] T017 Standard manifest inbound, `webapp/test/flpSandbox.html`, `fiori run` scripts와 static validation을 연결한다.
 - [x] T018 fixture 생성 테스트에서 Sandbox 파일, intent 일치와 future generation 재사용을 검증한다.
+- [x] T019 Standard List Report의 초기 자동 조회를 비활성화하고 Excel 요청 시 표준 table export를 활성화한다.
+- [x] T020 생성기 test와 generated project validator에서 `initialLoad`와 `enableExport` 설정을 검증한다.
 
 ## Phase 4: Remaining validation
 

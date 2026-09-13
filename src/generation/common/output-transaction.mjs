@@ -38,13 +38,13 @@ export async function writeApplicationAtomically(outputDirectory, files) {
 }
 
 async function renameWithRetry(source, destination) {
-    for (let attempt = 0; attempt < 4; attempt += 1) {
+    for (let attempt = 0; attempt < 10; attempt += 1) {
         try {
             await rename(source, destination);
             return;
         } catch (error) {
-            if (process.platform !== "win32" || !["EPERM", "EACCES", "EBUSY"].includes(error.code) || attempt === 3) throw error;
-            await new Promise((resolve) => setTimeout(resolve, 50 * (attempt + 1)));
+            if (process.platform !== "win32" || !["EPERM", "EACCES", "EBUSY"].includes(error.code) || attempt === 9) throw error;
+            await new Promise((resolve) => setTimeout(resolve, 100 * (attempt + 1)));
         }
     }
 }

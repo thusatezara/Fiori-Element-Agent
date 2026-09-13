@@ -103,6 +103,8 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 목록 사용 방식
 - **FR-025**: 시스템은 Standard Fiori Elements 결과에 `webapp/test/flpSandbox.html`과 `fiori run` 기반 `start` script를 생성해야 한다.
 - **FR-026**: 시스템은 앱 manifest의 FLP inbound와 Sandbox application entry를 동일한 `<semantic-object>-<action>` intent로 연결해야 하며, intent가 지정되지 않으면 EntitySet에서 일반적인 기본값을 만들어야 한다.
 - **FR-027**: 시스템은 `--flp-intent`로 지정한 intent를 검증하고, 생성된 Sandbox 파일·manifest inbound·실행 script의 일치 여부를 정적으로 검증해야 한다.
+- **FR-028**: 조회 화면은 초기 진입 시 데이터를 자동 조회하지 않고 사용자가 filter 조건을 확인한 뒤 실행해야 한다.
+- **FR-029**: 사용자가 Excel 다운로드를 요청하면 List Report의 표준 table export를 활성화하고 `.xlsx` 내보내기 설정을 정적으로 검증해야 한다.
 
 ### 주요 정보 객체 *(Key Entities)*
 
@@ -141,6 +143,7 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 목록 사용 방식
 - **SC-006**: `STD-APPROVAL-01`과 모든 미승인 사례의 100%에서 새 프로젝트 파일이 생성되지 않는다.
 - **SC-007**: 필수 target, table, 화면 흐름과 실행 검증을 모두 통과한 결과만 완료로 표시된다.
 - **SC-008**: 생성되는 Standard 프로젝트의 100%에서 FLP Sandbox 파일, manifest inbound와 `npm start` intent가 일치하고, `npm run lint`가 누락 또는 불일치를 검출한다.
+- **SC-009**: Excel 다운로드가 요청된 생성 결과의 100%에서 초기 자동 조회가 비활성화되고 표준 table export가 활성화되며, `npm run lint`가 두 설정을 검증한다.
 
 ## 가정 및 의존성
 

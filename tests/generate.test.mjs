@@ -33,7 +33,7 @@ test("the reusable pipeline generates a generic application without request-spec
     const output = join(directory, "products-app");
     try {
         const result = await runGeneration({
-            request: "Products 목록과 상세를 조회하는 Fiori application",
+            request: "Products 목록과 상세를 조회하고 Excel로 다운로드하는 Fiori application",
             odata_url: "https://service.example.test/odata/Products",
             metadata_file: "tests/fixtures/sample-metadata.xml",
             output
@@ -45,6 +45,8 @@ test("the reusable pipeline generates a generic application without request-spec
         assert.match(manifest, /"annotations":\s*\[\s*"localAnnotations"/);
         assert.match(manifest, /"minUI5Version":\s*"1\.141\.0"/);
         assert.match(manifest, /"synchronizationMode":\s*"None"/);
+        assert.match(manifest, /"initialLoad":\s*"Disabled"/);
+        assert.match(manifest, /"enableExport":\s*true/);
         assert.match(manifest, /"crossNavigation":/);
         assert.match(manifest, /"products-display":/);
         const packageJson = await readFile(join(output, "package.json"), "utf8");
