@@ -1,0 +1,13 @@
+specVersion: "3.0"
+metadata:
+  name: northwind-products
+type: application
+server:
+  customMiddleware:
+    - name: fiori-tools-proxy
+      afterMiddleware: compression
+      configuration:
+        ignoreCertErrors: false
+        backend:
+          - path: /V4/Northwind/Northwind.svc
+            url: http://localhost:4004

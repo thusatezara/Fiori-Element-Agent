@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/300/deployment-request.schema.json",
+  "title": "Protocol 300 DeploymentRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["handoffVersion", "handoffId", "planId", "stepId", "protocol", "completedDependencies", "requestedAt", "artifact", "target", "deployIntent", "approval", "idempotencyKey"],
+  "properties": {
+    "handoffVersion": { "const": "1.0" },
+    "handoffId": { "type": "string", "format": "uuid" },
+    "planId": { "type": "string", "format": "uuid" },
+    "stepId": { "type": "string", "minLength": 1 },
+    "protocol": { "type": "object", "required": ["id", "version"], "properties": { "id": { "const": "300" }, "version": { "const": "1.0" } } },
+    "completedDependencies": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "requestedAt": { "type": "string", "format": "date-time" },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifactId", "status", "archivePath", "archiveChecksum", "descriptorFingerprint", "validation"],
+      "properties": {
+        "artifactId": { "type": "string", "format": "uuid" },
+        "status": { "const": "READY" },
+        "archivePath": { "type": "string", "minLength": 1 },
+        "archiveChecksum": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "descriptorFingerprint": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "validation": { "type": "array", "minItems": 1, "items": { "type": "object" } },
+        "serviceRequirements": { "type": "array", "items": { "type": "object" } },
+        "applicationId": { "type": "string", "minLength": 1 },
+        "sapCloudService": { "type": ["string", "null"] }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["api", "org", "space", "stage"],
+      "properties": {
+        "api": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "org": { "type": "string", "minLength": 1 },
+        "space": { "type": "string", "minLength": 1 },
+        "stage": { "enum": ["DEV", "TEST", "PROD"] }
+      }
+    },
+    "deployIntent": { "const": true },
+    "approval": { "$ref": "#/$defs/approval" },
+    "productionApproval": { "anyOf": [{ "$ref": "#/$defs/approval" }, { "type": "null" }] },
+    "idempotencyKey": { "type": "string", "format": "uuid" }
+  },
+  "$defs": {
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approvalId", "scope", "targetFingerprint", "artifactChecksum", "snapshotId", "approvedAt"],
+      "properties": {
+        "approvalId": { "type": "string", "format": "uuid" },
+        "scope": { "enum": ["DEPLOY_CF", "DEPLOY_CF_PROD"] },
+        "targetFingerprint": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "artifactChecksum": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "snapshotId": { "type": "string", "format": "uuid" },
+        "approvedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "target": { "properties": { "stage": { "const": "PROD" } } } } },
+      "then": {
+        "required": ["productionApproval"],
+        "properties": { "productionApproval": { "$ref": "#/$defs/approval" } }
+      }
+    }
+  ]
+}

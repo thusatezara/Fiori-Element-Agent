@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/btp-agent/cap-generation-result.schema.json",
+  "title": "Protocol 100 CAP Generation Result",
+  "type": "object",
+  "required": ["resultVersion", "status", "handoffId", "projectPath", "files", "checks", "trace", "serviceSnapshots", "assumptions", "prerequisites", "risks"],
+  "properties": {
+    "resultVersion": { "const": "1.0" },
+    "status": { "enum": ["BLOCKED", "GENERATED", "VALIDATED", "FAILED"] },
+    "handoffId": { "type": "string", "format": "uuid" },
+    "projectPath": { "type": ["string", "null"] },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "kind", "requirementIds"],
+        "properties": {
+          "path": { "type": "string", "pattern": "^(?![A-Za-z]:|/)(?!.*(?:^|/)[.][.](?:/|$)).+$" },
+          "kind": { "enum": ["CONFIG", "DOMAIN_MODEL", "SERVICE_MODEL", "HANDLER", "TEST", "METADATA", "SNAPSHOT", "REPORT", "DOCUMENTATION"] },
+          "requirementIds": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "required", "status", "summary"],
+        "properties": {
+          "id": { "enum": ["HANDOFF_SCHEMA", "DOMAIN_SEMANTICS", "OUTPUT_BOUNDARY", "CREDENTIAL_SCAN", "CDS_COMPILE", "CONTRACT_TEST", "HANDLER_TEST", "LOCAL_START", "SNAPSHOT_CONSISTENCY"] },
+          "required": { "type": "boolean" },
+          "status": { "enum": ["PASS", "FAIL", "SKIPPED"] },
+          "summary": { "type": "string", "minLength": 1 },
+          "durationMs": { "type": "integer", "minimum": 0 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "trace": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["requirementId", "disposition", "artifacts", "checks"],
+        "properties": {
+          "requirementId": { "type": "string", "minLength": 1 },
+          "disposition": { "enum": ["GENERATED", "PREREQUISITE", "OUT_OF_SCOPE"] },
+          "artifacts": { "type": "array", "items": { "type": "string" } },
+          "checks": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "serviceSnapshots": {
+      "type": "array",
+      "items": { "$ref": "service-snapshot.schema.json" }
+    },
+    "assumptions": { "type": "array", "items": { "type": "string" } },
+    "prerequisites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+          "message": { "type": "string", "minLength": 1 },
+          "requirementIds": { "type": "array", "items": { "type": "string" } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "risks": { "type": "array", "items": { "type": "string" } }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "VALIDATED" } } },
+      "then": {
+        "properties": {
+          "projectPath": { "type": "string", "minLength": 1 },
+          "serviceSnapshots": { "minItems": 1 }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "status": { "enum": ["BLOCKED", "FAILED"] } } },
+      "then": {
+        "properties": {
+          "projectPath": { "type": "null" },
+          "serviceSnapshots": { "maxItems": 0 }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

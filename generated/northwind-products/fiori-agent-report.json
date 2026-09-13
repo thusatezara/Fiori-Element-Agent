@@ -1,0 +1,271 @@
+{
+  "generatorVersion": "2.0.0",
+  "protocol": {
+    "entry": "001",
+    "handoff": "002",
+    "selectedGenerator": "002"
+  },
+  "requestSummary": "Northwind Products를 검색, 필터, 목록 및 상세로 조회하는 읽기 전용 Fiori 화면을 만들어줘",
+  "assessment": {
+    "protocol": "001",
+    "selectedType": "STANDARD",
+    "handoff": "002",
+    "reason": "목록·검색·필터·상세 중심의 표준 OData 화면은 Fiori Elements 표준 흐름을 우선한다.",
+    "odataVersion": "4.0",
+    "requestedOverride": null,
+    "alternatives": [
+      "CUSTOM",
+      "FREESTYLE"
+    ],
+    "prerequisite": "PASS",
+    "outOfScope": [
+      "backend changes",
+      "authorization",
+      "transactions",
+      "deployment",
+      "Work Zone content"
+    ]
+  },
+  "service": {
+    "odataVersion": "4.0",
+    "serviceRoot": "https://services.odata.org/V4/Northwind/Northwind.svc/",
+    "entitySet": "Products",
+    "entityType": "NorthwindModel.Product",
+    "keys": [
+      "ProductID"
+    ],
+    "properties": [
+      {
+        "name": "ProductID",
+        "type": "Edm.Int32",
+        "label": "Product ID"
+      },
+      {
+        "name": "ProductName",
+        "type": "Edm.String",
+        "label": "Product Name"
+      },
+      {
+        "name": "SupplierID",
+        "type": "Edm.Int32",
+        "label": "Supplier ID"
+      },
+      {
+        "name": "CategoryID",
+        "type": "Edm.Int32",
+        "label": "Category ID"
+      },
+      {
+        "name": "QuantityPerUnit",
+        "type": "Edm.String",
+        "label": "Quantity Per Unit"
+      },
+      {
+        "name": "UnitPrice",
+        "type": "Edm.Decimal",
+        "label": "Unit Price"
+      },
+      {
+        "name": "UnitsInStock",
+        "type": "Edm.Int16",
+        "label": "Units In Stock"
+      },
+      {
+        "name": "UnitsOnOrder",
+        "type": "Edm.Int16",
+        "label": "Units On Order"
+      },
+      {
+        "name": "ReorderLevel",
+        "type": "Edm.Int16",
+        "label": "Reorder Level"
+      },
+      {
+        "name": "Discontinued",
+        "type": "Edm.Boolean",
+        "label": "Discontinued"
+      }
+    ],
+    "navigationProperties": [
+      "Category",
+      "Order_Details",
+      "Supplier"
+    ],
+    "metadataHash": "81a48488cd2911f7254170da5403628db22127ea59124d6597d04c6af18d7702"
+  },
+  "generated": {
+    "columns": [
+      "ProductID",
+      "ProductName",
+      "SupplierID",
+      "CategoryID",
+      "QuantityPerUnit",
+      "UnitPrice",
+      "UnitsInStock",
+      "UnitsOnOrder"
+    ],
+    "filters": [
+      "ProductID",
+      "ProductName",
+      "SupplierID",
+      "CategoryID",
+      "QuantityPerUnit"
+    ],
+    "files": [
+      ".gitignore",
+      "README.md",
+      "fiori-agent-report.json",
+      "package.json",
+      "scripts/validate.mjs",
+      "ui5-mock.yaml",
+      "ui5.yaml",
+      "webapp/Component.js",
+      "webapp/annotations/annotation.xml",
+      "webapp/i18n/i18n.properties",
+      "webapp/index.html",
+      "webapp/manifest.json",
+      "webapp/test/flpSandbox.html"
+    ],
+    "details": {
+      "decision": {
+        "columns": [
+          {
+            "name": "ProductID",
+            "type": "Edm.Int32",
+            "nullable": false,
+            "label": "Product ID",
+            "isPrimitive": true
+          },
+          {
+            "name": "ProductName",
+            "type": "Edm.String",
+            "nullable": true,
+            "label": "Product Name",
+            "isPrimitive": true
+          },
+          {
+            "name": "SupplierID",
+            "type": "Edm.Int32",
+            "nullable": true,
+            "label": "Supplier ID",
+            "isPrimitive": true
+          },
+          {
+            "name": "CategoryID",
+            "type": "Edm.Int32",
+            "nullable": true,
+            "label": "Category ID",
+            "isPrimitive": true
+          },
+          {
+            "name": "QuantityPerUnit",
+            "type": "Edm.String",
+            "nullable": true,
+            "label": "Quantity Per Unit",
+            "isPrimitive": true
+          },
+          {
+            "name": "UnitPrice",
+            "type": "Edm.Decimal",
+            "nullable": true,
+            "label": "Unit Price",
+            "isPrimitive": true
+          },
+          {
+            "name": "UnitsInStock",
+            "type": "Edm.Int16",
+            "nullable": true,
+            "label": "Units In Stock",
+            "isPrimitive": true
+          },
+          {
+            "name": "UnitsOnOrder",
+            "type": "Edm.Int16",
+            "nullable": true,
+            "label": "Units On Order",
+            "isPrimitive": true
+          }
+        ],
+        "filters": [
+          {
+            "name": "ProductID",
+            "type": "Edm.Int32",
+            "nullable": false,
+            "label": "Product ID",
+            "isPrimitive": true
+          },
+          {
+            "name": "ProductName",
+            "type": "Edm.String",
+            "nullable": true,
+            "label": "Product Name",
+            "isPrimitive": true
+          },
+          {
+            "name": "SupplierID",
+            "type": "Edm.Int32",
+            "nullable": true,
+            "label": "Supplier ID",
+            "isPrimitive": true
+          },
+          {
+            "name": "CategoryID",
+            "type": "Edm.Int32",
+            "nullable": true,
+            "label": "Category ID",
+            "isPrimitive": true
+          },
+          {
+            "name": "QuantityPerUnit",
+            "type": "Edm.String",
+            "nullable": true,
+            "label": "Quantity Per Unit",
+            "isPrimitive": true
+          }
+        ],
+        "titleProperty": {
+          "name": "ProductName",
+          "type": "Edm.String",
+          "nullable": true,
+          "label": "Product Name",
+          "isPrimitive": true
+        },
+        "descriptionProperty": null,
+        "tableType": "ResponsiveTable",
+        "editMode": "Standard Object Page; no inline edit unless capability is confirmed",
+        "userLanguageSummary": "EntitySet Products is exposed as a searchable List Report with an optional detail Object Page.",
+        "humanizedEntity": "Products"
+      },
+      "extensionPolicy": {
+        "requested": false,
+        "allowed": false,
+        "reason": "Standard annotation과 설정으로 충분하므로 extension을 추가하지 않는다.",
+        "alternative": "Prefer annotations and manifest settings before controller extensions.",
+        "maintenanceImpact": "No extension maintenance burden introduced.",
+        "validation": "Static manifest and extension path checks; runtime behavior requires application-specific OPA5 validation."
+      },
+      "flpNavigation": {
+        "inboundKey": "products-display",
+        "semanticObject": "products",
+        "action": "display"
+      }
+    }
+  },
+  "validation": {
+    "staticFiles": "PASS",
+    "profile": "standard",
+    "requiredFiles": [
+      "package.json",
+      "ui5.yaml",
+      "webapp/index.html",
+      "webapp/manifest.json",
+      "webapp/Component.js",
+      "fiori-agent-report.json",
+      "webapp/annotations/annotation.xml",
+      "webapp/i18n/i18n.properties",
+      "webapp/test/flpSandbox.html"
+    ],
+    "nextCommand": "npm install && npm run lint && npm run build",
+    "status": "PASS"
+  }
+}

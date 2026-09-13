@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/200/composition-result.schema.json",
+  "title": "Protocol 200 CompositionResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["resultVersion", "protocol", "status", "descriptorFingerprint", "sourceResultIds", "validation", "blockingReasons"],
+  "properties": {
+    "resultVersion": { "const": "1.0" },
+    "protocol": { "type": "object", "required": ["id", "version"], "properties": { "id": { "const": "200" }, "version": { "const": "1.0" } } },
+    "status": { "enum": ["READY", "BLOCKED", "FAILED", "NOT_IMPLEMENTED"] },
+    "artifactId": { "type": ["string", "null"], "format": "uuid" },
+    "archivePath": { "type": ["string", "null"] },
+    "archiveChecksum": { "type": ["string", "null"], "pattern": "^[A-Fa-f0-9]{64}$" },
+    "descriptorFingerprint": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+    "sourceResultIds": { "type": "array", "minItems": 1, "items": { "type": "string", "format": "uuid" } },
+    "serviceRequirements": { "type": "array", "items": { "type": "object" } },
+    "validation": {
+      "type": "array",
+      "items": { "type": "object", "additionalProperties": false, "required": ["name", "status"], "properties": { "name": { "type": "string" }, "status": { "enum": ["PASSED", "FAILED", "SKIPPED"] }, "message": { "type": "string" } } }
+    },
+    "blockingReasons": {
+      "type": "array",
+      "items": { "type": "object", "additionalProperties": false, "required": ["code", "message"], "properties": { "code": { "type": "string" }, "field": { "type": "string" }, "message": { "type": "string" } } }
+    }
+  },
+  "allOf": [
+    { "if": { "properties": { "status": { "const": "READY" } } }, "then": { "required": ["artifactId", "archivePath", "archiveChecksum"], "properties": { "blockingReasons": { "maxItems": 0 } } } }
+  ]
+}

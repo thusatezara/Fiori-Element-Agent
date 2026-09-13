@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/btp-agent/cap-generation-request.schema.json",
+  "title": "Protocol 100 CAP Generation Request",
+  "type": "object",
+  "required": ["handoffVersion", "handoffId", "planId", "stepId", "protocol", "request", "inputs", "target", "completedDependencies", "requestedAt"],
+  "properties": {
+    "handoffVersion": { "const": "1.0" },
+    "handoffId": { "type": "string", "format": "uuid" },
+    "planId": { "type": "string", "format": "uuid" },
+    "stepId": { "type": "string", "minLength": 1 },
+    "protocol": {
+      "type": "object",
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "const": "100" },
+        "version": { "const": "1.0" }
+      },
+      "additionalProperties": false
+    },
+    "request": { "type": "object" },
+    "inputs": { "$ref": "#/$defs/capInputs" },
+    "target": { "type": "null" },
+    "completedDependencies": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "requestedAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "requirementIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]*$" }
+    },
+    "capInputs": {
+      "type": "object",
+      "required": ["requirements", "project", "domain", "services"],
+      "properties": {
+        "requirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "text", "kind"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]*$" },
+              "text": { "type": "string", "minLength": 1 },
+              "kind": { "enum": ["DOMAIN", "SERVICE", "BEHAVIOR", "AUTHORIZATION", "NON_FUNCTIONAL"] }
+            },
+            "additionalProperties": false
+          }
+        },
+        "project": {
+          "type": "object",
+          "required": ["name", "namespace", "outputParent", "runtime", "persistence", "odataVersion"],
+          "properties": {
+            "name": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
+            "namespace": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*(\\.[A-Za-z_][A-Za-z0-9_]*)*$" },
+            "outputParent": { "type": "string", "minLength": 1 },
+            "runtime": { "const": "NODEJS" },
+            "persistence": { "enum": ["SQLITE", "HANA"] },
+            "odataVersion": { "const": "V4" }
+          },
+          "additionalProperties": false
+        },
+        "domain": {
+          "type": "object",
+          "required": ["entities"],
+          "properties": {
+            "entities": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 50,
+              "items": { "$ref": "#/$defs/domainEntity" }
+            }
+          },
+          "additionalProperties": false
+        },
+        "services": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10,
+          "items": { "$ref": "#/$defs/service" }
+        },
+        "behaviors": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/behavior" }
+        },
+        "seedData": { "type": ["object", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "domainEntity": {
+      "type": "object",
+      "required": ["id", "name", "aspects", "elements", "relationships", "requirementIds"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]*$" },
+        "name": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+        "aspects": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["CUID", "MANAGED"] }
+        },
+        "elements": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/element" }
+        },
+        "relationships": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/relationship" }
+        },
+        "requirementIds": { "$ref": "#/$defs/requirementIds" }
+      },
+      "additionalProperties": false
+    },
+    "element": {
+      "type": "object",
+      "required": ["name", "type", "key", "nullable", "requirementIds"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+        "type": { "enum": ["UUID", "STRING", "INTEGER", "DECIMAL", "BOOLEAN", "DATE", "TIMESTAMP", "LARGE_STRING"] },
+        "key": { "type": "boolean" },
+        "nullable": { "type": "boolean" },
+        "length": { "type": ["integer", "null"], "minimum": 1 },
+        "precision": { "type": ["integer", "null"], "minimum": 1 },
+        "scale": { "type": ["integer", "null"], "minimum": 0 },
+        "default": { "type": ["string", "number", "integer", "boolean", "null"] },
+        "requirementIds": { "$ref": "#/$defs/requirementIds" }
+      },
+      "additionalProperties": false
+    },
+    "relationship": {
+      "type": "object",
+      "required": ["name", "targetEntityId", "kind", "cardinality", "nullable", "requirementIds"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+        "targetEntityId": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["ASSOCIATION", "COMPOSITION"] },
+        "cardinality": { "enum": ["TO_ONE", "TO_MANY"] },
+        "nullable": { "type": "boolean" },
+        "on": { "type": ["object", "null"] },
+        "requirementIds": { "$ref": "#/$defs/requirementIds" }
+      },
+      "additionalProperties": false
+    },
+    "authorization": {
+      "type": "object",
+      "required": ["grant", "roles", "requirementIds"],
+      "properties": {
+        "grant": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]*$" }
+        },
+        "where": { "type": ["object", "null"] },
+        "requirementIds": { "$ref": "#/$defs/requirementIds" }
+      },
+      "additionalProperties": false
+    },
+    "serviceEntity": {
+      "type": "object",
+      "required": ["name", "sourceEntityId", "exposedElements", "capabilities", "requirementIds"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+        "sourceEntityId": { "type": "string", "minLength": 1 },
+        "exposedElements": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["READ", "CREATE", "UPDATE", "DELETE"] }
+        },
+        "authorization": { "type": "array", "items": { "$ref": "#/$defs/authorization" } },
+        "requirementIds": { "$ref": "#/$defs/requirementIds" }
+      },
+      "additionalProperties": false
+    },
+    "operation": {
+      "type": "object",
+      "required": ["name", "kind", "boundTo", "parameters", "returns", "sideEffect", "destructive", "requirementIds"],
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+        "kind": { "enum": ["ACTION", "FUNCTION"] },
+        "boundTo": { "type": ["string", "null"] },
+        "parameters": { "type": "array", "items": { "type": "object" } },
+        "returns": { "type": ["object", "null"] },
+        "sideEffect": { "type": "boolean" },
+        "destructive": { "type": "boolean" },
+        "requirementIds": { "$ref": "#/$defs/requirementIds" }
+      },
+      "additionalProperties": false
+    },
+    "service": {
+      "type": "object",
+      "required": ["id", "name", "path", "entities", "operations", "authorization", "requirementIds"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]*$" },
+        "name": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+        "path": { "type": "string", "pattern": "^/[A-Za-z0-9/_-]+$" },
+        "entities": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/serviceEntity" } },
+        "operations": { "type": "array", "items": { "$ref": "#/$defs/operation" } },
+        "authorization": { "type": "array", "items": { "$ref": "#/$defs/authorization" } },
+        "requirementIds": { "$ref": "#/$defs/requirementIds" }
+      },
+      "additionalProperties": false
+    },
+    "behavior": {
+      "type": "object",
+      "required": ["id", "kind", "serviceId", "target", "events", "condition", "atomic", "requirementIds"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._-]*$" },
+        "kind": { "enum": ["VALIDATION", "ACTION", "TRANSACTION"] },
+        "serviceId": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "events": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["CREATE", "READ", "UPDATE", "DELETE", "ACTION"] }
+        },
+        "condition": { "type": "object" },
+        "error": {
+          "type": ["object", "null"],
+          "properties": {
+            "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+            "message": { "type": "string", "minLength": 1 }
+          },
+          "required": ["code", "message"],
+          "additionalProperties": false
+        },
+        "atomic": { "type": "boolean" },
+        "requirementIds": { "$ref": "#/$defs/requirementIds" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
+

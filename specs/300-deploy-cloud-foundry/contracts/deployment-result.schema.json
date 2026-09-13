@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/300/deployment-result.schema.json",
+  "title": "Protocol 300 DeploymentResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["resultVersion", "resultId", "protocol", "status", "target", "targetFingerprint", "artifactDigest", "validation", "blockingReasons", "recoveryGuidance"],
+  "properties": {
+    "resultVersion": { "const": "1.0" },
+    "resultId": { "type": "string", "format": "uuid" },
+    "protocol": { "type": "object", "required": ["id", "version"], "properties": { "id": { "const": "300" }, "version": { "const": "1.0" } } },
+    "status": { "enum": ["SUCCEEDED", "FAILED", "UNKNOWN", "BLOCKED", "NOT_IMPLEMENTED"] },
+    "target": {
+      "type": "object",
+      "required": ["api", "org", "space", "stage"],
+      "properties": { "api": { "type": "string", "pattern": "^https://" }, "org": { "type": "string" }, "space": { "type": "string" }, "stage": { "enum": ["DEV", "TEST", "PROD"] } }
+    },
+    "targetFingerprint": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+    "operationId": { "type": ["string", "null"] },
+    "applicationId": { "type": ["string", "null"] },
+    "sapCloudService": { "type": ["string", "null"] },
+    "artifactDigest": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+    "subaccount": { "type": ["string", "null"] },
+    "verifiedAt": { "type": ["string", "null"], "format": "date-time" },
+    "changedResources": { "type": "array", "items": { "type": "object" } },
+    "validation": { "type": "array", "items": { "type": "object", "required": ["name", "status"], "properties": { "name": { "type": "string" }, "status": { "enum": ["PASSED", "FAILED", "UNKNOWN", "SKIPPED"] }, "message": { "type": "string" } } } },
+    "blockingReasons": { "type": "array", "items": { "type": "object", "required": ["code", "message"], "properties": { "code": { "type": "string" }, "message": { "type": "string" } } } },
+    "recoveryGuidance": { "type": "array", "items": { "type": "object", "required": ["action", "requiresApproval"], "properties": { "action": { "type": "string" }, "requiresApproval": { "const": true } } } }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "SUCCEEDED" } } },
+      "then": {
+        "required": ["operationId", "applicationId", "sapCloudService", "subaccount", "verifiedAt"],
+        "properties": {
+          "operationId": { "type": "string", "minLength": 1 },
+          "applicationId": { "type": "string", "minLength": 1 },
+          "sapCloudService": { "type": "string", "minLength": 1 },
+          "subaccount": { "type": "string", "minLength": 1 },
+          "verifiedAt": { "type": "string", "format": "date-time" },
+          "blockingReasons": { "maxItems": 0 }
+        }
+      }
+    }
+  ]
+}

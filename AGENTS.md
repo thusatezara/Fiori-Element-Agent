@@ -47,6 +47,7 @@
 ## 구현 경계
 
 - `src/orchestration`은 scope 판정, registry, plan, handoff와 실행 gate만 담당한다.
+- 조회 화면은 초기 진입 시 데이터를 자동 조회하지 않는다. 사용자가 filter 조건을 확인하고 `실행`을 선택한 뒤 조회하도록 구성한다.
 - Frontend, CAP, MTA, Cloud Foundry와 Work Zone 정책은 각각의 domain source와 중앙 Spec이 담당한다.
 - 공통 생성 기능은 `src/generation/common`, 유형별 renderer와 template은 해당 generator와 `templates/<type>`에 둔다.
 - domain 정책과 template을 orchestration에 인라인으로 넣지 않는다.

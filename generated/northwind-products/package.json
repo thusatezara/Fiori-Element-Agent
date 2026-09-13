@@ -1,0 +1,16 @@
+{
+  "name": "northwind-products",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fiori application for Products",
+  "scripts": {
+    "start": "node scripts/start.mjs",
+    "start-noflp": "node scripts/start.mjs --standalone",
+    "build": "ui5 build --all",
+    "lint": "node scripts/validate.mjs"
+  },
+  "devDependencies": {
+    "@sap/ux-ui5-tooling": "^1.16.0",
+    "@ui5/cli": "^4.0.0"
+  }
+}
