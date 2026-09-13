@@ -22,6 +22,8 @@ npm start
 
 The start script also runs a local bridge on port `4004`. The public Northwind sample sends the non-standard response header `OData-Version: 4.0;`; the bridge removes it from normal responses and normalizes it inside OData batch responses so the SAPUI5 OData V4 model can load the rows. Set `NORTHWIND_BRIDGE_PORT` only if port `4004` is already occupied, and update the backend port in `ui5.yaml` to match.
 
+The List Report does not load data automatically. Confirm the filter criteria and choose **Go**, then use the standard table **Export** action to download the current result as an `.xlsx` workbook.
+
 ## Validate
 
 ```bash

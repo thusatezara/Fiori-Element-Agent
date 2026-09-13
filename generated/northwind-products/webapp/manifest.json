@@ -106,11 +106,13 @@
             "settings": {
               "contextPath": "/Products",
               "variantManagement": "Page",
+              "initialLoad": "Disabled",
               "controlConfiguration": {
                 "@com.sap.vocabularies.UI.v1.LineItem": {
                   "tableSettings": {
                     "type": "ResponsiveTable",
-                    "selectionMode": "None"
+                    "selectionMode": "None",
+                    "enableExport": true
                   }
                 }
               }

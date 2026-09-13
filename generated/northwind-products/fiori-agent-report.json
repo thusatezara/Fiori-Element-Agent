@@ -5,7 +5,7 @@
     "handoff": "002",
     "selectedGenerator": "002"
   },
-  "requestSummary": "Northwind Products를 검색, 필터, 목록 및 상세로 조회하는 읽기 전용 Fiori 화면을 만들어줘",
+  "requestSummary": "Northwind Products를 검색, 필터, 목록 및 상세로 조회하고 Excel로 내려받을 수 있는 읽기 전용 Fiori 화면을 만들어줘",
   "assessment": {
     "protocol": "001",
     "selectedType": "STANDARD",
@@ -231,6 +231,7 @@
           "isPrimitive": true
         },
         "descriptionProperty": null,
+        "exportEnabled": true,
         "tableType": "ResponsiveTable",
         "editMode": "Standard Object Page; no inline edit unless capability is confirmed",
         "userLanguageSummary": "EntitySet Products is exposed as a searchable List Report with an optional detail Object Page.",

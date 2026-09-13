@@ -10,6 +10,9 @@ const targets = manifest["sap.ui5"]?.routing?.targets ?? {};
 const hasListReport = Object.values(targets).some((target) => target.name === "sap.fe.templates.ListReport") || Boolean(manifest["sap.ui.generic.app"]);
 if (!manifest["sap.app"]?.id || !manifest["sap.app"]?.dataSources?.mainService?.uri) throw new Error("Missing application or OData service configuration");
 if (!hasListReport) throw new Error("Missing List Report target");
+const listReport = Object.values(targets).find((target) => target.name === "sap.fe.templates.ListReport");
+if (listReport?.options?.settings?.initialLoad !== "Disabled") throw new Error("List Report must wait for the user to execute the initial search");
+if (listReport?.options?.settings?.controlConfiguration?.["@com.sap.vocabularies.UI.v1.LineItem"]?.tableSettings?.enableExport !== true) throw new Error("Missing requested Excel export configuration");
 const inbounds = manifest["sap.app"]?.crossNavigation?.inbounds ?? {};
 const inboundKeys = Object.keys(inbounds);
 if (inboundKeys.length !== 1) throw new Error("Missing or ambiguous FLP inbound navigation");
@@ -24,4 +27,4 @@ if (bridgeStartMatches && (!ui5Config.includes("url: http://localhost:4004") || 
 }
 if (!sandbox.includes(`\"${inboundKey}\"`) || !sandbox.includes(`SAPUI5.Component=${manifest["sap.app"].id}`) || !sandbox.includes("sap/ushell/bootstrap/sandbox.js")) throw new Error("Invalid FLP Sandbox configuration");
 for (const term of ["UI.HeaderInfo", "UI.SelectionFields", "UI.LineItem", "UI.Facets"]) if (!annotation.includes(`Term=\"${term}\"`)) throw new Error(`Missing local annotation: ${term}`);
-console.log("Validated Standard Fiori Elements application, service binding, routing, annotations, and FLP Sandbox.");
+console.log("Validated Standard Fiori Elements application, user-triggered initial search, Excel export configuration, service binding, routing, annotations, and FLP Sandbox.");
