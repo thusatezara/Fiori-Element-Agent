@@ -18,9 +18,9 @@
 
 **Purpose**: CAP generator source/template/test boundary를 만든다.
 
-- [ ] T001 `src/generation/backend/cap/`, `templates/cap-nodejs/`와 `tests/fixtures/cap/` directory boundary를 plan 구조대로 준비하고 placeholder executor는 추가하지 않는다.
-- [ ] T002 [P] Protocol request/result/snapshot schema loader와 fixture validation harness를 `tests/helpers/cap-contract.mjs`에 추가한다.
-- [ ] T003 [P] CAP generated-project fixture dependency와 test command를 repository `package.json`에 추가하고 lockfile을 `package-lock.json`에 동기화한다.
+- [x] T001 `src/generation/backend/cap/`, `templates/cap-nodejs/`와 `tests/fixtures/cap/` directory boundary를 plan 구조대로 준비하고 placeholder executor는 추가하지 않는다.
+- [x] T002 [P] Protocol request/result/snapshot schema loader와 fixture validation harness를 `tests/helpers/cap-contract.mjs`에 추가한다.
+- [x] T003 [P] CAP generated-project fixture dependency와 test command를 repository `package.json`에 추가하고 lockfile을 `package-lock.json`에 동기화한다.
 
 ---
 
@@ -30,13 +30,13 @@
 
 **⚠️ CRITICAL**: 이 phase가 끝날 때도 registry 상태는 `DEFINED`이며 user story executor를 외부에 노출하지 않는다.
 
-- [ ] T004 Request schema와 000 handoff/version/protocol/dependency 교차 검증을 `src/generation/backend/cap/request-validator.mjs`에 구현한다.
-- [ ] T005 [P] namespace, identifier, type/length/precision, key와 relationship reference semantic validation을 `src/generation/backend/cap/domain-plan.mjs`에 구현한다.
-- [ ] T006 [P] explicit projection, service path, capability와 operation signature plan을 `src/generation/backend/cap/service-plan.mjs`에 구현한다.
-- [ ] T007 [P] structured validation/action/transaction/authorization allowlist plan을 `src/generation/backend/cap/behavior-plan.mjs`에 구현하고 arbitrary code/raw SQL 입력을 거부한다.
-- [ ] T008 CAP plan을 deterministic template context와 requirement trace로 결합하는 coordinator를 `src/generation/backend/cap/generator.mjs`에 구현하되 final output commit은 비활성 상태로 둔다.
-- [ ] T009 공통 credential detector, workspace boundary와 staging/atomic output transaction을 `src/generation/backend/cap/generator.mjs`에서 `src/generation/common/` capability에 연결한다.
-- [ ] T010 [P] invalid version, protocol mismatch, missing key, unresolved relation, unsupported runtime와 unsafe output의 contract test를 `tests/cap-generation-contract.test.mjs`에 작성하고 구현 전 실패를 확인한다.
+- [x] T004 Request schema와 000 handoff/version/protocol/dependency 교차 검증을 `src/generation/backend/cap/request-validator.mjs`에 구현한다.
+- [x] T005 [P] namespace, identifier, type/length/precision, key와 relationship reference semantic validation을 `src/generation/backend/cap/domain-plan.mjs`에 구현한다.
+- [x] T006 [P] explicit projection, service path, capability와 operation signature plan을 `src/generation/backend/cap/service-plan.mjs`에 구현한다.
+- [x] T007 [P] structured validation/action/transaction/authorization allowlist plan을 `src/generation/backend/cap/behavior-plan.mjs`에 구현하고 arbitrary code/raw SQL 입력을 거부한다.
+- [x] T008 CAP plan을 deterministic template context와 requirement trace로 결합하는 coordinator를 `src/generation/backend/cap/generator.mjs`에 구현하되 final output commit은 비활성 상태로 둔다.
+- [x] T009 공통 credential detector, workspace boundary와 staging/atomic output transaction을 `src/generation/backend/cap/generator.mjs`에서 `src/generation/common/` capability에 연결한다.
+- [x] T010 [P] invalid version, protocol mismatch, missing key, unresolved relation, unsupported runtime와 unsafe output의 contract test를 `tests/cap-generation-contract.test.mjs`에 작성하고 구현 전 실패를 확인한다.
 
 **Checkpoint**: valid request는 immutable generation plan이 되고 invalid request는 write 이전 `BLOCKED` result가 된다. 외부 executor는 아직 없다.
 
@@ -50,18 +50,18 @@
 
 ### Tests for User Story 1
 
-- [ ] T011 [P] [US1] `CAP-CRUD-01` domain/service generation integration test를 `tests/cap-generation.test.mjs`에 작성하고 생성 전 실패를 확인한다.
-- [ ] T012 [P] [US1] `CAP-CONTRACT-01` hidden persistence field 및 snapshot consistency test를 `tests/cap-service-snapshot.test.mjs`에 작성하고 구현 전 실패를 확인한다.
+- [x] T011 [P] [US1] `CAP-CRUD-01` domain/service generation integration test를 `tests/cap-generation.test.mjs`에 작성하고 생성 전 실패를 확인한다.
+- [x] T012 [P] [US1] `CAP-CONTRACT-01` hidden persistence field 및 snapshot consistency test를 `tests/cap-service-snapshot.test.mjs`에 작성하고 구현 전 실패를 확인한다.
 
 ### Implementation for User Story 1
 
-- [ ] T013 [P] [US1] CAP Node.js dependency, scripts, SQLite local profile와 HANA intent-only profile template을 `templates/cap-nodejs/package.json.hbs`에 작성한다.
-- [ ] T014 [P] [US1] standard aspect, explicit element와 approved association/composition domain template을 `templates/cap-nodejs/db/schema.cds.hbs`에 작성한다.
-- [ ] T015 [P] [US1] explicit projection, capability restriction, action/function signature service template을 `templates/cap-nodejs/srv/service.cds.hbs`에 작성한다.
-- [ ] T016 [P] [US1] generated project 실행·검증·production exclusion 설명을 `templates/cap-nodejs/README.md.hbs`에 작성한다.
-- [ ] T017 [US1] compiled CSN/EDMX에서 public entity/property/navigation/operation/capability만 추출하고 digest를 계산하는 `src/generation/backend/cap/service-snapshot.mjs`를 구현한다.
-- [ ] T018 [US1] CDS compile, generated contract test, local metadata start와 snapshot consistency check를 `src/validation/generated-cap-project.mjs`에 구현한다.
-- [ ] T019 [US1] `CAP-CRUD-01`과 `CAP-CONTRACT-01`을 `tests/fixtures/cap/`에 비민감 example handoff로 추가하고 `tests/cap-generation.test.mjs`의 end-to-end validation을 통과시킨다.
+- [x] T013 [P] [US1] CAP Node.js dependency, scripts, SQLite local profile와 HANA intent-only profile template을 `templates/cap-nodejs/package.json.hbs`에 작성한다.
+- [x] T014 [P] [US1] standard aspect, explicit element와 approved association/composition domain template을 `templates/cap-nodejs/db/schema.cds.hbs`에 작성한다.
+- [x] T015 [P] [US1] explicit projection, capability restriction, action/function signature service template을 `templates/cap-nodejs/srv/service.cds.hbs`에 작성한다.
+- [x] T016 [P] [US1] generated project 실행·검증·production exclusion 설명을 `templates/cap-nodejs/README.md.hbs`에 작성한다.
+- [x] T017 [US1] compiled CSN/EDMX에서 public entity/property/navigation/operation/capability만 추출하고 digest를 계산하는 `src/generation/backend/cap/service-snapshot.mjs`를 구현한다.
+- [x] T018 [US1] CDS compile, generated contract test, local metadata start와 snapshot consistency check를 `src/validation/generated-cap-project.mjs`에 구현한다.
+- [x] T019 [US1] `CAP-CRUD-01`과 `CAP-CONTRACT-01`을 `tests/fixtures/cap/`에 비민감 example handoff로 추가하고 `tests/cap-generation.test.mjs`의 end-to-end validation을 통과시킨다.
 
 **Checkpoint**: US1만으로 local CRUD Backend와 후속 001용 service snapshot을 검증할 수 있지만 registry는 여전히 `DEFINED`다.
 
@@ -75,15 +75,15 @@
 
 ### Tests for User Story 2
 
-- [ ] T020 [P] [US2] validation/action transaction success, stable error와 rollback test를 `tests/cap-behavior.test.mjs`에 작성하고 구현 전 실패를 확인한다.
-- [ ] T021 [P] [US2] service/entity/operation authorization allow/deny contract test를 `tests/cap-authorization.test.mjs`에 작성하고 구현 전 실패를 확인한다.
+- [x] T020 [P] [US2] validation/action transaction success, stable error와 rollback test를 `tests/cap-behavior.test.mjs`에 작성하고 구현 전 실패를 확인한다.
+- [x] T021 [P] [US2] service/entity/operation authorization allow/deny contract test를 `tests/cap-authorization.test.mjs`에 작성하고 구현 전 실패를 확인한다.
 
 ### Implementation for User Story 2
 
-- [ ] T022 [P] [US2] structured behavior plan을 CAP event/CQL handler로 render하는 optional template을 `templates/cap-nodejs/srv/service.js.hbs`에 작성한다.
-- [ ] T023 [P] [US2] generated validation/action/transaction/authorization regression template을 `templates/cap-nodejs/test/service.test.js.hbs`에 작성한다.
-- [ ] T024 [US2] behavior plan의 transaction atomicity, destructive confirmation과 role annotation을 `src/generation/backend/cap/behavior-plan.mjs` 및 `src/generation/backend/cap/service-plan.mjs`에 연결한다.
-- [ ] T025 [US2] `CAP-RULES-01`, `CAP-AUTH-01` fixture를 `tests/fixtures/cap/`에 추가하고 `tests/cap-behavior.test.mjs`, `tests/cap-authorization.test.mjs`를 통과시킨다.
+- [x] T022 [P] [US2] structured behavior plan을 CAP event/CQL handler로 render하는 optional template을 `templates/cap-nodejs/srv/service.js.hbs`에 작성한다.
+- [x] T023 [P] [US2] generated validation/action/transaction/authorization regression template을 `templates/cap-nodejs/test/service.test.js.hbs`에 작성한다.
+- [x] T024 [US2] behavior plan의 transaction atomicity, destructive confirmation과 role annotation을 `src/generation/backend/cap/behavior-plan.mjs` 및 `src/generation/backend/cap/service-plan.mjs`에 연결한다.
+- [x] T025 [US2] `CAP-RULES-01`, `CAP-AUTH-01` fixture를 `tests/fixtures/cap/`에 추가하고 `tests/cap-behavior.test.mjs`, `tests/cap-authorization.test.mjs`를 통과시킨다.
 
 **Checkpoint**: US2까지 완료하면 business behavior와 authorization intent가 local test로 검증되며 cloud identity resource는 만들지 않는다.
 
@@ -97,15 +97,15 @@
 
 ### Tests for User Story 3
 
-- [ ] T026 [P] [US3] credential-like handoff, path escape, existing output와 invalid handoff negative test를 `tests/cap-generation-guard.test.mjs`에 작성하고 구현 전 실패를 확인한다.
-- [ ] T027 [P] [US3] staged compile/test/start failure가 partial final output과 service snapshot을 남기지 않는 test를 `tests/cap-generation-failure.test.mjs`에 작성하고 구현 전 실패를 확인한다.
-- [ ] T028 [P] [US3] result schema, required check set와 requirement trace completeness test를 `tests/cap-generation-result.test.mjs`에 작성하고 구현 전 실패를 확인한다.
+- [x] T026 [P] [US3] credential-like handoff, path escape, existing output와 invalid handoff negative test를 `tests/cap-generation-guard.test.mjs`에 작성하고 구현 전 실패를 확인한다.
+- [x] T027 [P] [US3] staged compile/test/start failure가 partial final output과 service snapshot을 남기지 않는 test를 `tests/cap-generation-failure.test.mjs`에 작성하고 구현 전 실패를 확인한다.
+- [x] T028 [P] [US3] result schema, required check set와 requirement trace completeness test를 `tests/cap-generation-result.test.mjs`에 작성하고 구현 전 실패를 확인한다.
 
 ### Implementation for User Story 3
 
-- [ ] T029 [US3] redacted blocking/failure result와 complete validation report 생성을 `src/generation/backend/cap/generator.mjs` 및 `src/generation/common/generation-report.mjs`에 연결한다.
-- [ ] T030 [US3] 모든 mandatory validation 후에만 staging을 final directory로 commit하고 실패 cleanup risk를 보존하도록 `src/generation/backend/cap/generator.mjs`를 완성한다.
-- [ ] T031 [US3] `CAP-GUARD-01`의 synthetic variants를 `tests/fixtures/cap/` 또는 in-memory fixture builder에 추가하고 guard/failure/result test를 모두 통과시킨다.
+- [x] T029 [US3] redacted blocking/failure result와 complete validation report 생성을 `src/generation/backend/cap/generator.mjs` 및 `src/generation/common/generation-report.mjs`에 연결한다.
+- [x] T030 [US3] 모든 mandatory validation 후에만 staging을 final directory로 commit하고 실패 cleanup risk를 보존하도록 `src/generation/backend/cap/generator.mjs`를 완성한다.
+- [x] T031 [US3] `CAP-GUARD-01`의 synthetic variants를 `tests/fixtures/cap/` 또는 in-memory fixture builder에 추가하고 guard/failure/result test를 모두 통과시킨다.
 
 **Checkpoint**: valid generation은 `VALIDATED`, 안전 prerequisite는 `BLOCKED`, validation 오류는 `FAILED`이며 incomplete `GENERATED`는 외부 결과가 아니다.
 
@@ -115,10 +115,10 @@
 
 **Purpose**: 000 handoff adapter, CLI와 전체 validation을 연결한 뒤 마지막에 protocol 상태를 전환한다.
 
-- [ ] T032 [P] specialized handoff file만 받는 local adapter와 `generate:backend` command를 `src/cli/commands/generate-backend.mjs`, `src/cli/index.mjs` 및 `package.json`에 연결한다.
-- [ ] T033 [P] 000 workflow가 invalid dependency/contract를 차단하고 100 result를 step report로 전달하는 integration test를 `tests/cap-protocol-gate.test.mjs`에 작성한다.
-- [ ] T034 quickstart의 schema, CRUD, behavior, authorization, guard, repository lint/test를 모두 통과한 같은 변경에서만 `src/generation/backend/cap/protocol.mjs`에 executor를 연결하고 `status`를 `DEFINED`에서 `IMPLEMENTED`로 전환한다.
-- [ ] T035 [P] 최종 구현과 contract가 달라진 항목을 `specs/100-generate-cap-application/spec.md`, `plan.md`, `contracts/`와 `quickstart.md`에 동기화하고 requirement trace 누락이 0건인지 검토한다.
+- [x] T032 [P] specialized handoff file만 받는 local adapter와 `generate:backend` command를 `src/cli/commands/generate-backend.mjs`, `src/cli/index.mjs` 및 `package.json`에 연결한다.
+- [x] T033 [P] 000 workflow가 invalid dependency/contract를 차단하고 100 result를 step report로 전달하는 integration test를 `tests/cap-protocol-gate.test.mjs`에 작성한다.
+- [x] T034 quickstart의 schema, CRUD, behavior, authorization, guard, repository lint/test를 모두 통과한 같은 변경에서만 `src/generation/backend/cap/protocol.mjs`에 executor를 연결하고 `status`를 `DEFINED`에서 `IMPLEMENTED`로 전환한다.
+- [x] T035 [P] 최종 구현과 contract가 달라진 항목을 `specs/100-generate-cap-application/spec.md`, `plan.md`, `contracts/`와 `quickstart.md`에 동기화하고 requirement trace 누락이 0건인지 검토한다.
 
 ---
 
@@ -182,6 +182,12 @@ Task T016: templates/cap-nodejs/README.md.hbs 작성
 3. validation/action/transaction/authorization behavior
 4. guard, atomic output와 evidence report
 5. 000 integration 전체 검증 후 단일 status activation
+
+## Phase 8: Persistence 및 standard aspect convergence
+
+- [x] T036 persistence intent 누락 시 default를 금지하고 000의 질문 gate, 100 request rejection, HANA development/production profile 생성과 contract/regression test를 Spec·Plan·contract에 동기화한다. (FR-004, SC-009)
+- [x] T037 `managed`/`cuid` aspect가 제공하는 표준 field를 explicit service projection에서 선택할 수 있도록 service plan과 contract test를 보완한다. (FR-008)
+- [x] T038 Protocol 200의 격리된 production build가 global toolchain에 의존하지 않도록 생성 project에 `@sap/cds-dk` devDependency를 추가하고 HANA package test를 보완한다. (FR-023)
 
 ## Notes
 

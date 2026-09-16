@@ -1,0 +1,43 @@
+{
+  "resultVersion": "1.0",
+  "protocol": {
+    "id": "200",
+    "version": "1.0"
+  },
+  "status": "READY",
+  "artifactId": "736e29ce-a4c0-48f7-90b0-dcf577d45b24",
+  "archivePath": "C:\\Users\\stati\\Documents\\ChatGPT\\Fiori Elements Agent\\generated\\bookshop-mta\\mta_archives\\bookshop_1.0.0.mtar",
+  "archiveChecksum": "c59a45d5b40387e75f90fcdc4ad00cd5f68a3148ee2e181c3184d55c92d705db",
+  "descriptorFingerprint": "0aa1cc32e9dbfd2b4ee49b0f140721fca60721da1929b0d388bd968ad639852c",
+  "sourceResultIds": [
+    "8a7a5d67-8e6a-4a7e-95d4-c436e972eea1"
+  ],
+  "serviceRequirements": [
+    {
+      "name": "bookshop-db",
+      "offering": "hana",
+      "plan": "hdi-shared"
+    }
+  ],
+  "applicationId": "bookshop",
+  "sapCloudService": "bookshop",
+  "validation": [
+    {
+      "name": "descriptor",
+      "status": "PASSED"
+    },
+    {
+      "name": "references",
+      "status": "PASSED"
+    },
+    {
+      "name": "secret-scan",
+      "status": "PASSED"
+    },
+    {
+      "name": "archive",
+      "status": "PASSED"
+    }
+  ],
+  "blockingReasons": []
+}

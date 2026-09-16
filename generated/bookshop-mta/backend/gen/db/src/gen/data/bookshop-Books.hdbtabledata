@@ -1,0 +1,39 @@
+{
+  "format_version": 1,
+  "imports": [
+    {
+      "target_table": "BOOKSHOP_BOOKS",
+      "source_data": {
+        "data_type": "CSV",
+        "file_name": "bookshop-Books.csv",
+        "has_header": true,
+        "type_config": {
+          "delimiter": ","
+        }
+      },
+      "import_settings": {
+        "import_columns": [
+          "ID",
+          "TITLE",
+          "DESCR",
+          "STOCK",
+          "PRICE",
+          "AUTHOR_ID",
+          "GENRE_ID",
+          "CURRENCY_CODE"
+        ],
+        "include_filter": []
+      },
+      "column_mappings": {
+        "ID": "ID",
+        "TITLE": "title",
+        "DESCR": "descr",
+        "STOCK": "stock",
+        "PRICE": "price",
+        "AUTHOR_ID": "author_ID",
+        "GENRE_ID": "genre_ID",
+        "CURRENCY_CODE": "currency_code"
+      }
+    }
+  ]
+}

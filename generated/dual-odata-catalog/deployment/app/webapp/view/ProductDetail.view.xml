@@ -1,0 +1,52 @@
+<mvc:View
+  controllerName="com.acme.dualcatalog.controller.ProductDetail"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:mvc="sap.ui.core.mvc">
+  <f:DynamicPage
+    id="productDetailPage"
+    busy="{view>/detailBusy}"
+    busyIndicatorDelay="0"
+    headerExpanded="true"
+    toggleHeaderOnTitleClick="true">
+    <f:title>
+      <f:DynamicPageTitle>
+        <f:heading>
+          <Title text="{northwind>ProductName}" level="H1" />
+        </f:heading>
+        <f:snappedContent>
+          <Text text="{= 'Product ID ' + ${northwind>ProductID} }" />
+        </f:snappedContent>
+        <f:expandedContent>
+          <Text text="{i18n>productDetailTitle}" />
+        </f:expandedContent>
+        <f:actions>
+          <Button text="{i18n>back}" icon="sap-icon://nav-back" press=".onNavBack" />
+        </f:actions>
+      </f:DynamicPageTitle>
+    </f:title>
+    <f:header>
+      <f:DynamicPageHeader pinnable="true">
+        <HBox wrap="Wrap" renderType="Bare">
+          <ObjectStatus title="{i18n>supplierId}" text="{northwind>SupplierID}" class="sapUiTinyMarginEnd" />
+          <ObjectStatus title="{i18n>categoryId}" text="{northwind>CategoryID}" class="sapUiTinyMarginEnd" />
+          <ObjectStatus title="{i18n>stock}" text="{northwind>UnitsInStock}" class="sapUiTinyMarginEnd" />
+          <ObjectStatus title="{i18n>discontinued}" text="{= ${northwind>Discontinued} ? ${i18n>yes} : ${i18n>no} }" />
+        </HBox>
+      </f:DynamicPageHeader>
+    </f:header>
+    <f:content>
+      <VBox class="sapUiResponsiveContentPadding">
+        <Title text="{i18n>detailSectionTitle}" level="H2" class="sapUiSmallMarginBottom" />
+        <Label text="{i18n>quantityPerUnit}" />
+        <Text text="{northwind>QuantityPerUnit}" class="sapUiSmallMarginBottom" />
+        <Label text="{i18n>unitPrice}" />
+        <ObjectNumber number="{northwind>UnitPrice}" unit="USD" class="sapUiSmallMarginBottom" />
+        <Label text="{i18n>unitsOnOrder}" />
+        <Text text="{northwind>UnitsOnOrder}" class="sapUiSmallMarginBottom" />
+        <Label text="{i18n>reorderLevel}" />
+        <Text text="{northwind>ReorderLevel}" />
+      </VBox>
+    </f:content>
+  </f:DynamicPage>
+</mvc:View>

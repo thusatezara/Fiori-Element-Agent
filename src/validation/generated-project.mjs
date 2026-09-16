@@ -7,7 +7,7 @@ export function validateGeneratedProject(profile, files, context) {
         required.push("webapp/ext/view/Main.view.xml", "webapp/ext/controller/Main.controller.js");
     }
     if (profile === "freestyle") {
-        required.push("webapp/view/View.view.xml", "webapp/controller/View.controller.js", "webapp/model/models.js", "webapp/i18n/i18n.properties");
+        required.push("webapp/view/App.view.xml", "webapp/view/View.view.xml", "webapp/controller/View.controller.js", "webapp/model/models.js", "webapp/i18n/i18n.properties");
     }
     const missing = required.filter((path) => !files.has(path));
     if (missing.length) {
@@ -58,6 +58,23 @@ export function validateGeneratedProject(profile, files, context) {
     }
     if (profile === "freestyle" && !files.get("webapp/view/View.view.xml").includes("ColumnListItem")) {
         throw new Error("Freestyle application does not contain a responsive table.");
+    }
+    if (profile === "freestyle") {
+        const appView = files.get("webapp/view/App.view.xml");
+        const views = [files.get("webapp/view/View.view.xml"), files.get("webapp/view/Review.view.xml")].filter(Boolean);
+        if (!appView.includes("<App id=\"app\"")) {
+            throw new Error("Freestyle application must provide an App route host.");
+        }
+        if (!manifest["sap.ui5"]?.dependencies?.libs?.["sap.f"]) {
+            throw new Error("Freestyle application must declare sap.f for the DynamicPage shell.");
+        }
+        for (const view of views) {
+            for (const control of ["<f:DynamicPage", "<f:DynamicPageTitle", "<f:DynamicPageHeader", "<f:content>"]) {
+                if (!view.includes(control)) {
+                    throw new Error(`Freestyle application is missing required page shell control: ${control}`);
+                }
+            }
+        }
     }
     return {
         staticFiles: "PASS",

@@ -23,7 +23,7 @@ JSON contract에서는 `handoff` 개념을 `handoffVersion`, `handoffId`, `planI
 | validationStatus | enum | `PASSED`만 소비 가능 |
 | outputPath | relative path | workspace 내부 |
 | checksum | SHA-256 string | 현재 output과 일치 |
-| capabilities | object | modules, provides, requires, navigation/auth intent |
+| capabilities | object | 검증·정규화된 runtime, persistence, modules 및 credential 없는 proxy intent |
 | validatedAt | ISO date-time | 유효한 timestamp |
 
 ## MtaTopology
@@ -36,6 +36,15 @@ JSON contract에서는 `handoff` 개념을 `handoffVersion`, `handoffId`, `planI
 | modules | ModuleNode[] | name 고유, path boundary 통과 |
 | resources | ResourceNode[] | name 고유, offering/plan 일관 |
 | edges | DependencyEdge[] | 양 끝 node 존재, 허용 방향 |
+
+HANA CAP BACKEND의 표준 graph는 아래와 같으며 모든 이름의 `<id>`는 `SolutionIdentity.applicationId`에서 파생한다.
+
+```text
+<id>-srv ──requires──> <id>-db <──requires── <id>-db-deployer
+   nodejs              HDI container                 hdb
+```
+
+HDI resource는 `hana/hdi-shared` service requirement를 300에 전달하지만 HANA Cloud database instance 생성 intent는 나타내지 않는다.
 
 ## BuildPlan과 DeploymentArtifact
 
@@ -84,4 +93,4 @@ BUILD_PENDING ─ tool unavailable/build failure → BLOCKED|FAILED
 BUILD_PENDING ─ build and checksum pass → READY
 ```
 
-`DEFINED` lifecycle에서는 executor 진입 전에 항상 `NOT_IMPLEMENTED`로 끝나며 runtime transition을 수행하지 않는다.
+`DEFINED` lifecycle에서는 executor 진입 전에 항상 `NOT_IMPLEMENTED`로 끝난다. 현재는 구현 검증 후 `IMPLEMENTED` lifecycle이며 위 runtime transition을 적용한다.

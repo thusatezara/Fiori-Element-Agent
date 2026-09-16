@@ -1,0 +1,132 @@
+<mvc:View
+  controllerName="com.acme.dualcatalog.controller.Home"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:mvc="sap.ui.core.mvc">
+  <f:DynamicPage
+    id="homePage"
+    headerExpanded="true"
+    toggleHeaderOnTitleClick="true"
+    preserveHeaderStateOnScroll="true">
+    <f:title>
+      <f:DynamicPageTitle>
+        <f:heading>
+          <Title text="{i18n>appTitle}" level="H1" />
+        </f:heading>
+        <f:snappedContent>
+          <Text text="{i18n>appDescription}" />
+        </f:snappedContent>
+        <f:expandedContent>
+          <Text text="{i18n>appDescription}" />
+        </f:expandedContent>
+        <f:actions>
+          <Button
+            id="executeButton"
+            text="{i18n>execute}"
+            type="Emphasized"
+            icon="sap-icon://search"
+            press=".onExecute" />
+        </f:actions>
+      </f:DynamicPageTitle>
+    </f:title>
+    <f:header>
+      <f:DynamicPageHeader pinnable="true">
+        <VBox>
+          <MessageStrip
+            text="{i18n>initialHint}"
+            type="Information"
+            showIcon="true"
+            visible="{= !${view>/hasSearched} }"
+            class="sapUiSmallMarginBottom" />
+          <HBox renderType="Bare" wrap="Wrap" class="filterRow">
+            <VBox class="filterBox sapUiTinyMarginEnd sapUiTinyMarginBottom">
+              <Label text="{i18n>bookSearchLabel}" labelFor="bookSearch" />
+              <SearchField
+                id="bookSearch"
+                value="{view>/bookQuery}"
+                placeholder="{i18n>bookSearchPlaceholder}"
+                search=".onExecute" />
+            </VBox>
+            <VBox class="filterBox sapUiTinyMarginBottom">
+              <Label text="{i18n>productSearchLabel}" labelFor="productSearch" />
+              <SearchField
+                id="productSearch"
+                value="{view>/productQuery}"
+                placeholder="{i18n>productSearchPlaceholder}"
+                search=".onExecute" />
+            </VBox>
+          </HBox>
+        </VBox>
+      </f:DynamicPageHeader>
+    </f:header>
+    <f:content>
+      <VBox class="sapUiResponsiveContentPadding">
+        <FlexBox renderType="Bare" wrap="Wrap" alignItems="Stretch" class="catalogColumns">
+          <VBox class="catalogPanel sapUiTinyMarginEnd sapUiTinyMarginBottom">
+            <Toolbar>
+              <Title id="booksHeading" text="{i18n>booksTitle}" level="H2" />
+              <ToolbarSpacer />
+              <ObjectStatus text="{= ${view>/bookCount} + ' ' + ${i18n>items} }" />
+            </Toolbar>
+            <Table
+              id="booksTable"
+              ariaLabelledBy="booksHeading"
+              busy="{view>/booksBusy}"
+              busyIndicatorDelay="0"
+              growing="true"
+              growingScrollToLoad="true"
+              noDataText="{i18n>noBooks}"
+              items="{view>/books}">
+              <columns>
+                <Column><Text text="{i18n>bookTitle}" /></Column>
+                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="{i18n>authorId}" /></Column>
+                <Column hAlign="End"><Text text="{i18n>stock}" /></Column>
+              </columns>
+              <items>
+                <ColumnListItem type="Navigation" press=".onBookPress">
+                  <cells>
+                    <ObjectIdentifier title="{view>title}" text="{= 'ID ' + ${view>ID} }" />
+                    <Text text="{view>author_ID}" />
+                    <ObjectNumber number="{view>stock}" />
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </VBox>
+
+          <VBox class="catalogPanel sapUiTinyMarginBottom">
+            <Toolbar>
+              <Title id="productsHeading" text="{i18n>productsTitle}" level="H2" />
+              <ToolbarSpacer />
+              <ObjectStatus text="{= ${view>/productCount} + ' ' + ${i18n>items} }" />
+            </Toolbar>
+            <Table
+              id="productsTable"
+              ariaLabelledBy="productsHeading"
+              busy="{view>/productsBusy}"
+              busyIndicatorDelay="0"
+              growing="true"
+              growingScrollToLoad="true"
+              noDataText="{i18n>noProducts}"
+              items="{view>/products}">
+              <columns>
+                <Column><Text text="{i18n>productName}" /></Column>
+                <Column minScreenWidth="Tablet" demandPopin="true"><Text text="{i18n>categoryId}" /></Column>
+                <Column hAlign="End"><Text text="{i18n>unitPrice}" /></Column>
+              </columns>
+              <items>
+                <ColumnListItem type="Navigation" press=".onProductPress">
+                  <cells>
+                    <ObjectIdentifier title="{view>ProductName}" text="{= 'ID ' + ${view>ProductID} }" />
+                    <Text text="{view>CategoryID}" />
+                    <ObjectNumber number="{view>UnitPrice}" unit="USD" />
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </VBox>
+        </FlexBox>
+      </VBox>
+    </f:content>
+  </f:DynamicPage>
+</mvc:View>

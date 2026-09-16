@@ -12,6 +12,7 @@ Usage:
   npm run plan -- --request "Create a CAP backend and Fiori application"
 
 Target options:
+  --db <SQLITE|HANA>  CAP persistence; required when the request includes a CAP Backend
   --cf-api <https-url> --cf-org <name> --cf-space <name> --stage <DEV|TEST|PROD>
   --work-zone-edition <STANDARD|ADVANCED>
   --work-zone-subaccount <id> --work-zone-site <id> --work-zone-content-target <id>
@@ -26,6 +27,7 @@ export async function main(argv = process.argv.slice(2)) {
     }
     const request = normalizeSolutionRequest({
         request: options.request,
+        backend: { persistence: options.db },
         cloudFoundry: {
             api: options.cf_api,
             org: options.cf_org,

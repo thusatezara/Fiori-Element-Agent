@@ -4,9 +4,9 @@
 
 **Created**: 2026-09-11
 
-**Specification Status**: `READY_FOR_IMPLEMENTATION`
+**Specification Status**: `IMPLEMENTED`
 
-**Protocol Status**: `DEFINED` — runtime 미구현
+**Protocol Status**: `IMPLEMENTED` — runtime 및 build adapter 검증 완료
 
 **Input**: 000이 승인한 `PACKAGE` handoff와 검증 완료된 generation result를 Cloud Foundry용 MTA 배포 단위로 구성한다.
 
@@ -67,6 +67,9 @@
 - build tool이 없다는 사실을 정적 validation 성공으로 대체하지 않으며 archive-ready로 보고하지 않는다.
 - 생성 결과가 validation 이후 변경되어 checksum이 달라졌으면 재검증을 요구한다.
 - platform/space별 service plan 가용성은 200에서 사실로 가정하지 않고 300 preflight의 확인 대상으로 전달한다.
+- CAP module, deployer와 HDI resource 이름은 business object나 예제 이름을 core protocol에 넣지 않고 `identity.applicationId`에서 deterministic하게 파생한다.
+- HANA persistence CAP component는 `srv → HDI resource ← db-deployer` topology를 만들지만 HANA Cloud database instance 자체를 생성하지 않는다.
+- 검증된 CAP `package.json`의 production persistence와 입력 capability가 충돌하면 어느 쪽도 우선하지 않고 차단한다.
 
 ## 요구사항
 
@@ -89,7 +92,10 @@
 - **FR-015**: 시스템은 build tool 미설치, build 실패 또는 validation 실패를 성공으로 완화하지 않아야 한다.
 - **FR-016**: 시스템은 검증 성공 시 archive 경로, SHA-256 checksum, descriptor fingerprint, source result references와 validation report를 포함한 `DeploymentArtifact`를 생성해야 한다.
 - **FR-017**: 시스템은 Protocol 300에 target-neutral artifact와 service requirement를 전달하되 배포 또는 Work Zone 변경을 수행하지 않아야 한다.
-- **FR-018**: Protocol 200의 registry 상태가 `DEFINED`인 동안 executor는 등록되지 않아야 하며 실제 package build를 실행하지 않아야 한다.
+- **FR-018**: Protocol 200은 모든 구현·안전 test 통과 전에는 executor를 등록하지 않아야 하며, 활성화 후에도 검증된 input과 workspace boundary를 통과한 요청만 package build를 실행해야 한다.
+- **FR-019**: 시스템은 검증된 CAP Node.js BACKEND의 production persistence가 `HANA`이면 application identity에서 service module, database deployer와 HDI resource 이름을 파생하고 `hana/hdi-shared` dependency graph를 생성해야 한다.
+- **FR-020**: 시스템은 특정 business object, sample project, tenant URL 또는 application 고유 이름을 core topology/staging code에 하드코딩하지 않아야 한다.
+- **FR-021**: 시스템은 BACKEND source를 별도 staging path에 복사하고 production CAP build 결과의 `gen/srv`, `gen/db`를 MTA module path로 사용해야 한다.
 
 ### 주요 정보 객체
 
@@ -112,10 +118,12 @@
 - **SC-005**: archive-ready로 보고된 결과의 100%가 schema/reference/build validation과 SHA-256 checksum을 가진다.
 - **SC-006**: 생성 descriptor, artifact manifest와 report에 credential 또는 token 저장 건수가 0건이다.
 - **SC-007**: Protocol 200 validation 중 Cloud Foundry 또는 Work Zone 외부 변경 호출 건수가 0건이다.
+- **SC-008**: 서로 다른 `applicationId`를 가진 HANA CAP fixture의 100%가 동일 규칙의 `<applicationId>-srv`, `<applicationId>-db-deployer`, `<applicationId>-db` topology를 생성하고 core source의 sample-specific 이름 검출 건수는 0건이다.
 
 ## 가정
 
 - 100 및 001~004의 source result는 Protocol 200 input adapter가 공통 `ComponentResult` envelope로 정규화하며, 원본 result identity, validation evidence, output boundary와 checksum을 보존한다.
 - MTA build tool과 지원 version은 구현 시 pinning 및 compatibility 검증 대상으로 정하며, 현재 문서는 특정 설치 상태를 가정하지 않는다.
 - service offering/plan 가용성, quota와 entitlement는 landscape 종속이므로 300의 read-only preflight에서 확인한다.
-- Protocol 200 구현이 완료되고 필수 test가 통과하기 전 registry 상태는 `DEFINED`로 유지한다.
+- Protocol 200 구현과 필수 test가 완료되어 registry 상태는 `IMPLEMENTED`이며, build 전 input/checksum/boundary gate는 계속 적용한다.
+- Protocol 200의 `hana/hdi-shared` resource는 application 전용 HDI container 요구사항이며 HANA Cloud database instance provisioning과 동일하지 않다.

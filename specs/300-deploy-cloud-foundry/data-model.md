@@ -90,7 +90,7 @@ DeploymentOperation 1 ── 0..1 DeploymentReport
 ## State Transitions
 
 ```text
-RECEIVED ─ protocol DEFINED → NOT_IMPLEMENTED
+RECEIVED ─ protocol DEFINED(activation 이전) → NOT_IMPLEMENTED
 RECEIVED ─ invalid artifact/target/secret → BLOCKED
 RECEIVED ─ valid local contract → PREFLIGHT
 PREFLIGHT ─ prerequisite mismatch/unknown → BLOCKED

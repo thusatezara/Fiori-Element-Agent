@@ -1,10 +1,32 @@
 <mvc:View
   controllerName="{{namespace}}.controller.View"
   xmlns="sap.m"
+  xmlns:f="sap.f"
   xmlns:mvc="sap.ui.core.mvc">
-  <Page id="reviewPage" title="{i18n>reviewTitle}">
-    <content>
+  <f:DynamicPage id="reviewPage" headerExpanded="true" toggleHeaderOnTitleClick="true" fitContent="true">
+    <f:title>
+      <f:DynamicPageTitle>
+        <f:heading>
+          <Title text="{i18n>reviewTitle}" level="H1" />
+        </f:heading>
+        <f:snappedContent>
+          <Text text="{i18n>reviewDescription}" />
+        </f:snappedContent>
+        <f:expandedContent>
+          <Text text="{i18n>reviewDescription}" />
+        </f:expandedContent>
+        <f:actions>
+          <Button text="{i18n>backAction}" icon="sap-icon://nav-back" press=".onBack" />
+        </f:actions>
+      </f:DynamicPageTitle>
+    </f:title>
+    <f:header>
+      <f:DynamicPageHeader pinnable="true">
+        <ObjectStatus title="{i18n>currentStepLabel}" text="{view>/currentStep}" />
+      </f:DynamicPageHeader>
+    </f:header>
+    <f:content>
       <Text text="{i18n>reviewDescription}" class="sapUiSmallMargin" />
-    </content>
-  </Page>
+    </f:content>
+  </f:DynamicPage>
 </mvc:View>

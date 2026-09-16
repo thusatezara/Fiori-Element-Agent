@@ -1,0 +1,11 @@
+<mvc:View
+  controllerName="com.acme.dualcatalog.controller.NotFound"
+  xmlns="sap.m"
+  xmlns:mvc="sap.ui.core.mvc">
+  <MessagePage
+    title="{i18n>notFoundTitle}"
+    text="{i18n>notFoundText}"
+    description="{i18n>notFoundDescription}"
+    showNavButton="true"
+    navButtonPress=".onNavBack" />
+</mvc:View>

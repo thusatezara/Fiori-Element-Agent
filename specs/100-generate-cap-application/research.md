@@ -16,7 +16,7 @@
 
 **Rationale**: credential 없는 재현 가능한 local validation을 제공하면서 production persistence 선택을 후속 200/300 protocol에 전달할 수 있다.
 
-**Alternatives considered**: HANA에 직접 compile/deploy하는 검증은 tenant, service instance와 credential이 필요하므로 100의 local-write 경계를 위반한다. in-memory only 설정은 fixture에는 유용하지만 생성 project의 재시작 가능한 local test에는 file SQLite가 더 명확하다.
+**Alternatives considered**: HANA에 직접 compile/deploy하는 검증은 tenant, service instance와 credential이 필요하므로 100의 local-write 경계를 위반한다. DB를 명시하지 않은 요청에 file SQLite를 기본 적용하는 방식은 사용자의 durability 의도를 숨기므로 채택하지 않는다. 명시적 `SQLITE`는 in-memory demo로, `HANA`는 development SQLite와 production HANA profile로 표현한다.
 
 **Source**: [CAP Database Services](https://cap.cloud.sap/docs/guides/databases/)
 

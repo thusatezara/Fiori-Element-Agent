@@ -1,0 +1,482 @@
+{
+  "resultVersion": "1.0",
+  "status": "VALIDATED",
+  "handoffId": "8a7a5d67-8e6a-4a7e-95d4-c436e972eea1",
+  "projectPath": "generated/bookshop",
+  "files": [
+    {
+      "path": "package.json",
+      "kind": "CONFIG",
+      "requirementIds": [
+        "BOOKSHOP-DOMAIN-001",
+        "BOOKSHOP-SERVICE-001",
+        "BOOKSHOP-PERSISTENCE-001"
+      ]
+    },
+    {
+      "path": "README.md",
+      "kind": "DOCUMENTATION",
+      "requirementIds": [
+        "BOOKSHOP-DOMAIN-001",
+        "BOOKSHOP-SERVICE-001",
+        "BOOKSHOP-PERSISTENCE-001"
+      ]
+    },
+    {
+      "path": "db/schema.cds",
+      "kind": "DOMAIN_MODEL",
+      "requirementIds": [
+        "BOOKSHOP-DOMAIN-001",
+        "BOOKSHOP-SERVICE-001",
+        "BOOKSHOP-PERSISTENCE-001"
+      ]
+    },
+    {
+      "path": "srv/service.cds",
+      "kind": "SERVICE_MODEL",
+      "requirementIds": [
+        "BOOKSHOP-DOMAIN-001",
+        "BOOKSHOP-SERVICE-001",
+        "BOOKSHOP-PERSISTENCE-001"
+      ]
+    },
+    {
+      "path": "test/service.test.js",
+      "kind": "TEST",
+      "requirementIds": [
+        "BOOKSHOP-DOMAIN-001",
+        "BOOKSHOP-SERVICE-001",
+        "BOOKSHOP-PERSISTENCE-001"
+      ]
+    },
+    {
+      "path": "db/data/bookshop-Authors.csv",
+      "kind": "CONFIG",
+      "requirementIds": [
+        "BOOKSHOP-DOMAIN-001",
+        "BOOKSHOP-SERVICE-001",
+        "BOOKSHOP-PERSISTENCE-001"
+      ]
+    },
+    {
+      "path": "db/data/bookshop-Genres.csv",
+      "kind": "CONFIG",
+      "requirementIds": [
+        "BOOKSHOP-DOMAIN-001",
+        "BOOKSHOP-SERVICE-001",
+        "BOOKSHOP-PERSISTENCE-001"
+      ]
+    },
+    {
+      "path": "db/data/bookshop-Currencies.csv",
+      "kind": "CONFIG",
+      "requirementIds": [
+        "BOOKSHOP-DOMAIN-001",
+        "BOOKSHOP-SERVICE-001",
+        "BOOKSHOP-PERSISTENCE-001"
+      ]
+    },
+    {
+      "path": "db/data/bookshop-Books.csv",
+      "kind": "CONFIG",
+      "requirementIds": [
+        "BOOKSHOP-DOMAIN-001",
+        "BOOKSHOP-SERVICE-001",
+        "BOOKSHOP-PERSISTENCE-001"
+      ]
+    },
+    {
+      "path": "gen/contract/metadata.xml",
+      "kind": "METADATA",
+      "requirementIds": [
+        "BOOKSHOP-DOMAIN-001",
+        "BOOKSHOP-SERVICE-001",
+        "BOOKSHOP-PERSISTENCE-001"
+      ]
+    },
+    {
+      "path": "gen/contract/service-snapshot.json",
+      "kind": "SNAPSHOT",
+      "requirementIds": [
+        "BOOKSHOP-DOMAIN-001",
+        "BOOKSHOP-SERVICE-001",
+        "BOOKSHOP-PERSISTENCE-001"
+      ]
+    },
+    {
+      "path": "cap-generation-report.json",
+      "kind": "REPORT",
+      "requirementIds": [
+        "BOOKSHOP-DOMAIN-001",
+        "BOOKSHOP-SERVICE-001",
+        "BOOKSHOP-PERSISTENCE-001"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "HANDOFF_SCHEMA",
+      "required": true,
+      "status": "PASS",
+      "summary": "Protocol handoff is valid.",
+      "durationMs": 0
+    },
+    {
+      "id": "OUTPUT_BOUNDARY",
+      "required": true,
+      "status": "PASS",
+      "summary": "Output remains inside the workspace.",
+      "durationMs": 0
+    },
+    {
+      "id": "CREDENTIAL_SCAN",
+      "required": true,
+      "status": "PASS",
+      "summary": "No credential-like content was detected.",
+      "durationMs": 0
+    },
+    {
+      "id": "DOMAIN_SEMANTICS",
+      "required": true,
+      "status": "PASS",
+      "summary": "Domain, service and behavior semantics are valid.",
+      "durationMs": 0
+    },
+    {
+      "id": "CDS_COMPILE",
+      "required": true,
+      "status": "PASS",
+      "summary": "CDS model and OData metadata compiled.",
+      "durationMs": 387
+    },
+    {
+      "id": "CONTRACT_TEST",
+      "required": true,
+      "status": "PASS",
+      "summary": "Compiled public service contract matches the plan.",
+      "durationMs": 0
+    },
+    {
+      "id": "HANDLER_TEST",
+      "required": true,
+      "status": "PASS",
+      "summary": "Handler presence and syntax match the behavior plan.",
+      "durationMs": 1
+    },
+    {
+      "id": "LOCAL_START",
+      "required": true,
+      "status": "PASS",
+      "summary": "Local CAP server returned OData metadata.",
+      "durationMs": 1004
+    },
+    {
+      "id": "SNAPSHOT_CONSISTENCY",
+      "required": true,
+      "status": "PASS",
+      "summary": "Snapshots match compiled public models.",
+      "durationMs": 1
+    }
+  ],
+  "trace": [
+    {
+      "requirementId": "BOOKSHOP-DOMAIN-001",
+      "disposition": "GENERATED",
+      "artifacts": [
+        "package.json",
+        "README.md",
+        "db/schema.cds",
+        "srv/service.cds",
+        "test/service.test.js",
+        "db/data/bookshop-Authors.csv",
+        "db/data/bookshop-Genres.csv",
+        "db/data/bookshop-Currencies.csv",
+        "db/data/bookshop-Books.csv",
+        "gen/contract/metadata.xml",
+        "gen/contract/service-snapshot.json",
+        "cap-generation-report.json"
+      ],
+      "checks": [
+        "HANDOFF_SCHEMA",
+        "DOMAIN_SEMANTICS",
+        "OUTPUT_BOUNDARY",
+        "CREDENTIAL_SCAN",
+        "CDS_COMPILE",
+        "CONTRACT_TEST",
+        "HANDLER_TEST",
+        "LOCAL_START",
+        "SNAPSHOT_CONSISTENCY"
+      ],
+      "reason": null
+    },
+    {
+      "requirementId": "BOOKSHOP-SERVICE-001",
+      "disposition": "GENERATED",
+      "artifacts": [
+        "package.json",
+        "README.md",
+        "db/schema.cds",
+        "srv/service.cds",
+        "test/service.test.js",
+        "db/data/bookshop-Authors.csv",
+        "db/data/bookshop-Genres.csv",
+        "db/data/bookshop-Currencies.csv",
+        "db/data/bookshop-Books.csv",
+        "gen/contract/metadata.xml",
+        "gen/contract/service-snapshot.json",
+        "cap-generation-report.json"
+      ],
+      "checks": [
+        "HANDOFF_SCHEMA",
+        "DOMAIN_SEMANTICS",
+        "OUTPUT_BOUNDARY",
+        "CREDENTIAL_SCAN",
+        "CDS_COMPILE",
+        "CONTRACT_TEST",
+        "HANDLER_TEST",
+        "LOCAL_START",
+        "SNAPSHOT_CONSISTENCY"
+      ],
+      "reason": null
+    },
+    {
+      "requirementId": "BOOKSHOP-PERSISTENCE-001",
+      "disposition": "GENERATED",
+      "artifacts": [
+        "package.json",
+        "README.md",
+        "db/schema.cds",
+        "srv/service.cds",
+        "test/service.test.js",
+        "db/data/bookshop-Authors.csv",
+        "db/data/bookshop-Genres.csv",
+        "db/data/bookshop-Currencies.csv",
+        "db/data/bookshop-Books.csv",
+        "gen/contract/metadata.xml",
+        "gen/contract/service-snapshot.json",
+        "cap-generation-report.json"
+      ],
+      "checks": [
+        "HANDOFF_SCHEMA",
+        "DOMAIN_SEMANTICS",
+        "OUTPUT_BOUNDARY",
+        "CREDENTIAL_SCAN",
+        "CDS_COMPILE",
+        "CONTRACT_TEST",
+        "HANDLER_TEST",
+        "LOCAL_START",
+        "SNAPSHOT_CONSISTENCY"
+      ],
+      "reason": null
+    }
+  ],
+  "serviceSnapshots": [
+    {
+      "snapshotVersion": "1.0",
+      "odataVersion": "4.0",
+      "serviceName": "AdminService",
+      "serviceUrlHint": "/admin/",
+      "entitySets": [
+        {
+          "name": "Books",
+          "keys": [
+            "ID"
+          ],
+          "properties": [
+            {
+              "name": "createdAt",
+              "type": "Edm.DateTimeOffset",
+              "nullable": true,
+              "maxLength": null,
+              "precision": null,
+              "scale": null
+            },
+            {
+              "name": "createdBy",
+              "type": "User",
+              "nullable": true,
+              "maxLength": 255,
+              "precision": null,
+              "scale": null
+            },
+            {
+              "name": "modifiedAt",
+              "type": "Edm.DateTimeOffset",
+              "nullable": true,
+              "maxLength": null,
+              "precision": null,
+              "scale": null
+            },
+            {
+              "name": "modifiedBy",
+              "type": "User",
+              "nullable": true,
+              "maxLength": 255,
+              "precision": null,
+              "scale": null
+            },
+            {
+              "name": "ID",
+              "type": "Edm.Int32",
+              "nullable": false,
+              "maxLength": null,
+              "precision": null,
+              "scale": null
+            },
+            {
+              "name": "title",
+              "type": "Edm.String",
+              "nullable": false,
+              "maxLength": 200,
+              "precision": null,
+              "scale": null
+            },
+            {
+              "name": "descr",
+              "type": "Edm.String",
+              "nullable": true,
+              "maxLength": null,
+              "precision": null,
+              "scale": null
+            },
+            {
+              "name": "stock",
+              "type": "Edm.Int32",
+              "nullable": false,
+              "maxLength": null,
+              "precision": null,
+              "scale": null
+            },
+            {
+              "name": "price",
+              "type": "Edm.Decimal",
+              "nullable": true,
+              "maxLength": null,
+              "precision": 9,
+              "scale": 2
+            }
+          ],
+          "navigation": [
+            {
+              "name": "author",
+              "target": "Authors",
+              "cardinality": "TO_ONE"
+            },
+            {
+              "name": "genre",
+              "target": "Genres",
+              "cardinality": "TO_ONE"
+            },
+            {
+              "name": "currency",
+              "target": "Currencies",
+              "cardinality": "TO_ONE"
+            }
+          ],
+          "capabilities": [
+            "READ"
+          ]
+        },
+        {
+          "name": "Authors",
+          "keys": [
+            "ID"
+          ],
+          "properties": [
+            {
+              "name": "ID",
+              "type": "Edm.Int32",
+              "nullable": false,
+              "maxLength": null,
+              "precision": null,
+              "scale": null
+            },
+            {
+              "name": "name",
+              "type": "Edm.String",
+              "nullable": false,
+              "maxLength": 120,
+              "precision": null,
+              "scale": null
+            }
+          ],
+          "navigation": [],
+          "capabilities": [
+            "READ"
+          ]
+        },
+        {
+          "name": "Genres",
+          "keys": [
+            "ID"
+          ],
+          "properties": [
+            {
+              "name": "ID",
+              "type": "Edm.Int32",
+              "nullable": false,
+              "maxLength": null,
+              "precision": null,
+              "scale": null
+            },
+            {
+              "name": "name",
+              "type": "Edm.String",
+              "nullable": false,
+              "maxLength": 80,
+              "precision": null,
+              "scale": null
+            }
+          ],
+          "navigation": [],
+          "capabilities": [
+            "READ"
+          ]
+        },
+        {
+          "name": "Currencies",
+          "keys": [
+            "code"
+          ],
+          "properties": [
+            {
+              "name": "code",
+              "type": "Edm.String",
+              "nullable": false,
+              "maxLength": 3,
+              "precision": null,
+              "scale": null
+            },
+            {
+              "name": "name",
+              "type": "Edm.String",
+              "nullable": false,
+              "maxLength": 80,
+              "precision": null,
+              "scale": null
+            }
+          ],
+          "navigation": [],
+          "capabilities": [
+            "READ"
+          ]
+        }
+      ],
+      "operations": [],
+      "metadataPath": "gen/contract/metadata.xml",
+      "modelDigest": "sha256:d9aa2030fb3d0dfe23175f7e13e848915cdf2dbb5090170a2465d00c9bf1cbe2"
+    }
+  ],
+  "assumptions": [
+    "OData V4 and CAP Node.js are used as approved by the request."
+  ],
+  "prerequisites": [
+    {
+      "code": "PRODUCTION_BINDING_UNVERIFIED",
+      "message": "HANA, XSUAA/IAS and Cloud Foundry bindings are not created or verified by protocol 100."
+    }
+  ],
+  "risks": [
+    "HANA is an intent only until protocol 200/300 provides and validates a binding."
+  ]
+}

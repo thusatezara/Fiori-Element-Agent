@@ -4,7 +4,7 @@
   "title": "Protocol 300 DeploymentRequest",
   "type": "object",
   "additionalProperties": false,
-  "required": ["handoffVersion", "handoffId", "planId", "stepId", "protocol", "completedDependencies", "requestedAt", "artifact", "target", "deployIntent", "approval", "idempotencyKey"],
+  "required": ["handoffVersion", "handoffId", "planId", "stepId", "protocol", "completedDependencies", "requestedAt", "artifact", "target", "deployIntent", "preflightSnapshot", "approval", "idempotencyKey"],
   "properties": {
     "handoffVersion": { "const": "1.0" },
     "handoffId": { "type": "string", "format": "uuid" },
@@ -46,6 +46,21 @@
       }
     },
     "deployIntent": { "const": true },
+    "preflightSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["snapshotId", "targetFingerprint", "artifactChecksum", "target", "observedTarget", "checks", "createdAt", "status"],
+      "properties": {
+        "snapshotId": { "type": "string", "format": "uuid" },
+        "targetFingerprint": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "artifactChecksum": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "target": { "type": "object" },
+        "observedTarget": { "type": "object" },
+        "checks": { "type": "array", "items": { "type": "object" } },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "status": { "enum": ["READY_FOR_APPROVAL", "BLOCKED"] }
+      }
+    },
     "approval": { "$ref": "#/$defs/approval" },
     "productionApproval": { "anyOf": [{ "$ref": "#/$defs/approval" }, { "type": "null" }] },
     "idempotencyKey": { "type": "string", "format": "uuid" }

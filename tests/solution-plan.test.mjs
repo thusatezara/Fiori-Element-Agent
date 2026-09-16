@@ -26,11 +26,40 @@ test("000 orders a CAP, Fiori and MTA request by service-contract dependency", (
     assert.deepEqual(plan.steps.map(({ scope }) => scope), ["BACKEND", "FRONTEND", "PACKAGE"]);
     assert.deepEqual(plan.steps[1].dependsOn, ["backend"]);
     assert.deepEqual(plan.steps[2].dependsOn, ["backend", "frontend"]);
-    assert.equal(plan.status, "PARTIALLY_IMPLEMENTED");
-    assert.equal(plan.steps[0].readiness, "NOT_IMPLEMENTED");
-    assert.equal(plan.steps[1].readiness, "BLOCKED");
-    assert.match(plan.steps[1].blockingReasons.join(" "), /backend/);
-    assert.equal(plan.steps[2].readiness, "NOT_IMPLEMENTED");
+    assert.equal(plan.status, "NEEDS_INPUT");
+    assert.equal(plan.steps[0].readiness, "NEEDS_INPUT");
+    assert.match(plan.steps[0].blockingReasons.join(" "), /SQLITE.*HANA/);
+    assert.ok(plan.steps.slice(1).every(({ readiness }) => readiness === "BLOCKED"));
+});
+
+test("000 asks for an explicit CAP database instead of defaulting to SQLite", () => {
+    const request = normalizeSolutionRequest({ request: "CAP backend를 만들어줘" });
+    const plan = createSolutionPlan(request);
+    assert.deepEqual(request.backend, { persistence: null, source: "UNSPECIFIED" });
+    assert.equal(plan.status, "NEEDS_INPUT");
+    assert.equal(plan.steps[0].readiness, "NEEDS_INPUT");
+    assert.match(plan.steps[0].blockingReasons.join(" "), /database.*SQLITE.*HANA/i);
+});
+
+test("000 accepts an explicit CAP database from text or structured input", () => {
+    const sqlite = normalizeSolutionRequest({ request: "SQLite를 사용하는 CAP backend를 만들어줘" });
+    assert.deepEqual(sqlite.backend, { persistence: "SQLITE", source: "REQUEST_TEXT" });
+    assert.equal(createSolutionPlan(sqlite).steps[0].readiness, "READY");
+
+    const hana = normalizeSolutionRequest({ request: "CAP backend를 만들어줘", backend: { persistence: "HANA" } });
+    assert.deepEqual(hana.backend, { persistence: "HANA", source: "STRUCTURED_INPUT" });
+    assert.equal(createSolutionPlan(hana).steps[0].readiness, "READY");
+});
+
+test("000 rejects ambiguous or conflicting CAP database choices", () => {
+    assert.throws(
+        () => normalizeSolutionRequest({ request: "SQLite와 HANA를 사용하는 CAP backend를 만들어줘" }),
+        /ambiguous/i
+    );
+    assert.throws(
+        () => normalizeSolutionRequest({ request: "SQLite CAP backend를 만들어줘", backend: { persistence: "HANA" } }),
+        /conflicts/i
+    );
 });
 
 test("registry maps every scope once and exposes implementation honestly", () => {
@@ -38,18 +67,20 @@ test("registry maps every scope once and exposes implementation honestly", () =>
     assert.deepEqual(protocols.map(({ id }) => id), ["001", "100", "200", "300", "400"]);
     assert.equal(new Set(protocols.map(({ scope }) => scope)).size, protocols.length);
     assert.equal(getProtocol("FRONTEND").status, "IMPLEMENTED");
-    for (const scope of ["BACKEND", "PACKAGE", "DEPLOY_CF", "PUBLISH_WORK_ZONE"]) {
+    assert.equal(getProtocol("BACKEND").status, "IMPLEMENTED");
+    for (const scope of ["PUBLISH_WORK_ZONE"]) {
         assert.equal(getProtocol(scope).status, "DEFINED");
     }
+    for (const scope of ["PACKAGE", "DEPLOY_CF"]) assert.equal(getProtocol(scope).status, "IMPLEMENTED");
 });
 
 test("defined protocols return a structured blocked result instead of executing", async () => {
-    const request = normalizeSolutionRequest({ request: "CAP backend를 만들어줘" });
-    const step = createSolutionPlan(request).steps[0];
+    const request = normalizeSolutionRequest({ request: "Cloud Foundry에 배포하고 Work Zone에 타일을 등록해줘", cloudFoundry: { api: "https://api.cf.example.test", org: "demo", space: "dev", stage: "DEV" }, workZone: { edition: "STANDARD", subaccount: "demo", site: "main", contentTarget: "apps" } });
+    const step = createSolutionPlan(request).steps.find(({ scope }) => scope === "PUBLISH_WORK_ZONE");
     const result = await executeProtocolStep(step, { request });
     assert.equal(result.status, "BLOCKED");
     assert.equal(result.code, "PROTOCOL_NOT_IMPLEMENTED");
-    assert.equal(result.protocolId, "100");
+    assert.equal(result.protocolId, "400");
 });
 
 test("deploy and Work Zone publication require complete targets", () => {
@@ -63,15 +94,15 @@ test("deploy and Work Zone publication require complete targets", () => {
     assert.match(plan.steps[2].blockingReasons.join(" "), /edition|subaccount|site|contentTarget/);
 });
 
-test("complete external targets pass the input gate but remain not implemented", () => {
+test("complete external targets pass the input gate and expose implemented deployment", () => {
     const request = normalizeSolutionRequest({
         request: "Cloud Foundry에 배포하고 Work Zone에 타일을 등록해줘",
         cloudFoundry: { api: "https://api.cf.example.test", org: "demo-org", space: "dev", stage: "DEV" },
         workZone: { edition: "STANDARD", subaccount: "demo", site: "main", contentTarget: "apps" }
     });
     const plan = createSolutionPlan(request);
-    assert.equal(plan.status, "PARTIALLY_IMPLEMENTED");
-    assert.equal(plan.steps[1].readiness, "NOT_IMPLEMENTED");
+    assert.equal(plan.steps[1].protocol.status, "IMPLEMENTED");
+    assert.equal(plan.steps[1].readiness, "READY");
     assert.equal(plan.steps[2].readiness, "NOT_IMPLEMENTED");
 });
 
@@ -159,9 +190,23 @@ test("planning CLI maps target options without performing deployment", async () 
             "--cf-space", "dev",
             "--stage", "DEV"
         ]);
-        assert.equal(plan.steps.find(({ scope }) => scope === "DEPLOY_CF").readiness, "NOT_IMPLEMENTED");
+        assert.equal(plan.steps.find(({ scope }) => scope === "DEPLOY_CF").readiness, "READY");
         assert.match(rendered, /"protocol"/);
         assert.doesNotMatch(rendered, /password|authorization|token/i);
+    } finally {
+        console.log = originalLog;
+    }
+});
+
+test("planning CLI maps an explicit CAP database", async () => {
+    const originalLog = console.log;
+    let rendered = "";
+    console.log = (value) => { rendered = String(value); };
+    try {
+        const plan = await planMain(["--request", "CAP backend를 만들어줘", "--db", "HANA"]);
+        assert.equal(plan.request.backend.persistence, "HANA");
+        assert.equal(plan.steps[0].readiness, "READY");
+        assert.match(rendered, /\"persistence\": \"HANA\"/);
     } finally {
         console.log = originalLog;
     }

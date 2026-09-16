@@ -1,0 +1,5 @@
+COLUMN TABLE bookshop_Currencies (
+  code NVARCHAR(3) NOT NULL,
+  name NVARCHAR(80) NOT NULL,
+  PRIMARY KEY(code)
+)

@@ -27,9 +27,17 @@ npm run plan -- --request "재고 관리 CAP backend와 Fiori Elements 화면을
 Expected:
 
 - `BACKEND → FRONTEND → PACKAGE` 순서다.
-- 100과 200은 `NOT_IMPLEMENTED` readiness를 보고한다.
-- 001은 구현되어 있어도 선행 BACKEND가 준비되지 않았으므로 `BLOCKED`를 보고한다.
-- 결과 status는 `PARTIALLY_IMPLEMENTED`다.
+- DB가 명시되지 않았으므로 BACKEND는 `SQLITE` 또는 `HANA` 선택을 요구하는 `NEEDS_INPUT`이다.
+- 선행 BACKEND가 준비되지 않았으므로 FRONTEND와 PACKAGE는 `BLOCKED`다.
+- 결과 status는 `NEEDS_INPUT`이며 SQLite를 자동 선택하지 않는다.
+
+DB를 명시한 계획은 다음처럼 실행한다.
+
+```powershell
+npm run plan -- --request "재고 관리 CAP backend와 Fiori Elements 화면을 만들고 MTA로 구성해줘" --db HANA
+```
+
+이 경우 정규화된 `request.backend.persistence`는 `HANA`이고 BACKEND step은 DB 입력 gate를 통과한다.
 
 ## Scenario 3: CF 배포와 Work Zone 게시 계획
 

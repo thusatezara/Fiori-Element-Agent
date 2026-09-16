@@ -12,6 +12,13 @@ export async function generateFreestyleProject(context) {
     const flow = planFlow(context.request);
     const state = planState(context.service, flow);
     const validationPlan = planValidation(context.request);
+    const pageShell = {
+        type: "DYNAMIC_PAGE",
+        title: "i18n heading with snapped and expanded context",
+        header: "pinnable responsive screen context",
+        content: "approved screen controls",
+        sapFLibrary: true
+    };
     const manifest = createManifest(context, flow);
     const columnsMarkup = decision.columns.map((property) => `      <Column><Text text="{i18n>${property.name}}" /></Column>`).join("\n");
     const cellsMarkup = decision.columns.map((property) => `          <Text text="{${property.name}}" />`).join("\n");
@@ -47,6 +54,7 @@ export async function generateFreestyleProject(context) {
         "webapp/Component.js": "webapp/Component.js.hbs",
         "webapp/manifest.json": "webapp/manifest.json.hbs",
         "webapp/model/models.js": "webapp/model/models.js.hbs",
+        "webapp/view/App.view.xml": "webapp/view/App.view.xml.hbs",
         "webapp/view/View.view.xml": "webapp/view/View.view.xml.hbs",
         "webapp/controller/View.controller.js": "webapp/controller/View.controller.js.hbs",
         "webapp/controller/ErrorHandlers.js": "webapp/controller/ErrorHandlers.js.hbs",
@@ -59,7 +67,7 @@ export async function generateFreestyleProject(context) {
     if (flow.screens.includes("review")) {
         files.set("webapp/view/Review.view.xml", await renderTemplate("freestyle", "webapp/view/Review.view.xml.hbs", values));
     }
-    return { profile: "freestyle", files, columns: decision.columns, filters: [], details: { flow, state, validation: validationPlan, backendBoundary: boundary } };
+    return { profile: "freestyle", files, columns: decision.columns, filters: [], details: { flow, state, validation: validationPlan, backendBoundary: boundary, pageShell } };
 }
 
 function createManifest(context, flow) {
@@ -78,13 +86,13 @@ function createManifest(context, flow) {
         "sap.ui": { technology: "UI5", deviceTypes: { desktop: true, tablet: true, phone: true } },
         "sap.ui5": {
             flexEnabled: false,
-            dependencies: { libs: { "sap.m": {}, "sap.ui.core": {} } },
+            dependencies: { minUI5Version: "1.120.0", libs: { "sap.f": {}, "sap.m": {}, "sap.ui.core": {} } },
             models: {
                 i18n: { type: "sap.ui.model.resource.ResourceModel", settings: { bundleName: `${context.namespace}.i18n.i18n` } },
                 "": { dataSource: "mainService", preload: true, settings: { operationMode: "Server", autoExpandSelect: true, earlyRequests: true } }
             },
             routing: { config: { routerClass: "sap.m.routing.Router", viewType: "XML", viewPath: `${context.namespace}.view`, controlId: "app", controlAggregation: "pages" }, routes, targets },
-            rootView: { viewName: `${context.namespace}.view.View`, type: "XML", async: true, id: "app" }
+            rootView: { viewName: `${context.namespace}.view.App`, type: "XML", async: true, id: "root" }
         }
     };
 }

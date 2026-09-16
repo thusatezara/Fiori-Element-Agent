@@ -1,0 +1,5 @@
+COLUMN TABLE bookshop_Genres (
+  ID INTEGER NOT NULL,
+  name NVARCHAR(80) NOT NULL,
+  PRIMARY KEY(ID)
+)

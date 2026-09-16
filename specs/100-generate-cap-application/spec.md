@@ -6,11 +6,11 @@
 
 **Last Updated**: 2026-09-11
 
-**Specification Status**: `READY_FOR_IMPLEMENTATION`
+**Specification Status**: `IMPLEMENTED`
 
-**Protocol Status**: `DEFINED`
+**Protocol Status**: `IMPLEMENTED`
 
-**Runtime**: 구현되지 않음. `IMPLEMENTED` 전환 전에는 실행 가능 또는 완료로 보고하지 않는다.
+**Runtime**: CAP Node.js executor와 local SQLite validation pipeline이 구현됨. 실제 cloud resource 변경은 200/300에 위임한다.
 
 **Input**: 000에서 전달한 versioned `BACKEND` `ProtocolHandoff`와 승인된 domain/service 요구사항으로 하나의 CAP Backend project를 생성하고 검증한다.
 
@@ -78,6 +78,7 @@ Backend 개발자는 단순한 data exposure를 넘어 validation, action, trans
 - output project 안의 `app/`은 비워 두거나 Backend 소유 설명만 둘 수 있으며 UI artifact를 생성하지 않는다.
 - local SQLite 검증 성공을 SAP HANA, XSUAA/IAS, Cloud Foundry 배포 성공으로 간주하지 않는다.
 - 같은 handoff를 재실행해 existing output과 충돌하면 overwrite하지 않고 안전하게 실패한다.
+- persistence intent가 없으면 SQLite로 보완하지 않고 `SQLITE` 또는 `HANA`의 명시적 선택을 요구하며 생성 전에 차단한다.
 
 ## 요구사항
 
@@ -86,11 +87,11 @@ Backend 개발자는 단순한 data exposure를 넘어 validation, action, trans
 - **FR-001**: 시스템은 000이 발행한 `handoffVersion=1.0`, `protocol.id=100`, registry와 일치하는 `protocol.version`, `BACKEND` step의 `ProtocolHandoff`만 입력으로 받아야 한다.
 - **FR-002**: 시스템은 handoff의 `planId`, `stepId`, request, inputs, completed dependency와 requested time을 검증해야 한다.
 - **FR-003**: 시스템은 원문 요구사항과 모든 stable requirement ID를 보존하고 각 항목을 생성 결과, prerequisite 또는 범위 밖 결정에 연결해야 한다.
-- **FR-004**: 시스템은 project name, namespace, output parent, runtime intent와 persistence intent를 생성 전에 검증해야 한다.
+- **FR-004**: 시스템은 project name, namespace, output parent, runtime intent와 명시적인 `SQLITE` 또는 `HANA` persistence intent를 생성 전에 검증해야 하며, persistence 누락을 기본값으로 보완해서는 안 된다.
 - **FR-005**: 시스템은 entity마다 이름, 하나 이상의 key, field type, nullability와 필요한 length/precision을 확인해야 한다.
 - **FR-006**: 시스템은 관계마다 source, target, cardinality, ownership/lifecycle과 필수 여부를 확인하고 결정되지 않은 의미를 추측해서는 안 된다.
 - **FR-007**: 시스템은 승인된 domain model을 `db/`, 공개 service definition과 custom behavior를 `srv/`, UI content를 `app/` 경계에 유지해야 한다.
-- **FR-008**: 시스템은 공통 identity/audit 의미가 요구사항과 일치할 때 표준 aspect를 우선하고, 적용한 기본값을 generation report에 기록해야 한다.
+- **FR-008**: 시스템은 공통 identity/audit 의미가 요구사항과 일치할 때 표준 aspect를 우선하고, 적용한 기본값을 generation report에 기록해야 한다. `managed` 또는 `cuid`가 승인된 entity에는 해당 aspect가 제공하는 표준 field를 explicit service projection에서 선택할 수 있어야 한다.
 - **FR-009**: 시스템은 persistence entity를 직접 무제한 공개하지 않고 승인된 field와 operation만 service projection에 포함해야 한다.
 - **FR-010**: 시스템은 service name, path, entity projection, operation, parameter, return type과 side-effect intent를 명시적인 service contract로 생성해야 한다.
 - **FR-011**: 시스템은 validation rule을 적용 대상 operation, 조건, 오류 식별자와 requirement ID에 연결해야 한다.
@@ -146,11 +147,13 @@ Backend 개발자는 단순한 data exposure를 넘어 validation, action, trans
 - **SC-006**: 생성물, report와 fixture에서 credential 또는 secret 저장 검출 건수는 0건이다.
 - **SC-007**: service snapshot의 entity, property, navigation, operation과 capability 100%가 compile된 public service model과 일치한다.
 - **SC-008**: 필수 validation이 하나라도 실패한 결과의 완료 보고 및 후속 완료 dependency 제공 건수는 0건이다.
+- **SC-009**: persistence가 누락된 Protocol 100 handoff의 100%가 파일 생성 전에 거부되고, `HANA` 선택 시 development SQLite와 production HANA profile이 모두 생성된다.
 
 ## 가정 및 의존성
 
 - 000의 registry와 `ProtocolHandoff 1.0`이 routing의 단일 원본이다.
 - 첫 구현 범위는 CAP Node.js와 local SQLite 검증이며 production persistence intent는 `HANA`로 기록만 하고 실제 binding 또는 deploy는 200/300에 위임한다.
+- `SQLITE`와 `HANA`는 사용자가 선택하는 상이한 persistence intent이며 Protocol 100은 둘 중 하나를 자동 기본값으로 정하지 않는다.
 - OData V4를 기본 service contract로 사용한다. 다른 OData version 요구는 명시적인 후속 범위 없이는 지원하지 않는다.
 - entity key, destructive operation, authorization intent와 business rule은 사용자 또는 상위 planning에서 승인되어 전달된다.
 - 공통 generator의 staging, atomic output, credential detection과 report capability를 재사용하되 CAP domain 정책은 `src/generation/backend/cap/`에 둔다.

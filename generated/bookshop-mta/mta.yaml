@@ -1,0 +1,41 @@
+_schema-version: "3.3"
+ID: "bookshop"
+version: "1.0.0"
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: "custom"
+      commands:
+        - "npm --prefix backend install"
+        - "npm --prefix backend exec -- cds build backend --production"
+modules:
+  - name: "bookshop-db-deployer"
+    type: "hdb"
+    path: "backend/gen/db"
+    parameters:
+      buildpack: "nodejs_buildpack"
+    requires:
+      - name: "bookshop-db"
+  - name: "bookshop-srv"
+    type: "nodejs"
+    path: "backend/gen/srv"
+    parameters:
+      buildpack: "nodejs_buildpack"
+      disk-quota: "512M"
+      memory: "256M"
+      random-route: true
+    build-parameters:
+      builder: "npm"
+    requires:
+      - name: "bookshop-db"
+    provides:
+      - name: "bookshop-srv-api"
+        properties:
+          srv-url: "${default-url}"
+resources:
+  - name: "bookshop-db"
+    type: "com.sap.xs.hdi-container"
+    parameters:
+      service: "hana"
+      service-plan: "hdi-shared"

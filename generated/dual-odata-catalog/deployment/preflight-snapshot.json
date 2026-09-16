@@ -1,0 +1,41 @@
+{
+  "snapshotId": "622cb5b2-617e-4b49-87f0-f6e7b37abc5c",
+  "targetFingerprint": "71501f5f4c7c7fa717d682c0a3f87f64b77f4569a4e09fb586d081901c32f4e2",
+  "artifactChecksum": "f1b462ff66ee4cd7b65cb4ec64d0ebf3b4c184bc6b81c24c494ae20df06a64d6",
+  "target": {
+    "api": "https://api.cf.us10-001.hana.ondemand.com",
+    "org": "2ae090ebtrial",
+    "space": "dev",
+    "stage": "DEV"
+  },
+  "observedTarget": {
+    "api": "https://api.cf.us10-001.hana.ondemand.com",
+    "org": "2ae090ebtrial",
+    "space": "dev",
+    "session": "CONFIRMED"
+  },
+  "checks": [
+    {
+      "name": "artifact-checksum",
+      "status": "PASSED"
+    },
+    {
+      "name": "target",
+      "status": "PASSED"
+    },
+    {
+      "name": "cf-cli",
+      "status": "PASSED"
+    },
+    {
+      "name": "multiapps-plugin",
+      "status": "PASSED"
+    },
+    {
+      "name": "space-role",
+      "status": "PASSED"
+    }
+  ],
+  "createdAt": "2026-09-14T07:43:43.177Z",
+  "status": "READY_FOR_APPROVAL"
+}

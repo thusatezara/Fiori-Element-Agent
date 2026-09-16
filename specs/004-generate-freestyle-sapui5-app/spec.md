@@ -26,6 +26,7 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 화면 단계, 이�
 2. **Given** 사용자가 여러 단계의 입력에 따라 다음 화면과 선택지가 동적으로 달라지는 흐름을 설명했을 때, **When** 화면 구조를 결정하면, **Then** 단계별 표시, 동작 처리와 상태 책임을 구분한 구성을 추천하고 사용자에게 업무 흐름으로 설명한다.
 3. **Given** 사용자가 여러 화면 사이의 이동, 이전 단계 복귀와 입력 상태 유지를 요구할 때, **When** navigation을 결정하면, **Then** 시작 화면과 각 이동 조건 및 보존할 상태가 원문 요구사항에 연결된다.
 4. **Given** 화면 흐름 생성 입력이 완전하고 001 handoff가 확인되었을 때, **When** 프로젝트를 생성·검증하면, **Then** 시작 화면, navigation과 상태 보존이 요구사항에 추적되고 필수 검증 실패는 완료로 표시되지 않는다.
+5. **Given** FreeStyle 화면을 생성할 때, **When** 화면 shell을 구성하면, **Then** 각 화면은 `sap.f.DynamicPage`를 root page layout으로 사용하고 `DynamicPageTitle`, `DynamicPageHeader`, content 영역을 명시적으로 구분하여 Standard 화면과 일관된 title/header 경험을 제공한다.
 
 ---
 
@@ -66,6 +67,9 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 화면 단계, 이�
 - 화면 간 이동 조건이 순환하거나 서로 충돌하면 생성 전에 흐름을 확정하도록 요청한다.
 - 화면 또는 target 이름이 충돌하면 기존 파일을 덮어쓰지 않고 수정을 요청한다.
 - 서비스 metadata는 데이터 구조 확인에 사용할 수 있지만 UI annotation을 화면 생성 근거로 사용하지 않는다.
+- title 또는 header에 표시할 별도 업무 정보가 없으면 빈 영역을 만들지 않고 application title, 화면 목적과 현재 단계처럼 이미 승인된 context를 사용한다.
+- 작은 화면에서 header가 접히더라도 `DynamicPageTitle`의 heading과 snapped content로 현재 화면과 context를 식별할 수 있어야 한다.
+- route host인 `App.view.xml`과 not-found·fatal-error 전용 `MessagePage`는 업무 page shell이 아니므로 `DynamicPage` 의무 대상에서 제외한다.
 - client 로직으로 backend 권한, transaction, 계산 또는 데이터 무결성을 대신하지 않는다.
 - 요청에 없는 custom control이나 비표준 동작을 편의를 이유로 임의 생성하지 않는다.
 - build는 성공하지만 시작 화면, navigation, 상태 또는 주요 interaction 검증이 실패하면 완료로 표시하지 않는다.
@@ -97,6 +101,10 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 화면 단계, 이�
 - **FR-021**: 시스템은 요구사항별 반영 여부, 생성 파일, 주요 설정, 판정 근거, 검증 결과와 후속 작업을 제공해야 한다.
 - **FR-022**: 시스템은 필수 검증 실패 시 결과를 완료로 표시해서는 안 된다.
 - **FR-023**: 시스템은 실제 SAP 환경에 로그인하거나 배포 또는 콘텐츠 변경을 수행해서는 안 된다.
+- **FR-024**: 시스템은 모든 정상 업무 화면의 root page layout을 공개 SAPUI5 `sap.f.DynamicPage`로 구성하고 화면을 `title`, `header`, `content` aggregation으로 분리해야 한다.
+- **FR-025**: 각 `DynamicPageTitle`은 i18n 기반 heading과 snapped·expanded context를 제공하고, 화면 전역 primary action이 있으면 title action 영역에 배치해야 한다.
+- **FR-026**: 각 `DynamicPageHeader`는 검색 조건, 현재 단계, 상태 또는 승인된 화면 context 중 해당 화면에 필요한 정보를 제공하고 사용자가 header를 접거나 pin할 수 있는 responsive 동작을 가져야 한다.
+- **FR-027**: 시스템은 generated manifest의 `sap.f` dependency와 각 업무 XML View의 `DynamicPage`, `DynamicPageTitle`, `DynamicPageHeader` 존재를 검증해야 한다.
 
 ### 주요 정보 객체 *(Key Entities)*
 
@@ -105,6 +113,7 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 화면 단계, 이�
 - **FreeStyle 생성 요청**: 승인된 유형, 원문 업무 요청, 사용자 답변, 앱 정보, 화면, 상태, data source와 navigation 요구사항이다.
 - **업무 흐름 설명**: 사용자가 원하는 화면 단계, 입력, 선택, 상태 변화, 오류와 복구를 기술 용어 없이 표현한 내용이다.
 - **화면 책임 결정**: 각 화면의 표시 정보, 동작 처리, 상태와 데이터 사용 책임에 대한 근거 있는 결정이다.
+- **Page Shell 결정**: `DynamicPage` root, i18n heading, snapped·expanded title context, pinnable header와 content 영역의 화면별 책임이다.
 - **서비스 설명**: 외부 서비스에서 확인한 데이터 구조와 capability이며 이 Feature가 소유하거나 변경하지 않는다.
 - **생성 요약**: 화면 흐름, 책임, navigation, validation, 데이터 연결, 포함·제외 범위와 선행 조건에 대한 사전 검토 결과다.
 - **FreeStyle 프로젝트**: UI annotation에 의존하지 않고 승인된 화면과 상태 및 interaction을 직접 구성한 SAPUI5 생성 결과다.
@@ -123,6 +132,7 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 화면 단계, 이�
 | `FREE-RECLASS-01` | 검색·필터 목록과 한 건 상세 수정만 필요 | Standard 재판정 제시 |
 | `FREE-BACKEND-01` | 최종 일괄 처리 transaction이 필요하지만 service capability를 확인할 수 없음 | FreeStyle 후보 유지, 생성 차단과 backend 선행 조건 표시 |
 | `FREE-APPROVAL-01` | 생성 요약이 완전하지만 사용자가 승인하지 않음 | 프로젝트 파일 생성 없음 |
+| `FREE-SHELL-01` | FreeStyle 화면도 Standard와 일관된 title/header 구조 필요 | 모든 XML View에 `DynamicPage`, `DynamicPageTitle`, `DynamicPageHeader`와 manifest `sap.f` dependency 생성 |
 
 ### 측정 가능한 결과
 
@@ -134,12 +144,14 @@ SAP 애플리케이션 개발자 또는 업무 전문가는 화면 단계, 이�
 - **SC-006**: 제출된 원문 요구사항과 사용자 답변의 100%가 화면, 동작, 상태, 재판정, 선행 조건 또는 범위 밖 중 하나로 추적된다.
 - **SC-007**: `FREE-APPROVAL-01`과 모든 미승인 사례의 100%에서 새 프로젝트 파일이 생성되지 않는다.
 - **SC-008**: 필수 화면, navigation, 상태, validation, interaction과 실행 검증을 모두 통과한 결과만 완료로 표시된다.
+- **SC-009**: `FREE-SHELL-01`에서 생성된 업무 화면의 100%가 `DynamicPage` title/header/content 구조를 사용하고 작은 화면에서도 snapped title로 현재 화면을 식별할 수 있다.
 
 ## 가정 및 의존성
 
 - 이 Feature는 `001-classify-fiori-app-request`에서 승인된 `FREESTYLE` 판정 결과를 사용한다.
 - 사용자는 MVC, View, Controller, Model, control, binding 또는 annotation을 알지 못할 수 있다.
 - FreeStyle은 전형적인 MVC 책임을 따르지만 사용자는 기술 구조가 아니라 업무 화면과 동작을 설명한다.
+- Standard와의 일관성은 동일한 Fiori page shell과 responsive title/header 동작을 의미하며, Fiori Elements annotation 기반 기능 또는 pixel-level 동일성을 의미하지 않는다.
 - data source는 승인된 요청에서 확인하며 metadata는 데이터 구조와 capability 확인에만 사용할 수 있다.
 - 화면별 interaction과 backend 계약은 생성 전에 확인 가능한 형태로 제공된다.
 - 배포 대상과 운영 환경 결정은 별도 Feature에서 다룬다.

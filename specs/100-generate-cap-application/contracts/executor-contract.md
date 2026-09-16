@@ -21,6 +21,7 @@ Protocol 100 executor는 000의 `workflow-executor`가 전달한 specialized `Pr
 - `completedDependencies`는 실제 step dependency의 완료 ID만 포함
 - `target=null`; protocol 100은 landscape target을 소비하지 않음
 - request가 [cap-generation-request.schema.json](./cap-generation-request.schema.json)을 만족
+- `inputs.project.persistence`가 명시적 `SQLITE` 또는 `HANA`; 누락 시 SQLite로 default하지 않고 `BLOCKED`
 - credential detector가 전체 handoff에서 credential-like content를 찾지 않음
 - output parent가 workspace boundary 안이고 final project path가 존재하지 않음
 - protocol descriptor가 `IMPLEMENTED`이고 executor가 등록된 경우에만 실행. `DEFINED`에서는 항상 `NOT_IMPLEMENTED`로 차단

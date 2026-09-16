@@ -85,9 +85,25 @@ test("the same 001 entry point dispatches Custom and Freestyle without cross-gen
             output: freestyleOutput
         });
         assert.equal(freestyle.protocol.selectedGenerator, "004");
-        assert.match(await readFile(join(freestyleOutput, "webapp/manifest.json"), "utf8"), /review/);
+        const freestyleManifest = await readFile(join(freestyleOutput, "webapp/manifest.json"), "utf8");
+        const freestyleApp = await readFile(join(freestyleOutput, "webapp/view/App.view.xml"), "utf8");
+        const freestyleView = await readFile(join(freestyleOutput, "webapp/view/View.view.xml"), "utf8");
+        const freestyleReview = await readFile(join(freestyleOutput, "webapp/view/Review.view.xml"), "utf8");
+        const freestyleReport = await readFile(join(freestyleOutput, "fiori-agent-report.json"), "utf8");
+        assert.match(freestyleManifest, /review/);
+        assert.match(freestyleManifest, /"sap\.f"/);
+        assert.match(freestyleManifest, /"minUI5Version":\s*"1\.120\.0"/);
+        assert.match(freestyleManifest, /\.view\.App/);
+        assert.match(freestyleApp, /<App id="app"/);
+        for (const view of [freestyleView, freestyleReview]) {
+            assert.match(view, /<f:DynamicPage/);
+            assert.match(view, /<f:DynamicPageTitle/);
+            assert.match(view, /<f:DynamicPageHeader/);
+            assert.match(view, /<f:content>/);
+        }
+        assert.match(freestyleReport, /"type": "DYNAMIC_PAGE"/);
         assert.match(await readFile(join(freestyleOutput, "webapp/model/models.js"), "utf8"), /JSONModel/);
-        assert.equal(await readFile(join(freestyleOutput, "webapp/view/Review.view.xml"), "utf8") !== "", true);
+        assert.equal(freestyleReview !== "", true);
     } finally {
         await rm(directory, { recursive: true, force: true });
     }

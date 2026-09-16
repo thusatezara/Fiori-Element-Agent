@@ -1,9 +1,18 @@
 import { readFile } from "node:fs/promises";
 
 const manifest = JSON.parse(await readFile(new URL("../webapp/manifest.json", import.meta.url), "utf8"));
+const appView = await readFile(new URL("../webapp/view/App.view.xml", import.meta.url), "utf8");
 const view = await readFile(new URL("../webapp/view/View.view.xml", import.meta.url), "utf8");
+const review = await readFile(new URL("../webapp/view/Review.view.xml", import.meta.url), "utf8").catch(() => null);
 const source = await readFile(new URL("../webapp/Component.js", import.meta.url), "utf8");
 if (!manifest["sap.app"]?.id || !manifest["sap.app"]?.dataSources?.mainService?.uri) throw new Error("Missing application or OData service configuration");
 if (!manifest["sap.ui5"]?.routing?.routes?.length || !view.includes("ColumnListItem")) throw new Error("Missing freestyle table and routing");
+if (!appView.includes("<App id=\"app\"")) throw new Error("Missing App route host");
+if (!manifest["sap.ui5"]?.dependencies?.libs?.["sap.f"]) throw new Error("Missing sap.f dependency for the DynamicPage shell");
+for (const screen of [view, review].filter(Boolean)) {
+  for (const control of ["<f:DynamicPage", "<f:DynamicPageTitle", "<f:DynamicPageHeader", "<f:content>"]) {
+    if (!screen.includes(control)) throw new Error(`Missing FreeStyle page shell control: ${control}`);
+  }
+}
 if (source.includes("annotation.xml") || source.includes("UI.LineItem")) throw new Error("Freestyle screen must not depend on UI annotations");
 console.log("Validated Freestyle SAPUI5 application, service binding, table, routing, and annotation boundary.");

@@ -63,6 +63,7 @@
 - Backend가 새로 생성되는 경우 Frontend가 존재하지 않는 service metadata를 먼저 소비하지 않도록 계약 의존성을 둔다.
 - 기존 001 CLI 요청은 새로운 진입점 추가 후에도 동일하게 동작해야 한다.
 - 외부 변경을 포함하지 않은 요청에는 배포·게시 단계를 자동 추가하지 않는다.
+- CAP Backend 요청에 DB가 명시되지 않으면 SQLite를 기본값으로 선택하지 않고 `SQLITE` 또는 `HANA` 중 하나를 확인하는 `NEEDS_INPUT` 상태로 차단한다. 둘 다 언급되거나 구조화 입력과 원문이 충돌해도 생성하지 않는다.
 
 ## 요구사항
 
@@ -86,6 +87,7 @@
 - **FR-016**: 시스템은 계획 결과에 단계별 protocol, dependency, 상태, approval level, blocking reason과 validation criteria를 포함해야 한다.
 - **FR-017**: 시스템은 실행 전용 adapter가 없는 100, 200, 300, 400 protocol을 `DEFINED` 상태로 공개하되 완료된 기능으로 보고하지 않아야 한다.
 - **FR-018**: 시스템은 요청 분석과 계획 생성을 local read-only 성격으로 수행해야 한다.
+- **FR-019**: 시스템은 BACKEND scope의 persistence를 `SQLITE` 또는 `HANA` 중 하나로 명시적으로 받아야 하며, 누락·중복·충돌 시 기본값을 추론하지 않고 사용자 확인이 필요한 차단 사유를 반환해야 한다.
 
 ### 주요 정보 객체
 
@@ -105,10 +107,12 @@
 - **SC-004**: 기존 Frontend generator test의 100%가 새 orchestration 도입 후에도 통과한다.
 - **SC-005**: 생성되는 계획과 문서의 credential 저장 건수가 0건이다.
 - **SC-006**: protocol 담당 Agent 정의의 100%가 중앙 Spec 경로와 책임 범위를 명시한다.
+- **SC-007**: DB가 명시되지 않은 CAP 요청의 100%가 project 생성 전에 `NEEDS_INPUT`으로 차단되고, 명시된 `SQLITE` 또는 `HANA`만 Backend 실행 가능 입력으로 전달된다.
 
 ## 가정
 
 - 이번 Feature는 orchestration 기반과 protocol 경계를 구현하며 실제 CAP 생성, MTA build, CF deploy와 Work Zone API 호출은 후속 protocol 구현에서 제공한다.
 - CAP의 첫 runtime 대상은 Node.js로 계획하되 100 protocol 구현 전에는 기술 선택을 실행 가능한 기능으로 표시하지 않는다.
+- CAP persistence에는 안전한 기본값이 없다. `SQLITE`는 local/demo용 in-memory 저장소이고 `HANA`는 durable production intent이므로 요청마다 선택을 확인한다.
 - Cloud Foundry와 Work Zone target은 사용자 입력 또는 인증된 실행 환경의 read-only inspection으로 확인한다.
 - 기존 `npm run generate`는 Frontend 전용 호환 진입점으로 유지한다.

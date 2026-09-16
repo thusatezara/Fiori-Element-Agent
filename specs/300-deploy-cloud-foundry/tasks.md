@@ -8,16 +8,16 @@
 
 ## Phase 1: Setup
 
-- [ ] T001 Cloud Foundry secret-free fixture와 fake adapter 경계를 `tests/fixtures/cloud-foundry/README.md`에 정의한다.
-- [ ] T002 [P] Protocol 300 schema loader와 safe error 형식을 `src/deployment/cloud-foundry/contract.mjs`에 구성한다.
-- [ ] T003 [P] CF process 호출을 기록하되 외부 process를 만들지 않는 fake를 `tests/helpers/fake-cf-adapter.mjs`에 구성한다.
+- [x] T001 Cloud Foundry secret-free fixture와 fake adapter 경계를 `tests/fixtures/cloud-foundry/README.md`에 정의한다.
+- [x] T002 [P] Protocol 300 schema loader와 safe error 형식을 `src/deployment/cloud-foundry/contract.mjs`에 구성한다.
+- [x] T003 [P] CF process 호출을 기록하되 외부 process를 만들지 않는 fake를 `tests/helpers/fake-cf-adapter.mjs`에 구성한다.
 
 ## Phase 2: Foundational
 
-- [ ] T004 handoff와 Protocol 200 `READY` artifact/evidence/checksum validator를 `src/deployment/cloud-foundry/deployment-gate.mjs`에 구현한다. (FR-001~FR-003)
-- [ ] T005 [P] HTTPS API/org/space/stage canonicalization과 fingerprint test를 `tests/cloud-foundry-contract.test.mjs`에 작성한다. (FR-004~FR-005)
-- [ ] T006 credential-like payload와 raw CLI output redaction test를 `tests/cloud-foundry-contract.test.mjs`에 작성한다. (FR-009)
-- [ ] T007 `DEFINED` 상태에서는 fake adapter조차 호출하지 않는 registry safety test를 `tests/solution-plan.test.mjs`에 보강한다. (FR-021)
+- [x] T004 handoff와 Protocol 200 `READY` artifact/evidence/checksum validator를 `src/deployment/cloud-foundry/deployment-gate.mjs`에 구현한다. (FR-001~FR-003)
+- [x] T005 [P] HTTPS API/org/space/stage canonicalization과 fingerprint test를 `tests/cloud-foundry-contract.test.mjs`에 작성한다. (FR-004~FR-005)
+- [x] T006 credential-like payload와 raw CLI output redaction test를 `tests/cloud-foundry-contract.test.mjs`에 작성한다. (FR-009)
+- [x] T007 `DEFINED` 상태에서는 fake adapter조차 호출하지 않는 registry safety test를 `tests/solution-plan.test.mjs`에 보강한다. (FR-021)
 
 ## Phase 3: User Story 1 - target과 권한 확인 (Priority: P1) 🎯 MVP
 
@@ -25,11 +25,11 @@
 
 **Independent Test**: 누락/불일치/확인 불가 prerequisite는 `BLOCKED`, 완전한 fixture만 `READY_FOR_APPROVAL`이다.
 
-- [ ] T008 [P] [US1] target match/mismatch, session/role/plugin/service/quota fixture를 `tests/fixtures/cloud-foundry/preflight/`에 작성한다.
-- [ ] T009 [P] [US1] artifact checksum/evidence 및 preflight matrix test를 `tests/cloud-foundry-deployment.test.mjs`에 작성한다. (FR-001~FR-008)
-- [ ] T010 [US1] canonical requested/current target inspector를 `src/deployment/cloud-foundry/target-inspector.mjs`에 구현한다. (FR-004~FR-005)
-- [ ] T011 [US1] session/role, CLI/plugin, service/entitlement/quota inspector를 `src/deployment/cloud-foundry/prerequisite-inspector.mjs`에 구현한다. (FR-006~FR-008)
-- [ ] T012 [US1] secret-free `PreflightSnapshot`과 freshness/fingerprint를 `src/deployment/cloud-foundry/deployment-gate.mjs`에 구현한다. (FR-009)
+- [x] T008 [P] [US1] target match/mismatch, session/role/plugin/service/quota fixture를 `tests/fixtures/cloud-foundry/preflight/`에 작성한다.
+- [x] T009 [P] [US1] artifact checksum/evidence 및 preflight matrix test를 `tests/cloud-foundry-deployment.test.mjs`에 작성한다. (FR-001~FR-008)
+- [x] T010 [US1] canonical requested/current target inspector를 `src/deployment/cloud-foundry/target-inspector.mjs`에 구현한다. (FR-004~FR-005)
+- [x] T011 [US1] session/role, CLI/plugin, service/entitlement/quota inspector를 `src/deployment/cloud-foundry/prerequisite-inspector.mjs`에 구현한다. (FR-006~FR-008)
+- [x] T012 [US1] secret-free `PreflightSnapshot`과 freshness/fingerprint를 `src/deployment/cloud-foundry/deployment-gate.mjs`에 구현한다. (FR-009)
 
 ## Phase 4: User Story 2 - 명시적으로 승인된 배포 실행 (Priority: P1)
 
@@ -37,12 +37,12 @@
 
 **Independent Test**: approval 오류와 PROD 추가 승인 누락은 호출 0회, 유효 요청은 key당 호출 최대 1회다.
 
-- [ ] T013 [P] [US2] missing/stale/mismatch approval와 PROD approval fixture를 `tests/fixtures/cloud-foundry/approvals/`에 작성한다.
-- [ ] T014 [P] [US2] approval, execution-time recheck 및 idempotency test를 `tests/cloud-foundry-deployment.test.mjs`에 작성한다. (FR-010~FR-015)
-- [ ] T015 [US2] deploy intent, approval binding/freshness와 PROD 추가 gate를 `src/deployment/cloud-foundry/deployment-gate.mjs`에 구현한다. (FR-010~FR-013)
-- [ ] T016 [US2] allowlisted executable/argument-array process boundary와 redaction을 `src/deployment/cloud-foundry/cf-process-adapter.mjs`에 구현한다. (FR-009, FR-014)
-- [ ] T017 [US2] idempotency key와 operation lifecycle을 `src/deployment/cloud-foundry/operation-tracker.mjs`에 구현한다. (FR-015~FR-016)
-- [ ] T018 [US2] gate 통과 후 adapter 1회 호출 순서를 `src/deployment/cloud-foundry/protocol.mjs` executor factory에 연결하되 registry 상태는 유지한다. (FR-013~FR-016, FR-021)
+- [x] T013 [P] [US2] missing/stale/mismatch approval와 PROD approval fixture를 `tests/fixtures/cloud-foundry/approvals/`에 작성한다.
+- [x] T014 [P] [US2] approval, execution-time recheck 및 idempotency test를 `tests/cloud-foundry-deployment.test.mjs`에 작성한다. (FR-010~FR-015)
+- [x] T015 [US2] deploy intent, approval binding/freshness와 PROD 추가 gate를 `src/deployment/cloud-foundry/deployment-gate.mjs`에 구현한다. (FR-010~FR-013)
+- [x] T016 [US2] allowlisted executable/argument-array process boundary와 redaction을 `src/deployment/cloud-foundry/cf-process-adapter.mjs`에 구현한다. (FR-009, FR-014)
+- [x] T017 [US2] idempotency key와 operation lifecycle을 `src/deployment/cloud-foundry/operation-tracker.mjs`에 구현한다. (FR-015~FR-016)
+- [x] T018 [US2] gate 통과 후 adapter 1회 호출 순서를 `src/deployment/cloud-foundry/protocol.mjs` executor factory에 연결하되 registry 상태는 유지한다. (FR-013~FR-016, FR-021)
 
 ## Phase 5: User Story 3 - 결과 검증과 안전한 recovery (Priority: P2)
 
@@ -50,19 +50,19 @@
 
 **Independent Test**: success/failed/timeout/partial fixture가 정확한 상태와 credential-free evidence를 만들고 recovery 호출은 0회다.
 
-- [ ] T019 [P] [US3] success/failure/timeout/partial/route-less-worker fixture를 `tests/fixtures/cloud-foundry/results/`에 작성한다.
-- [ ] T020 [P] [US3] operation, health, route와 no-auto-recovery test를 `tests/cloud-foundry-deployment.test.mjs`에 작성한다. (FR-016~FR-020)
-- [ ] T021 [US3] expected topology와 observed application health/route validator를 `src/deployment/cloud-foundry/deployment-validator.mjs`에 구현한다. (FR-017~FR-018)
-- [ ] T022 [US3] `SUCCEEDED|FAILED|UNKNOWN` 판정과 approval prerequisite recovery guidance를 `src/deployment/cloud-foundry/deployment-report.mjs`에 구현한다. (FR-018~FR-019)
-- [ ] T023 [US3] 400이 소비할 `resultId`, protocol, operation/application identity, artifact digest, subaccount와 verified time을 `src/deployment/cloud-foundry/deployment-report.mjs`에 포함한다. (FR-016~FR-020)
-- [ ] T024 [US3] `deployment-result.schema.json`과 Protocol 400 handoff 호환 test를 `tests/cloud-foundry-contract.test.mjs`에 작성한다. (FR-016~FR-020)
+- [x] T019 [P] [US3] success/failure/timeout/partial/route-less-worker fixture를 `tests/fixtures/cloud-foundry/results/`에 작성한다.
+- [x] T020 [P] [US3] operation, health, route와 no-auto-recovery test를 `tests/cloud-foundry-deployment.test.mjs`에 작성한다. (FR-016~FR-020)
+- [x] T021 [US3] expected topology와 observed application health/route validator를 `src/deployment/cloud-foundry/deployment-validator.mjs`에 구현한다. (FR-017~FR-018)
+- [x] T022 [US3] `SUCCEEDED|FAILED|UNKNOWN` 판정과 approval prerequisite recovery guidance를 `src/deployment/cloud-foundry/deployment-report.mjs`에 구현한다. (FR-018~FR-019)
+- [x] T023 [US3] 400이 소비할 `resultId`, protocol, operation/application identity, artifact digest, subaccount와 verified time을 `src/deployment/cloud-foundry/deployment-report.mjs`에 포함한다. (FR-016~FR-020)
+- [x] T024 [US3] `deployment-result.schema.json`과 Protocol 400 handoff 호환 test를 `tests/cloud-foundry-contract.test.mjs`에 작성한다. (FR-016~FR-020)
 
 ## Phase 6: Polish & Cross-Cutting Concerns
 
-- [ ] T025 [P] error code와 운영자 recovery 절차를 `specs/300-deploy-cloud-foundry/quickstart.md`에 구현 결과와 맞춘다.
-- [ ] T026 모든 payload/log/report에 대한 credential scan coverage를 `tests/cloud-foundry-contract.test.mjs`에 완성한다. (FR-009)
-- [ ] T027 `npm test`와 quickstart 결과 및 실제 CF 호출 0건을 `specs/300-deploy-cloud-foundry/checklists/implementation.md`에 기록한다.
-- [ ] T028 모든 safety test 통과 후에만 `src/deployment/cloud-foundry/protocol.mjs`에 executor를 등록하고 `IMPLEMENTED`로 전환한다. (FR-021)
+- [x] T025 [P] error code와 운영자 recovery 절차를 `specs/300-deploy-cloud-foundry/quickstart.md`에 구현 결과와 맞춘다.
+- [x] T026 모든 payload/log/report에 대한 credential scan coverage를 `tests/cloud-foundry-contract.test.mjs`에 완성한다. (FR-009)
+- [x] T027 `npm test`와 quickstart 결과 및 실제 CF 호출 0건을 `specs/300-deploy-cloud-foundry/checklists/implementation.md`에 기록한다.
+- [x] T028 모든 safety test 통과 후에만 `src/deployment/cloud-foundry/protocol.mjs`에 executor를 등록하고 `IMPLEMENTED`로 전환한다. (FR-021)
 
 ## Dependencies & Execution Order
 

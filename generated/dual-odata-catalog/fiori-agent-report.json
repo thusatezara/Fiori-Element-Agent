@@ -1,0 +1,88 @@
+{
+  "status": "VALIDATED",
+  "solutionPlan": {
+    "scopes": ["FRONTEND"],
+    "steps": [
+      {
+        "protocol": "001-classify-fiori-app-request",
+        "status": "COMPLETED",
+        "decision": "FREESTYLE",
+        "reason": "서로 다른 OData version의 두 service를 한 화면에서 동시에 조합하는 사용자 정의 layout"
+      },
+      {
+        "protocol": "004-generate-freestyle-sapui5-app",
+        "status": "VALIDATED",
+        "dependsOn": ["001-classify-fiori-app-request"]
+      }
+    ],
+    "excludedScopes": ["BACKEND", "PUBLISH_WORK_ZONE"],
+    "expandedScopes": ["PACKAGE", "DEPLOY_CF"]
+  },
+  "services": [
+    {
+      "collectionUrl": "https://cc779debtrial-dev-bookshop-srv.cfapps.us10-001.hana.ondemand.com/admin/Books",
+      "odataVersion": "4.0",
+      "entitySet": "Books",
+      "key": "ID",
+      "access": "READ"
+    },
+    {
+      "collectionUrl": "https://services.odata.org/northwind/northwind.svc/Products",
+      "odataVersion": "2.0",
+      "entitySet": "Products",
+      "key": "ProductID",
+      "access": "READ"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "REQ-001",
+      "request": "두 목록을 한 화면에서 동시에 조회",
+      "implementation": "Home.view.xml의 responsive FlexBox와 두 client-side result table"
+    },
+    {
+      "id": "REQ-002",
+      "request": "각 line 선택 시 상세 페이지 이동",
+      "implementation": "bookDetail 및 productDetail route와 두 상세 view"
+    },
+    {
+      "id": "POLICY-001",
+      "request": "초기 자동 조회 금지",
+      "implementation": "remote collection binding을 초기 View에서 제외하고 onExecute에서 두 OData 요청 실행"
+    },
+    {
+      "id": "FR-004-024-027",
+      "request": "FreeStyle 화면을 Standard와 일관된 Title/Header 구조로 표시",
+      "implementation": "Home, BookDetail, ProductDetail에 sap.f.DynamicPage, DynamicPageTitle, pinnable DynamicPageHeader와 content aggregation 적용"
+    }
+  ],
+  "validation": {
+    "metadata": "PASSED",
+    "static": "PASSED",
+    "tests": "PASSED (4/4 generated project, 19/19 repository regression)",
+    "build": "PASSED (SAPUI5 1.120.0, sap_horizon)",
+    "browser": "PASSED (Books 5, Products 20, both detail routes)",
+    "runtimeConsoleErrors": 0,
+    "productionDependencyAudit": "PASSED (0 vulnerabilities)"
+  },
+  "pageShell": {
+    "type": "DYNAMIC_PAGE",
+    "businessViews": ["Home", "BookDetail", "ProductDetail"],
+    "title": "i18n heading, snapped and expanded context, primary actions",
+    "header": "collapsible and pinnable screen context",
+    "content": "list and detail controls",
+    "sapFLibrary": true
+  },
+  "packaging": {
+    "protocol": "200-compose-mta-solution",
+    "status": "READY",
+    "descriptor": "deployment/mta.yaml",
+    "archive": "deployment/mta_archives/dual-odata-catalog_1.0.0.mtar",
+    "validation": ["descriptor", "references", "secret-scan", "archive-checksum"]
+  },
+  "risks": [
+    "Bookshop trial endpoint의 수명과 인증 정책은 외부 환경에 의존함",
+    "배포 시 두 remote service를 destination 또는 application router로 연결해야 함",
+    "개발 도구 dependency에는 npm audit 기준 moderate 7건, high 4건이 있으나 production dependency audit은 0건임"
+  ]
+}

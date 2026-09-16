@@ -1,0 +1,38 @@
+{
+  "handoffVersion": "1.0",
+  "handoffId": "22222222-2222-4222-8222-222222222221",
+  "planId": "22222222-2222-4222-8222-222222222222",
+  "stepId": "backend",
+  "protocol": { "id": "100", "version": "1.0" },
+  "request": { "summary": "재고 검증과 주문 transaction" },
+  "inputs": {
+    "requirements": [
+      { "id": "RULE-DOMAIN-001", "text": "재고가 있는 도서를 모델링한다", "kind": "DOMAIN" },
+      { "id": "RULE-SERVICE-001", "text": "주문 action을 공개한다", "kind": "SERVICE" },
+      { "id": "RULE-BEHAVIOR-001", "text": "재고는 음수가 될 수 없고 주문은 atomic하다", "kind": "BEHAVIOR" }
+    ],
+    "project": { "name": "cap-rules-01", "namespace": "demo.rules", "outputParent": "generated", "runtime": "NODEJS", "persistence": "SQLITE", "odataVersion": "V4" },
+    "domain": { "entities": [
+      { "id": "book", "name": "Books", "aspects": [], "elements": [
+        { "name": "ID", "type": "INTEGER", "key": true, "nullable": false, "requirementIds": ["RULE-DOMAIN-001"] },
+        { "name": "title", "type": "STRING", "length": 200, "key": false, "nullable": false, "requirementIds": ["RULE-DOMAIN-001"] },
+        { "name": "stock", "type": "INTEGER", "key": false, "nullable": false, "requirementIds": ["RULE-DOMAIN-001"] }
+      ], "relationships": [], "requirementIds": ["RULE-DOMAIN-001"] }
+    ] },
+    "services": [
+      { "id": "catalog", "name": "CatalogService", "path": "/catalog", "entities": [
+        { "name": "Books", "sourceEntityId": "book", "exposedElements": ["ID", "title", "stock"], "capabilities": ["READ", "UPDATE"], "authorization": [], "requirementIds": ["RULE-SERVICE-001"] }
+      ], "operations": [
+        { "name": "submitOrder", "kind": "ACTION", "boundTo": null, "parameters": [{ "name": "book", "type": "Integer", "nullable": false }, { "name": "quantity", "type": "Integer", "nullable": false }], "returns": { "type": "Boolean" }, "sideEffect": true, "destructive": false, "requirementIds": ["RULE-SERVICE-001"] }
+      ], "authorization": [], "requirementIds": ["RULE-SERVICE-001"] }
+    ],
+    "behaviors": [
+      { "id": "positive-stock", "kind": "VALIDATION", "serviceId": "catalog", "target": "Books", "events": ["CREATE", "UPDATE"], "condition": { "field": "stock", "operator": "GTE", "value": 0 }, "error": { "code": "INVALID_STOCK", "message": "Stock must not be negative" }, "atomic": false, "requirementIds": ["RULE-BEHAVIOR-001"] },
+      { "id": "submit-order", "kind": "TRANSACTION", "serviceId": "catalog", "target": "submitOrder", "events": ["ACTION"], "condition": { "statements": [{ "op": "UPDATE", "entity": "CatalogService.Books", "where": { "field": "ID", "parameter": "book" }, "set": { "field": "stock", "decrementParameter": "quantity" } }] }, "error": null, "atomic": true, "requirementIds": ["RULE-BEHAVIOR-001"] }
+    ],
+    "seedData": { "Books": [{ "ID": 1, "title": "Transactional Book", "stock": 5 }] }
+  },
+  "target": null,
+  "completedDependencies": [],
+  "requestedAt": "2026-09-15T00:00:00.000Z"
+}

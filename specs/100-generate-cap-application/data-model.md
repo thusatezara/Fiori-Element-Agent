@@ -36,8 +36,10 @@
 | `namespace` | string | dot-separated CDS identifier |
 | `outputParent` | string | workspace-relative, boundary 안에 resolve |
 | `runtime` | enum | 최초 구현은 `NODEJS` |
-| `persistence` | enum | `SQLITE`, `HANA`; HANA는 intent만 기록 |
+| `persistence` | enum | 필수 명시값 `SQLITE`, `HANA`; 누락 시 default 없이 거부 |
 | `odataVersion` | enum | `V4` |
+
+`SQLITE`는 in-memory local/demo DB를 생성한다. `HANA`는 local 검증용 development SQLite profile과 durable deployment를 위한 production HANA profile을 생성하지만, 실제 HANA instance/binding은 200/300에 위임한다.
 
 ## RequirementRef
 

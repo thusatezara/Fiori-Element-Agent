@@ -9,7 +9,7 @@ request → 000 solution plan → 001/100/200/300/400 → validation/report
 ## Solution planning
 
 ```powershell
-npm run plan -- --request "CAP backend와 Fiori Elements 앱을 만들고 MTA로 구성해줘"
+npm run plan -- --request "CAP backend와 Fiori Elements 앱을 만들고 MTA로 구성해줘" --db HANA
 ```
 
 `plan`은 외부 시스템이나 application 파일을 변경하지 않고 scope, dependency, protocol 상태와 prerequisite를 JSON으로 출력한다. 100, 200, 300, 400은 executor가 구현되기 전까지 `DEFINED`/`NOT_IMPLEMENTED`로 보고된다.

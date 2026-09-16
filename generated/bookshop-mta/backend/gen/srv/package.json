@@ -1,0 +1,38 @@
+{
+  "name": "bookshop",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "cds-serve",
+    "compile": "cds compile srv --to edmx",
+    "test": "node --test test/*.test.js",
+    "validate": "npm run compile && npm test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@sap/cds": "^9.7.0",
+    "@cap-js/sqlite": "^2.1.0",
+    "@cap-js/hana": "^2.0.0"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^9.7.0"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "[development]": {
+          "kind": "sqlite",
+          "credentials": {
+            "url": ":memory:"
+          }
+        },
+        "[production]": {
+          "kind": "hana"
+        }
+      }
+    }
+  }
+}

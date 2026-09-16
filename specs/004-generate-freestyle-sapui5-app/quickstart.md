@@ -15,6 +15,7 @@ npm run generate -- --request "Products 다단계 wizard와 client state를 제�
 기대 결과:
 
 - manifest route와 XML View/controller pair 생성
+- 모든 업무 화면에 `DynamicPage`, `DynamicPageTitle`, pinnable `DynamicPageHeader`와 content 영역 생성
 - metadata 기반 responsive table과 XML View/controller pair 생성
 - OData model과 UI5 routing 연결
 - UI annotation 기반 layout 생성 없음
@@ -40,4 +41,4 @@ npm run lint
 npm run build
 ```
 
-contract, route graph, generated QUnit scaffold, annotation 비의존 검사와 UI5 build가 성공해야 결과를 검증 완료로 보고한다. OPA5는 후속 검증 항목이다.
+contract, route graph, generated QUnit scaffold, `sap.f` dependency, DynamicPage title/header/content shell, annotation 비의존 검사와 UI5 build가 성공해야 결과를 검증 완료로 보고한다. OPA5는 후속 검증 항목이다.

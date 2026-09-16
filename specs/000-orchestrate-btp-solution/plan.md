@@ -24,7 +24,7 @@
 
 **Performance Goals**: 일반적인 자연어 요청을 외부 I/O 없이 100ms 이내에 계획
 
-**Constraints**: 기존 `npm run generate` 호환, 외부 변경 없음, credential 저장 없음, 요청별 Spec 생성 없음, 미구현 executor 실행 금지
+**Constraints**: 기존 `npm run generate` 호환, 외부 변경 없음, credential 저장 없음, 요청별 Spec 생성 없음, 미구현 executor 실행 금지, CAP persistence 기본값 추론 금지
 
 **Scale/Scope**: 한 요청에서 최대 5개 scope와 dependency-ordered step 5개
 
@@ -121,6 +121,10 @@ Root `AGENTS.md`에는 mandatory entry와 governance만 둔다. 정확한 protoc
 ### Decision 5: 외부 변경은 별도 risk level
 
 300과 400은 `EXTERNAL_CHANGE`로 표시한다. 계획에 명시적 intent와 완전한 target reference가 모두 있어야 ready가 될 수 있다. credential은 target reference에 포함하지 않는다.
+
+### Decision 6: CAP DB는 필수 확인 입력
+
+BACKEND scope가 포함되면 자연어의 `SQLite`/`HANA` 또는 구조화된 `backend.persistence`를 확인한다. 값이 없으면 Backend step을 `NEEDS_INPUT`으로 두고 `SQLITE`와 `HANA` 중 하나를 질문하며, 서로 다른 값이 동시에 제시되면 충돌을 반환한다. 000은 persistence를 임의 선택하지 않는다.
 
 ## Complexity Tracking
 

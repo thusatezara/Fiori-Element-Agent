@@ -1,0 +1,47 @@
+<mvc:View
+  controllerName="com.acme.dualcatalog.controller.BookDetail"
+  xmlns="sap.m"
+  xmlns:f="sap.f"
+  xmlns:mvc="sap.ui.core.mvc">
+  <f:DynamicPage
+    id="bookDetailPage"
+    busy="{view>/detailBusy}"
+    busyIndicatorDelay="0"
+    headerExpanded="true"
+    toggleHeaderOnTitleClick="true">
+    <f:title>
+      <f:DynamicPageTitle>
+        <f:heading>
+          <Title text="{bookshop>title}" level="H1" />
+        </f:heading>
+        <f:snappedContent>
+          <Text text="{= 'Book ID ' + ${bookshop>ID} }" />
+        </f:snappedContent>
+        <f:expandedContent>
+          <Text text="{i18n>bookDetailTitle}" />
+        </f:expandedContent>
+        <f:actions>
+          <Button text="{i18n>back}" icon="sap-icon://nav-back" press=".onNavBack" />
+        </f:actions>
+      </f:DynamicPageTitle>
+    </f:title>
+    <f:header>
+      <f:DynamicPageHeader pinnable="true">
+        <HBox wrap="Wrap" renderType="Bare">
+          <ObjectStatus title="{i18n>authorId}" text="{bookshop>author_ID}" class="sapUiTinyMarginEnd" />
+          <ObjectStatus title="{i18n>genreId}" text="{bookshop>genre_ID}" class="sapUiTinyMarginEnd" />
+          <ObjectStatus title="{i18n>stock}" text="{bookshop>stock}" />
+        </HBox>
+      </f:DynamicPageHeader>
+    </f:header>
+    <f:content>
+      <VBox class="sapUiResponsiveContentPadding">
+        <Title text="{i18n>detailSectionTitle}" level="H2" class="sapUiSmallMarginBottom" />
+        <Label text="{i18n>description}" />
+        <Text text="{bookshop>descr}" class="sapUiSmallMarginBottom" />
+        <Label text="{i18n>unitPrice}" />
+        <ObjectNumber number="{bookshop>price}" unit="{bookshop>currency_code}" />
+      </VBox>
+    </f:content>
+  </f:DynamicPage>
+</mvc:View>

@@ -1,0 +1,15 @@
+COLUMN TABLE bookshop_Books (
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  ID INTEGER NOT NULL,
+  title NVARCHAR(200) NOT NULL,
+  descr NCLOB,
+  stock INTEGER NOT NULL,
+  price DECIMAL(9, 2),
+  author_ID INTEGER,
+  genre_ID INTEGER,
+  currency_code NVARCHAR(3),
+  PRIMARY KEY(ID)
+)

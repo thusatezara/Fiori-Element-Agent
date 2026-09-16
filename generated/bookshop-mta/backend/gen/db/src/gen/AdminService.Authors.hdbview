@@ -1,0 +1,4 @@
+VIEW AdminService_Authors AS SELECT
+  Authors_0.ID,
+  Authors_0.name
+FROM bookshop_Authors AS Authors_0

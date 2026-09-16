@@ -4,7 +4,7 @@
 
 ## Summary
 
-Protocol 200은 000의 `PACKAGE` handoff와 검증된 generation result만 받아 target-neutral `MtaTopology`를 만들고, collision/schema/reference/boundary/secret 검증과 격리된 MTA build validation을 통과한 경우에만 checksum이 있는 `DeploymentArtifact`를 출력한다. 배포 target 확인과 외부 변경은 300에 위임한다. 구현 및 필수 검증이 끝날 때까지 registry 상태는 `DEFINED`이고 package executor를 등록하지 않는다.
+Protocol 200은 000의 `PACKAGE` handoff와 검증된 generation result만 받아 target-neutral `MtaTopology`를 만들고, collision/schema/reference/boundary/secret 검증과 격리된 MTA build validation을 통과한 경우에만 checksum이 있는 `DeploymentArtifact`를 출력한다. 배포 target 확인과 외부 변경은 300에 위임한다. 구현 및 필수 검증 완료 후 registry 상태와 package executor를 `IMPLEMENTED`로 활성화했다.
 
 ## Technical Context
 
@@ -85,6 +85,16 @@ tests/fixtures/mta/
 4. 기존 output은 fingerprint가 동일할 때만 재사용하고 다르면 차단한다.
 5. 정적 검증과 실제 build validation이 모두 성공해야 `READY` artifact를 발급한다.
 6. executor와 registry `IMPLEMENTED` 전환은 모든 task/test가 완료된 동일 변경에서 수행한다.
+
+## Reusable CAP HANA Topology Decision
+
+- BACKEND component는 checksum 검증 후 `package.json`의 production DB profile을 읽어 `HANA` 또는 `SQLITE` capability로 정규화한다.
+- HANA CAP module 이름은 고정 예제가 아니라 `identity.applicationId`에서 `<id>-srv`, `<id>-db-deployer`, `<id>-db`로 파생한다.
+- source는 composition output의 `backend/`에 staging하고 CAP production build 결과인 `backend/gen/srv`, `backend/gen/db`를 module path로 사용한다.
+- MTAR 생성 후 staging에만 사용된 backend와 `gen/*`의 `node_modules`는 제거하고 archive, build output 및 lockfile만 보존한다.
+- `<id>-db`는 `com.sap.xs.hdi-container`, offering `hana`, plan `hdi-shared`로 선언하며 300 preflight가 marketplace 가용성을 확인한다.
+- Frontend proxy가 필요하면 검증된 component capability로만 전달하며 core runtime source에 endpoint를 하드코딩하지 않는다.
+- 이 결정은 HDI container topology까지만 소유하며 HANA Cloud database instance provisioning은 수행하지 않는다.
 
 ## Complexity Tracking
 

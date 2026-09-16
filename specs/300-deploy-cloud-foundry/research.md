@@ -44,6 +44,8 @@
 
 **Decision**: registry 상태가 `DEFINED`면 target inspection을 포함한 실제 CF process를 시작하지 않고 `NOT_IMPLEMENTED`를 반환한다.
 
+**Implementation status**: 필수 task와 fake-adapter safety test 완료 후 `IMPLEMENTED`로 전환되었다.
+
 **Rationale**: 부분 구현이나 문서만 완성된 protocol이 외부 변경을 일으키지 않도록 한다.
 
 **Alternatives considered**: read-only CF command만 먼저 허용하면 lifecycle contract가 모호해지므로 executor 구현·검증 후 함께 활성화한다.

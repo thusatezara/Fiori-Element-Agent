@@ -36,6 +36,16 @@
 
 **Decision**: 문서와 구현 task가 모두 완료되어 registry가 원자적으로 `IMPLEMENTED`로 전환되기 전에는 executor 및 build adapter를 호출하지 않는다.
 
+**Implementation status**: 필수 task와 safety test 완료 후 `IMPLEMENTED`로 전환되었다.
+
 **Rationale**: 부분 구현의 실행 가능 노출을 막는다.
 
 **Alternatives considered**: experimental executor를 `DEFINED`에서 실행하는 방식은 000 registry 계약을 위반한다.
+
+## Decision 6: CAP HANA topology는 identity와 artifact metadata에서 파생
+
+**Decision**: CAP BACKEND의 이름, persistence와 build path를 sample 이름에서 가져오지 않는다. checksum이 검증된 component `package.json`에서 production persistence를 읽고 `identity.applicationId`를 기반으로 service module, db-deployer와 HDI resource를 생성한다.
+
+**Rationale**: Protocol 200을 Bookshop뿐 아니라 임의의 CAP solution에 동일하게 적용하면서 source artifact와 descriptor 사이의 persistence drift를 차단한다.
+
+**Alternatives considered**: core code에 `bookshop-*` 이름이나 remote endpoint를 넣는 방식은 재사용성과 target-neutral 원칙을 위반해 제외했다. HANA Cloud database instance 자동 생성도 account entitlement, sizing과 credential 결정이 필요하므로 HDI packaging과 분리한다.

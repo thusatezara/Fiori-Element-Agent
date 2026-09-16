@@ -77,3 +77,4 @@
 
 - [x] T018 [US1] 상위 dependency step이 실행 가능하지 않을 때 자체적으로 `READY`인 downstream step을 `BLOCKED`로 표시하고 executor가 dependency completion evidence를 요구하도록 `src/orchestration/solution-plan.mjs`, `src/orchestration/workflow-executor.mjs`, `tests/solution-plan.test.mjs`, `specs/000-orchestrate-btp-solution/quickstart.md`를 보완한다. (FR-006, FR-008 partial)
 - [x] T019 [US2] versioned `ProtocolHandoff` 생성·검증 경계를 `src/orchestration/protocol-handoff.mjs`에 구현하고 `src/orchestration/workflow-executor.mjs`, contract, plan, test를 연결한다. (Plan Summary, ProtocolHandoff object partial)
+- [x] T020 [US1] CAP persistence가 없는 자연어 요청을 `NEEDS_INPUT`으로 차단하고 `--db SQLITE|HANA` 및 원문 명시를 지원하도록 request normalization, plan gate, schema, Protocol 100 validation과 회귀 테스트를 동기화한다. (FR-019, SC-007)

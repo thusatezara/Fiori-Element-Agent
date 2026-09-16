@@ -39,7 +39,27 @@
           "validationStatus": { "const": "PASSED" },
           "outputPath": { "type": "string", "minLength": 1 },
           "checksum": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
-          "capabilities": { "type": "object" },
+          "capabilities": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "runtime": { "enum": ["NODEJS"] },
+              "persistence": { "enum": ["SQLITE", "HANA"] },
+              "proxies": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["prefix", "base"],
+                  "properties": {
+                    "prefix": { "type": "string", "pattern": "^/[A-Za-z0-9/_-]*/$" },
+                    "base": { "type": "string", "format": "uri", "pattern": "^https://" }
+                  }
+                }
+              },
+              "modules": { "type": "array", "items": { "type": "object" } }
+            }
+          },
           "validatedAt": { "type": "string", "format": "date-time" }
         }
       }
@@ -64,7 +84,8 @@
           "offering": { "type": "string", "minLength": 1 },
           "plan": { "type": "string", "minLength": 1 },
           "configuration": { "type": "object" }
-        }
+        },
+        "additionalProperties": false
       }
     }
   }

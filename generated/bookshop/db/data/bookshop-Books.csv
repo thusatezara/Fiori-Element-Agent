@@ -1,0 +1,6 @@
+ID,title,descr,stock,price,author_ID,genre_ID,currency_code
+1,"Wuthering Heights","A classic English novel.",12,15.9,1,1,"USD"
+2,"Jane Eyre","A coming-of-age novel.",8,13.5,2,1,"USD"
+3,"Pride and Prejudice","A novel of manners.",20,11.75,3,2,"USD"
+4,"Emma","A novel about youthful confidence.",6,12.25,3,2,"EUR"
+5,"Villette","A nineteenth-century novel.",10,14,2,1,"EUR"

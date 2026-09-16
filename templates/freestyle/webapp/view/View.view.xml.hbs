@@ -1,9 +1,32 @@
 <mvc:View
   controllerName="{{namespace}}.controller.View"
   xmlns="sap.m"
+  xmlns:f="sap.f"
   xmlns:mvc="sap.ui.core.mvc">
-  <Page id="mainPage" title="{i18n>appTitle}">
-    <content>
+  <f:DynamicPage id="mainPage" headerExpanded="true" toggleHeaderOnTitleClick="true" fitContent="true">
+    <f:title>
+      <f:DynamicPageTitle>
+        <f:heading>
+          <Title text="{i18n>appTitle}" level="H1" />
+        </f:heading>
+        <f:snappedContent>
+          <Text text="{i18n>appDescription}" />
+        </f:snappedContent>
+        <f:expandedContent>
+          <Text text="{i18n>appDescription}" />
+        </f:expandedContent>
+      </f:DynamicPageTitle>
+    </f:title>
+    <f:header>
+      <f:DynamicPageHeader pinnable="true">
+        <HBox wrap="Wrap" renderType="Bare">
+          <ObjectStatus title="{i18n>entitySetLabel}" text="{{entitySet}}" class="sapUiTinyMarginEnd" />
+          <ObjectStatus title="{i18n>keyFieldsLabel}" text="{{keys}}" />
+        </HBox>
+      </f:DynamicPageHeader>
+    </f:header>
+    <f:content>
+      <VBox class="sapUiResponsiveContentPadding">
       <Table id="dataTable" items="{/{{entitySet}}}" growing="true" growingScrollToLoad="true" sticky="ColumnHeaders">
         <columns>
 {{columnsMarkup}}
@@ -14,6 +37,7 @@
           </ColumnListItem>
         </items>
       </Table>
-    </content>
-  </Page>
+      </VBox>
+    </f:content>
+  </f:DynamicPage>
 </mvc:View>

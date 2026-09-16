@@ -12,9 +12,9 @@
 
 **Language/Version**: generator는 Node.js 20 이상 ECMAScript modules; 생성물은 CAP Node.js와 CDS
 
-**Primary Dependencies**: project-local `@sap/cds` 9.x compatible range, `@cap-js/sqlite`, Node.js built-in test runner, 기존 `src/generation/common` output transaction/report utilities
+**Primary Dependencies**: project-local `@sap/cds` 9.x compatible range, `@cap-js/sqlite`, HANA intent의 `@cap-js/hana`, reproducible production build용 devDependency `@sap/cds-dk`, Node.js built-in test runner, 기존 `src/generation/common` output transaction/report utilities
 
-**Storage**: local validation은 SQLite; production intent는 `SQLITE` 또는 `HANA`지만 100은 HANA binding/deploy를 수행하지 않음
+**Storage**: persistence intent는 필수 `SQLITE` 또는 `HANA`; `SQLITE`는 in-memory local/demo profile, `HANA`는 development SQLite와 production HANA profile을 생성하지만 100은 HANA binding/deploy를 수행하지 않음
 
 **Testing**: Node.js test runner의 schema/contract/unit/integration test, `cds compile`, generated handler test, local HTTP metadata smoke test, credential scan
 
@@ -24,7 +24,7 @@
 
 **Performance Goals**: dependency install 제외, entity 50개·service 10개·element 총 1,000개의 fixture를 10초 안에 plan/render; compile/start는 별도 check duration으로 보고
 
-**Constraints**: `ProtocolHandoff 1.0` only, OData V4, Node.js only, `db`/`srv`/`app` boundary, credential 0건, raw SQL 없음, 기존 output overwrite 없음, external change 없음
+**Constraints**: `ProtocolHandoff 1.0` only, OData V4, Node.js only, 명시적 persistence 필수·default 금지, `db`/`srv`/`app` boundary, credential 0건, raw SQL 없음, 기존 output overwrite 없음, external change 없음
 
 **Scale/Scope**: 한 handoff당 project 1개, domain entity 1~50개, service 1~10개, request size 2 MB 이하
 
@@ -104,7 +104,9 @@ tests/
 
 **Pipeline Decision**: validate specialized handoff → build immutable domain/service/behavior plan → render to staging → secret/static scan → install-independent CDS syntax/contract checks → generated-project dependency install in isolated test fixture → compile/test/start/snapshot checks → atomic rename → result/report 순서다. 어느 필수 단계든 실패하면 final directory와 completed capability를 만들지 않는다.
 
-**Registry Decision**: 구현 기간에는 `src/generation/backend/cap/protocol.mjs`의 `status: DEFINED`, `executor: null`을 유지한다. 모든 mandatory test와 quickstart가 통과하는 마지막 task에서만 executor를 연결하고 `IMPLEMENTED`로 동시에 전환한다.
+**Registry Decision**: mandatory test와 quickstart가 통과한 T034에서 `src/generation/backend/cap/protocol.mjs`의 executor를 연결하고 `IMPLEMENTED`로 동시에 전환했다. executor는 specialized handoff 전체를 받는 `invocation: HANDOFF` 계약을 사용한다.
+
+**Persistence Decision**: 000이 `SQLITE` 또는 `HANA`를 명시적으로 확인한 handoff만 100에 전달한다. 누락된 persistence는 request validation에서 거부한다. `HANA` 선택은 local 검증용 development SQLite profile과 downstream 배포용 production HANA profile을 함께 생성한다.
 
 ## Requirement Traceability
 

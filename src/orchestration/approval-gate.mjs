@@ -1,7 +1,11 @@
 const SECRET_KEY = /(^|_)(authorization|password|passwd|token|secret|client_secret|api_key)($|_)/i;
 
 export function containsCredential(value, key = "") {
-    if (SECRET_KEY.test(key)) return true;
+    if (SECRET_KEY.test(key)) {
+        const authorizationIntent = /^authorization$/i.test(key) && (Array.isArray(value) || (value && typeof value === "object"));
+        const emptyValue = value === null || value === undefined || value === "" || (Array.isArray(value) && value.length === 0);
+        if (!authorizationIntent && !emptyValue) return true;
+    }
     if (Array.isArray(value)) return value.some((item) => containsCredential(item));
     if (value && typeof value === "object") {
         return Object.entries(value).some(([childKey, childValue]) => containsCredential(childValue, childKey));

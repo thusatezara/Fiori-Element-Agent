@@ -20,6 +20,12 @@ function dependencies(scope, present) {
 }
 
 function readiness(protocol, request) {
+    if (protocol.scope === "BACKEND" && !request.backend?.persistence) {
+        return {
+            readiness: "NEEDS_INPUT",
+            blockingReasons: ["Which CAP database should be used: SQLITE for an in-memory demo or HANA for durable production persistence?"]
+        };
+    }
     if (protocol.riskLevel === "EXTERNAL_CHANGE") {
         const gate = evaluateApprovalGate(protocol.scope, request);
         if (!gate.ready) return { readiness: "NEEDS_INPUT", blockingReasons: gate.reasons };

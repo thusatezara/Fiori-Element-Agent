@@ -1,0 +1,145 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "com.acme.dualcatalog",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "dataSources": {
+      "bookshopService": {
+        "uri": "/admin/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      },
+      "northwindService": {
+        "uri": "/northwind/northwind.svc/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": {
+        "sap.f": {},
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.ui.layout": {}
+      }
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.acme.dualcatalog.i18n.i18n",
+          "supportedLocales": ["", "ko", "en"],
+          "fallbackLocale": "en"
+        }
+      },
+      "bookshop": {
+        "type": "sap.ui.model.odata.v4.ODataModel",
+        "dataSource": "bookshopService",
+        "preload": false,
+        "settings": {
+          "operationMode": "Server",
+          "synchronizationMode": "None",
+          "autoExpandSelect": true,
+          "earlyRequests": false
+        }
+      },
+      "northwind": {
+        "type": "sap.ui.model.odata.v2.ODataModel",
+        "dataSource": "northwindService",
+        "preload": false,
+        "settings": {
+          "defaultBindingMode": "OneWay",
+          "useBatch": false
+        }
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "rootView": {
+      "viewName": "com.acme.dualcatalog.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "root"
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "type": "View",
+        "viewType": "XML",
+        "path": "com.acme.dualcatalog.view",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "async": true,
+        "bypassed": {
+          "target": "notFound"
+        }
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "home",
+          "target": "home"
+        },
+        {
+          "pattern": "books/{bookId}",
+          "name": "bookDetail",
+          "target": "bookDetail"
+        },
+        {
+          "pattern": "products/{productId}",
+          "name": "productDetail",
+          "target": "productDetail"
+        }
+      ],
+      "targets": {
+        "home": {
+          "viewId": "home",
+          "viewName": "Home",
+          "viewLevel": 1
+        },
+        "bookDetail": {
+          "viewId": "bookDetail",
+          "viewName": "BookDetail",
+          "viewLevel": 2
+        },
+        "productDetail": {
+          "viewId": "productDetail",
+          "viewName": "ProductDetail",
+          "viewLevel": 2
+        },
+        "notFound": {
+          "viewId": "notFound",
+          "viewName": "NotFound",
+          "viewLevel": 3
+        }
+      }
+    }
+  }
+}

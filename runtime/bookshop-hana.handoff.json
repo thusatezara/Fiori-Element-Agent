@@ -1,0 +1,163 @@
+{
+  "handoffVersion": "1.0",
+  "handoffId": "8a7a5d67-8e6a-4a7e-95d4-c436e972eea1",
+  "planId": "a25adf88-803b-4fd4-b80f-f3548b5444d6",
+  "stepId": "backend",
+  "protocol": { "id": "100", "version": "1.0" },
+  "request": {
+    "summary": "만료된 trial의 Bookshop AdminService를 HANA persistence intent로 재생성",
+    "sourceEvidence": "기존 검증 보고서의 /admin/Books OData V4 contract"
+  },
+  "inputs": {
+    "requirements": [
+      {
+        "id": "BOOKSHOP-DOMAIN-001",
+        "text": "도서, 저자, 장르와 통화를 관계가 명시된 persistence model로 정의한다.",
+        "kind": "DOMAIN"
+      },
+      {
+        "id": "BOOKSHOP-SERVICE-001",
+        "text": "기존 Frontend가 사용한 /admin/Books OData V4 read contract와 필드를 공개한다.",
+        "kind": "SERVICE"
+      },
+      {
+        "id": "BOOKSHOP-PERSISTENCE-001",
+        "text": "production persistence intent는 SAP HANA이며 development validation은 SQLite profile을 사용한다.",
+        "kind": "NON_FUNCTIONAL"
+      }
+    ],
+    "project": {
+      "name": "bookshop",
+      "namespace": "bookshop",
+      "outputParent": "generated",
+      "runtime": "NODEJS",
+      "persistence": "HANA",
+      "odataVersion": "V4"
+    },
+    "domain": {
+      "entities": [
+        {
+          "id": "authors",
+          "name": "Authors",
+          "aspects": [],
+          "elements": [
+            { "name": "ID", "type": "INTEGER", "key": true, "nullable": false, "requirementIds": ["BOOKSHOP-DOMAIN-001"] },
+            { "name": "name", "type": "STRING", "length": 120, "key": false, "nullable": false, "requirementIds": ["BOOKSHOP-DOMAIN-001"] }
+          ],
+          "relationships": [],
+          "requirementIds": ["BOOKSHOP-DOMAIN-001"]
+        },
+        {
+          "id": "genres",
+          "name": "Genres",
+          "aspects": [],
+          "elements": [
+            { "name": "ID", "type": "INTEGER", "key": true, "nullable": false, "requirementIds": ["BOOKSHOP-DOMAIN-001"] },
+            { "name": "name", "type": "STRING", "length": 80, "key": false, "nullable": false, "requirementIds": ["BOOKSHOP-DOMAIN-001"] }
+          ],
+          "relationships": [],
+          "requirementIds": ["BOOKSHOP-DOMAIN-001"]
+        },
+        {
+          "id": "currencies",
+          "name": "Currencies",
+          "aspects": [],
+          "elements": [
+            { "name": "code", "type": "STRING", "length": 3, "key": true, "nullable": false, "requirementIds": ["BOOKSHOP-DOMAIN-001"] },
+            { "name": "name", "type": "STRING", "length": 80, "key": false, "nullable": false, "requirementIds": ["BOOKSHOP-DOMAIN-001"] }
+          ],
+          "relationships": [],
+          "requirementIds": ["BOOKSHOP-DOMAIN-001"]
+        },
+        {
+          "id": "books",
+          "name": "Books",
+          "aspects": ["MANAGED"],
+          "elements": [
+            { "name": "ID", "type": "INTEGER", "key": true, "nullable": false, "requirementIds": ["BOOKSHOP-DOMAIN-001"] },
+            { "name": "title", "type": "STRING", "length": 200, "key": false, "nullable": false, "requirementIds": ["BOOKSHOP-DOMAIN-001"] },
+            { "name": "descr", "type": "LARGE_STRING", "key": false, "nullable": true, "requirementIds": ["BOOKSHOP-DOMAIN-001"] },
+            { "name": "stock", "type": "INTEGER", "key": false, "nullable": false, "requirementIds": ["BOOKSHOP-DOMAIN-001"] },
+            { "name": "price", "type": "DECIMAL", "precision": 9, "scale": 2, "key": false, "nullable": true, "requirementIds": ["BOOKSHOP-DOMAIN-001"] }
+          ],
+          "relationships": [
+            { "name": "author", "targetEntityId": "authors", "kind": "ASSOCIATION", "cardinality": "TO_ONE", "nullable": true, "requirementIds": ["BOOKSHOP-DOMAIN-001"] },
+            { "name": "genre", "targetEntityId": "genres", "kind": "ASSOCIATION", "cardinality": "TO_ONE", "nullable": true, "requirementIds": ["BOOKSHOP-DOMAIN-001"] },
+            { "name": "currency", "targetEntityId": "currencies", "kind": "ASSOCIATION", "cardinality": "TO_ONE", "nullable": true, "requirementIds": ["BOOKSHOP-DOMAIN-001"] }
+          ],
+          "requirementIds": ["BOOKSHOP-DOMAIN-001"]
+        }
+      ]
+    },
+    "services": [
+      {
+        "id": "admin-service",
+        "name": "AdminService",
+        "path": "/admin",
+        "entities": [
+          {
+            "name": "Books",
+            "sourceEntityId": "books",
+            "exposedElements": ["createdAt", "createdBy", "modifiedAt", "modifiedBy", "ID", "title", "descr", "stock", "price", "author", "genre", "currency"],
+            "capabilities": ["READ"],
+            "authorization": [],
+            "requirementIds": ["BOOKSHOP-SERVICE-001"]
+          },
+          {
+            "name": "Authors",
+            "sourceEntityId": "authors",
+            "exposedElements": ["ID", "name"],
+            "capabilities": ["READ"],
+            "authorization": [],
+            "requirementIds": ["BOOKSHOP-SERVICE-001"]
+          },
+          {
+            "name": "Genres",
+            "sourceEntityId": "genres",
+            "exposedElements": ["ID", "name"],
+            "capabilities": ["READ"],
+            "authorization": [],
+            "requirementIds": ["BOOKSHOP-SERVICE-001"]
+          },
+          {
+            "name": "Currencies",
+            "sourceEntityId": "currencies",
+            "exposedElements": ["code", "name"],
+            "capabilities": ["READ"],
+            "authorization": [],
+            "requirementIds": ["BOOKSHOP-SERVICE-001"]
+          }
+        ],
+        "operations": [],
+        "authorization": [],
+        "requirementIds": ["BOOKSHOP-SERVICE-001"]
+      }
+    ],
+    "behaviors": [],
+    "seedData": {
+      "Authors": [
+        { "ID": 1, "name": "Emily Bronte" },
+        { "ID": 2, "name": "Charlotte Bronte" },
+        { "ID": 3, "name": "Jane Austen" }
+      ],
+      "Genres": [
+        { "ID": 1, "name": "Novel" },
+        { "ID": 2, "name": "Romance" }
+      ],
+      "Currencies": [
+        { "code": "USD", "name": "US Dollar" },
+        { "code": "EUR", "name": "Euro" }
+      ],
+      "Books": [
+        { "ID": 1, "title": "Wuthering Heights", "descr": "A classic English novel.", "stock": 12, "price": 15.90, "author_ID": 1, "genre_ID": 1, "currency_code": "USD" },
+        { "ID": 2, "title": "Jane Eyre", "descr": "A coming-of-age novel.", "stock": 8, "price": 13.50, "author_ID": 2, "genre_ID": 1, "currency_code": "USD" },
+        { "ID": 3, "title": "Pride and Prejudice", "descr": "A novel of manners.", "stock": 20, "price": 11.75, "author_ID": 3, "genre_ID": 2, "currency_code": "USD" },
+        { "ID": 4, "title": "Emma", "descr": "A novel about youthful confidence.", "stock": 6, "price": 12.25, "author_ID": 3, "genre_ID": 2, "currency_code": "EUR" },
+        { "ID": 5, "title": "Villette", "descr": "A nineteenth-century novel.", "stock": 10, "price": 14.00, "author_ID": 2, "genre_ID": 1, "currency_code": "EUR" }
+      ]
+    }
+  },
+  "target": null,
+  "completedDependencies": [],
+  "requestedAt": "2026-09-15T00:55:00.000Z"
+}

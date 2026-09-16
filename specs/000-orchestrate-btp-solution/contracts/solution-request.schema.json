@@ -3,7 +3,7 @@
   "$id": "https://example.local/btp-agent/solution-request.schema.json",
   "title": "BTP Solution Request",
   "type": "object",
-  "required": ["requestId", "originalText", "scopes", "evidence", "requestedTargets", "externalChangeIntent", "createdAt"],
+  "required": ["requestId", "originalText", "scopes", "evidence", "backend", "requestedTargets", "externalChangeIntent", "createdAt"],
   "properties": {
     "requestId": { "type": "string", "format": "uuid" },
     "originalText": { "type": "string", "minLength": 1 },
@@ -14,6 +14,15 @@
       "items": { "enum": ["FRONTEND", "BACKEND", "PACKAGE", "DEPLOY_CF", "PUBLISH_WORK_ZONE"] }
     },
     "evidence": { "type": "array", "items": { "type": "object" } },
+    "backend": {
+      "type": "object",
+      "required": ["persistence", "source"],
+      "properties": {
+        "persistence": { "enum": ["SQLITE", "HANA", null] },
+        "source": { "enum": ["STRUCTURED_INPUT", "REQUEST_TEXT", "UNSPECIFIED"] }
+      },
+      "additionalProperties": false
+    },
     "requestedTargets": { "type": "object" },
     "externalChangeIntent": { "type": "boolean" },
     "createdAt": { "type": "string", "format": "date-time" }

@@ -16,7 +16,19 @@
         "stateFields": { "type": "array", "items": { "type": "object" } },
         "validations": { "type": "array", "items": { "type": "object" } },
         "reclassification": { "type": ["string", "null"], "enum": ["STANDARD", "CUSTOM", null] },
-        "prerequisites": { "type": "array", "items": { "type": "object" } }
+        "prerequisites": { "type": "array", "items": { "type": "object" } },
+        "pageShell": {
+          "type": "object",
+          "required": ["type", "title", "header", "content", "sapFLibrary"],
+          "properties": {
+            "type": { "const": "DYNAMIC_PAGE" },
+            "title": { "type": "string" },
+            "header": { "type": "string" },
+            "content": { "type": "string" },
+            "sapFLibrary": { "const": true }
+          },
+          "additionalProperties": false
+        }
       },
       "additionalProperties": true
     },

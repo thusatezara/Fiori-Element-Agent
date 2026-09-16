@@ -1,6 +1,6 @@
 # Quickstart: CAP Backend protocol 검증
 
-이 문서는 protocol 100 구현 후 재현할 validation 시나리오다. 현재 descriptor는 `DEFINED`이며 아래 command가 구현·통과하고 registry가 `IMPLEMENTED`로 전환되기 전에는 실행 가능한 protocol이 아니다.
+이 문서는 구현된 protocol 100의 validation 시나리오다. descriptor는 mandatory validation을 통과한 변경에서 `IMPLEMENTED`로 전환되었다.
 
 ## 사전 조건
 
@@ -80,6 +80,7 @@ npm test -- --test-name-pattern "CAP generation guard"
 - protocol ID 또는 version 불일치
 - missing entity key 또는 unresolved relationship lifecycle
 - unsupported runtime
+- missing persistence intent 또는 `SQLITE`/`HANA`가 아닌 값
 - credential-like key/value 또는 authorization header 포함
 - workspace 밖 output 또는 path traversal
 - 이미 존재하는 output directory
@@ -107,4 +108,5 @@ Get-ChildItem specs/100-generate-cap-application/contracts/*.json | ForEach-Obje
 - 생성물과 report의 credential scan 0건
 - existing output 손상 0건
 - HANA, XSUAA/IAS와 Cloud Foundry는 검증하지 않았다고 report에 명시
+- DB 미지정 요청이 SQLite로 default되지 않고 000에서 `NEEDS_INPUT`, 100 handoff에서 `BLOCKED`로 처리됨
 - 위 조건을 모두 만족한 뒤에만 protocol descriptor를 `IMPLEMENTED`로 전환

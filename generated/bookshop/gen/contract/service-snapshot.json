@@ -1,0 +1,197 @@
+[
+  {
+    "snapshotVersion": "1.0",
+    "odataVersion": "4.0",
+    "serviceName": "AdminService",
+    "serviceUrlHint": "/admin/",
+    "entitySets": [
+      {
+        "name": "Books",
+        "keys": [
+          "ID"
+        ],
+        "properties": [
+          {
+            "name": "createdAt",
+            "type": "Edm.DateTimeOffset",
+            "nullable": true,
+            "maxLength": null,
+            "precision": null,
+            "scale": null
+          },
+          {
+            "name": "createdBy",
+            "type": "User",
+            "nullable": true,
+            "maxLength": 255,
+            "precision": null,
+            "scale": null
+          },
+          {
+            "name": "modifiedAt",
+            "type": "Edm.DateTimeOffset",
+            "nullable": true,
+            "maxLength": null,
+            "precision": null,
+            "scale": null
+          },
+          {
+            "name": "modifiedBy",
+            "type": "User",
+            "nullable": true,
+            "maxLength": 255,
+            "precision": null,
+            "scale": null
+          },
+          {
+            "name": "ID",
+            "type": "Edm.Int32",
+            "nullable": false,
+            "maxLength": null,
+            "precision": null,
+            "scale": null
+          },
+          {
+            "name": "title",
+            "type": "Edm.String",
+            "nullable": false,
+            "maxLength": 200,
+            "precision": null,
+            "scale": null
+          },
+          {
+            "name": "descr",
+            "type": "Edm.String",
+            "nullable": true,
+            "maxLength": null,
+            "precision": null,
+            "scale": null
+          },
+          {
+            "name": "stock",
+            "type": "Edm.Int32",
+            "nullable": false,
+            "maxLength": null,
+            "precision": null,
+            "scale": null
+          },
+          {
+            "name": "price",
+            "type": "Edm.Decimal",
+            "nullable": true,
+            "maxLength": null,
+            "precision": 9,
+            "scale": 2
+          }
+        ],
+        "navigation": [
+          {
+            "name": "author",
+            "target": "Authors",
+            "cardinality": "TO_ONE"
+          },
+          {
+            "name": "genre",
+            "target": "Genres",
+            "cardinality": "TO_ONE"
+          },
+          {
+            "name": "currency",
+            "target": "Currencies",
+            "cardinality": "TO_ONE"
+          }
+        ],
+        "capabilities": [
+          "READ"
+        ]
+      },
+      {
+        "name": "Authors",
+        "keys": [
+          "ID"
+        ],
+        "properties": [
+          {
+            "name": "ID",
+            "type": "Edm.Int32",
+            "nullable": false,
+            "maxLength": null,
+            "precision": null,
+            "scale": null
+          },
+          {
+            "name": "name",
+            "type": "Edm.String",
+            "nullable": false,
+            "maxLength": 120,
+            "precision": null,
+            "scale": null
+          }
+        ],
+        "navigation": [],
+        "capabilities": [
+          "READ"
+        ]
+      },
+      {
+        "name": "Genres",
+        "keys": [
+          "ID"
+        ],
+        "properties": [
+          {
+            "name": "ID",
+            "type": "Edm.Int32",
+            "nullable": false,
+            "maxLength": null,
+            "precision": null,
+            "scale": null
+          },
+          {
+            "name": "name",
+            "type": "Edm.String",
+            "nullable": false,
+            "maxLength": 80,
+            "precision": null,
+            "scale": null
+          }
+        ],
+        "navigation": [],
+        "capabilities": [
+          "READ"
+        ]
+      },
+      {
+        "name": "Currencies",
+        "keys": [
+          "code"
+        ],
+        "properties": [
+          {
+            "name": "code",
+            "type": "Edm.String",
+            "nullable": false,
+            "maxLength": 3,
+            "precision": null,
+            "scale": null
+          },
+          {
+            "name": "name",
+            "type": "Edm.String",
+            "nullable": false,
+            "maxLength": 80,
+            "precision": null,
+            "scale": null
+          }
+        ],
+        "navigation": [],
+        "capabilities": [
+          "READ"
+        ]
+      }
+    ],
+    "operations": [],
+    "metadataPath": "gen/contract/metadata.xml",
+    "modelDigest": "sha256:d9aa2030fb3d0dfe23175f7e13e848915cdf2dbb5090170a2465d00c9bf1cbe2"
+  }
+]

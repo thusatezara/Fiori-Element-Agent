@@ -1,0 +1,32 @@
+{
+  "handoffVersion": "1.0",
+  "handoffId": "33333333-3333-4333-8333-333333333331",
+  "planId": "33333333-3333-4333-8333-333333333332",
+  "stepId": "backend",
+  "protocol": { "id": "100", "version": "1.0" },
+  "request": { "summary": "승인된 catalog reader role" },
+  "inputs": {
+    "requirements": [
+      { "id": "AUTH-DOMAIN-001", "text": "도서를 모델링한다", "kind": "DOMAIN" },
+      { "id": "AUTH-SERVICE-001", "text": "도서를 읽기 전용으로 공개한다", "kind": "SERVICE" },
+      { "id": "AUTH-ROLE-001", "text": "CatalogReader만 읽을 수 있다", "kind": "AUTHORIZATION" }
+    ],
+    "project": { "name": "cap-auth-01", "namespace": "demo.auth", "outputParent": "generated", "runtime": "NODEJS", "persistence": "SQLITE", "odataVersion": "V4" },
+    "domain": { "entities": [
+      { "id": "book", "name": "Books", "aspects": [], "elements": [
+        { "name": "ID", "type": "INTEGER", "key": true, "nullable": false, "requirementIds": ["AUTH-DOMAIN-001"] },
+        { "name": "title", "type": "STRING", "length": 200, "key": false, "nullable": false, "requirementIds": ["AUTH-DOMAIN-001"] }
+      ], "relationships": [], "requirementIds": ["AUTH-DOMAIN-001"] }
+    ] },
+    "services": [
+      { "id": "catalog", "name": "CatalogService", "path": "/catalog", "entities": [
+        { "name": "Books", "sourceEntityId": "book", "exposedElements": ["ID", "title"], "capabilities": ["READ"], "authorization": [{ "grant": ["READ"], "roles": ["CatalogReader"], "where": null, "requirementIds": ["AUTH-ROLE-001"] }], "requirementIds": ["AUTH-SERVICE-001", "AUTH-ROLE-001"] }
+      ], "operations": [], "authorization": [], "requirementIds": ["AUTH-SERVICE-001"] }
+    ],
+    "behaviors": [],
+    "seedData": { "Books": [{ "ID": 1, "title": "Authorized Book" }] }
+  },
+  "target": null,
+  "completedDependencies": [],
+  "requestedAt": "2026-09-15T00:00:00.000Z"
+}

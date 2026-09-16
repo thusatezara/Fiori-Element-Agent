@@ -1,0 +1,43 @@
+{
+  "handoffVersion": "1.0",
+  "handoffId": "11111111-1111-4111-8111-111111111111",
+  "planId": "11111111-1111-4111-8111-111111111112",
+  "stepId": "backend",
+  "protocol": { "id": "100", "version": "1.0" },
+  "request": { "summary": "비민감 도서 카탈로그 CRUD service" },
+  "inputs": {
+    "requirements": [
+      { "id": "BOOK-DOMAIN-001", "text": "도서와 저자를 모델링한다", "kind": "DOMAIN" },
+      { "id": "BOOK-SERVICE-001", "text": "승인된 도서 필드를 OData V4로 공개한다", "kind": "SERVICE" }
+    ],
+    "project": { "name": "cap-crud-01", "namespace": "demo.bookshop", "outputParent": "generated", "runtime": "NODEJS", "persistence": "SQLITE", "odataVersion": "V4" },
+    "domain": { "entities": [
+      { "id": "author", "name": "Authors", "aspects": [], "elements": [
+        { "name": "ID", "type": "INTEGER", "key": true, "nullable": false, "requirementIds": ["BOOK-DOMAIN-001"] },
+        { "name": "name", "type": "STRING", "length": 120, "key": false, "nullable": false, "requirementIds": ["BOOK-DOMAIN-001"] }
+      ], "relationships": [], "requirementIds": ["BOOK-DOMAIN-001"] },
+      { "id": "book", "name": "Books", "aspects": ["MANAGED"], "elements": [
+        { "name": "ID", "type": "INTEGER", "key": true, "nullable": false, "requirementIds": ["BOOK-DOMAIN-001"] },
+        { "name": "title", "type": "STRING", "length": 200, "key": false, "nullable": false, "requirementIds": ["BOOK-DOMAIN-001"] },
+        { "name": "stock", "type": "INTEGER", "key": false, "nullable": false, "requirementIds": ["BOOK-DOMAIN-001"] },
+        { "name": "internalNote", "type": "STRING", "length": 200, "key": false, "nullable": true, "requirementIds": ["BOOK-DOMAIN-001"] }
+      ], "relationships": [
+        { "name": "author", "targetEntityId": "author", "kind": "ASSOCIATION", "cardinality": "TO_ONE", "nullable": false, "requirementIds": ["BOOK-DOMAIN-001"] }
+      ], "requirementIds": ["BOOK-DOMAIN-001"] }
+    ] },
+    "services": [
+      { "id": "admin", "name": "AdminService", "path": "/admin", "entities": [
+        { "name": "Books", "sourceEntityId": "book", "exposedElements": ["ID", "title", "stock", "author"], "capabilities": ["READ", "CREATE", "UPDATE"], "authorization": [], "requirementIds": ["BOOK-SERVICE-001"] },
+        { "name": "Authors", "sourceEntityId": "author", "exposedElements": ["ID", "name"], "capabilities": ["READ"], "authorization": [], "requirementIds": ["BOOK-SERVICE-001"] }
+      ], "operations": [], "authorization": [], "requirementIds": ["BOOK-SERVICE-001"] }
+    ],
+    "behaviors": [],
+    "seedData": {
+      "Authors": [{ "ID": 1, "name": "Sample Author" }],
+      "Books": [{ "ID": 1, "title": "Sample Book", "stock": 10, "author_ID": 1 }]
+    }
+  },
+  "target": null,
+  "completedDependencies": [],
+  "requestedAt": "2026-09-15T00:00:00.000Z"
+}

@@ -1,0 +1,37 @@
+{
+  "resultVersion": "1.0",
+  "protocol": {
+    "id": "200",
+    "version": "1.0"
+  },
+  "status": "READY",
+  "artifactId": "d9c32806-c83d-4874-81b1-e7e6e0dd8e6b",
+  "archivePath": "C:\\Users\\stati\\Documents\\ChatGPT\\Fiori Elements Agent\\generated\\dual-odata-catalog\\deployment\\mta_archives\\dual-odata-catalog_1.0.0.mtar",
+  "archiveChecksum": "f1b462ff66ee4cd7b65cb4ec64d0ebf3b4c184bc6b81c24c494ae20df06a64d6",
+  "descriptorFingerprint": "b14fb3c5cc480fdb113a970c352977f971452fb5bcef804ec78a0f6ad100de16",
+  "sourceResultIds": [
+    "4bb327b2-5d6a-4114-b288-b17e4cd640dd"
+  ],
+  "serviceRequirements": [],
+  "applicationId": "dual-odata-catalog",
+  "sapCloudService": "dual-odata-catalog",
+  "validation": [
+    {
+      "name": "descriptor",
+      "status": "PASSED"
+    },
+    {
+      "name": "references",
+      "status": "PASSED"
+    },
+    {
+      "name": "secret-scan",
+      "status": "PASSED"
+    },
+    {
+      "name": "archive",
+      "status": "PASSED"
+    }
+  ],
+  "blockingReasons": []
+}

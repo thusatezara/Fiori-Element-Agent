@@ -55,6 +55,27 @@ function normalizeWorkZone(target = {}) {
     };
 }
 
+function normalizeBackend(target = {}, originalText) {
+    const explicit = target.persistence ? String(target.persistence).trim().toUpperCase() : null;
+    if (explicit && !["SQLITE", "HANA"].includes(explicit)) {
+        throw new Error("CAP persistence must be SQLITE or HANA.");
+    }
+    const mentioned = [];
+    if (/\bsqlite\b/i.test(originalText)) mentioned.push("SQLITE");
+    if (/\bhana(?:\s+cloud)?\b/i.test(originalText)) mentioned.push("HANA");
+    if (new Set(mentioned).size > 1) {
+        throw new Error("CAP persistence is ambiguous. Choose exactly one of SQLITE or HANA.");
+    }
+    const fromText = mentioned[0] ?? null;
+    if (explicit && fromText && explicit !== fromText) {
+        throw new Error("Structured CAP persistence conflicts with the natural-language request.");
+    }
+    return {
+        persistence: explicit ?? fromText,
+        source: explicit ? "STRUCTURED_INPUT" : fromText ? "REQUEST_TEXT" : "UNSPECIFIED"
+    };
+}
+
 export function normalizeSolutionRequest(input = {}) {
     const originalText = String(input.request ?? "").trim();
     if (!originalText) throw new Error("A natural-language solution request is required.");
@@ -69,6 +90,7 @@ export function normalizeSolutionRequest(input = {}) {
         cloudFoundry: normalizeCloudFoundry(input.cloudFoundry),
         workZone: normalizeWorkZone(input.workZone)
     };
+    const backend = normalizeBackend(input.backend, originalText);
     if (containsCredential(requestedTargets)) {
         throw new Error("Target references must not contain credential values.");
     }
@@ -78,6 +100,7 @@ export function normalizeSolutionRequest(input = {}) {
         originalText,
         scopes: classification.scopes,
         evidence: classification.evidence,
+        backend,
         requestedTargets,
         externalChangeIntent,
         createdAt: new Date().toISOString()

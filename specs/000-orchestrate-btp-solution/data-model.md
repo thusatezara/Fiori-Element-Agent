@@ -10,6 +10,7 @@
 | originalText | string | 비어 있지 않고 원문 보존 |
 | scopes | Scope[] | 중복 없는 판정 결과 |
 | evidence | object[] | scope와 원문 표현 연결 |
+| backend | BackendIntent | CAP persistence 선택과 출처; BACKEND가 아니면 nullable intent |
 | requestedTargets | object | `cloudFoundry`, `workZone` optional |
 | externalChangeIntent | boolean | deploy/publish의 명시적 요청 여부 |
 | createdAt | ISO datetime | UTC |
@@ -17,6 +18,15 @@
 ## Scope
 
 `FRONTEND`, `BACKEND`, `PACKAGE`, `DEPLOY_CF`, `PUBLISH_WORK_ZONE` 중 하나다.
+
+## BackendIntent
+
+| Field | Type | Rules |
+|---|---|---|
+| persistence | enum/null | `SQLITE`, `HANA`; BACKEND scope에서는 실행 전에 필수 |
+| source | enum | `REQUEST_TEXT`, `STRUCTURED_INPUT`, `UNSPECIFIED` |
+
+`persistence=null`은 default SQLite를 뜻하지 않는다. Backend step은 사용자에게 선택을 확인할 때까지 `NEEDS_INPUT`이다.
 
 ## ProtocolDescriptor
 
@@ -99,7 +109,7 @@
 RECEIVED
   → CLASSIFIED
   → PLANNED
-  ├── missing target/input → NEEDS_INPUT
+  ├── missing DB/target/input → NEEDS_INPUT
   ├── executor absent      → PARTIALLY_IMPLEMENTED
   ├── contract error       → BLOCKED
   └── all steps ready      → READY

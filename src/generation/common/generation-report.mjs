@@ -32,3 +32,7 @@ export function sanitizeRequestText(value) {
         .replace(/(https?:\/\/)([^\s/@]+):([^\s/@]+)@/gi, "$1[redacted]@")
         .replace(/\b(token|password|passwd|authorization|auth)\s*[:=]\s*[^\s,;]+/gi, "$1=[redacted]");
 }
+
+export function createCapGenerationReport(result) {
+    return structuredClone(result);
+}

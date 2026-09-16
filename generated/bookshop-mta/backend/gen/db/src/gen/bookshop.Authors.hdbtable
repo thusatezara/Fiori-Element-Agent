@@ -1,0 +1,5 @@
+COLUMN TABLE bookshop_Authors (
+  ID INTEGER NOT NULL,
+  name NVARCHAR(120) NOT NULL,
+  PRIMARY KEY(ID)
+)

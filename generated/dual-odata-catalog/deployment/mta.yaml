@@ -1,0 +1,13 @@
+_schema-version: "3.3"
+ID: "dual-odata-catalog"
+version: "1.0.0"
+modules:
+  - name: "dual-odata-catalog"
+    type: "nodejs"
+    path: "app"
+    parameters:
+      disk-quota: "256M"
+      memory: "128M"
+      random-route: true
+    build-parameters:
+      builder: npm

@@ -62,7 +62,7 @@
             "namespace": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*(\\.[A-Za-z_][A-Za-z0-9_]*)*$" },
             "outputParent": { "type": "string", "minLength": 1 },
             "runtime": { "const": "NODEJS" },
-            "persistence": { "enum": ["SQLITE", "HANA"] },
+            "persistence": { "enum": ["SQLITE", "HANA"], "description": "Required explicit choice. The generator must not default an omitted persistence intent." },
             "odataVersion": { "const": "V4" }
           },
           "additionalProperties": false

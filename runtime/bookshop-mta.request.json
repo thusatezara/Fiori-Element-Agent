@@ -1,0 +1,29 @@
+{
+  "handoffVersion": "1.0",
+  "handoffId": "b064c364-c1fb-4d37-bcff-ced490fb0201",
+  "planId": "a25adf88-803b-4fd4-b80f-f3548b5444d6",
+  "stepId": "package",
+  "protocol": { "id": "200", "version": "1.0" },
+  "completedDependencies": ["backend"],
+  "requestedAt": "2026-09-15T01:20:00.000Z",
+  "solutionId": "bookshop",
+  "outputDirectory": "generated/bookshop-mta",
+  "components": [
+    {
+      "resultId": "8a7a5d67-8e6a-4a7e-95d4-c436e972eea1",
+      "protocol": { "id": "100", "version": "1.0" },
+      "kind": "BACKEND",
+      "validationStatus": "PASSED",
+      "outputPath": "generated/bookshop",
+      "checksum": "bb444e547eb2b9d0998c257f22094607127deb8ad21730232bf86f3e629c7e30",
+      "capabilities": {},
+      "validatedAt": "2026-09-15T01:00:00.000Z"
+    }
+  ],
+  "identity": {
+    "applicationId": "bookshop",
+    "sapCloudService": "bookshop",
+    "version": "1.0.0"
+  },
+  "requirements": []
+}

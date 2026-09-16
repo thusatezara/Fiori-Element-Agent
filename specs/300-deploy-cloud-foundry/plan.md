@@ -4,7 +4,7 @@
 
 ## Summary
 
-Protocol 300은 검증된 Protocol 200 artifact와 정확한 `api/org/space/stage`를 대상으로 read-only preflight를 수행하고, target/artifact/snapshot에 결속된 explicit approval 및 production 추가 승인을 검증한 뒤에만 idempotent deploy adapter를 호출한다. operation, health와 route 검증까지 성공해야 `SUCCEEDED`이며 timeout은 `UNKNOWN`이다. `DEFINED` 상태에서는 실제 `cf` command가 절대 실행되지 않는다.
+Protocol 300은 검증된 Protocol 200 artifact와 정확한 `api/org/space/stage`를 대상으로 read-only preflight를 수행하고, target/artifact/snapshot에 결속된 explicit approval 및 production 추가 승인을 검증한 뒤에만 idempotent deploy adapter를 호출한다. operation, health와 route 검증까지 성공해야 `SUCCEEDED`이며 timeout은 `UNKNOWN`이다. 구현과 safety test 완료 후 registry 상태를 `IMPLEMENTED`로 활성화했다.
 
 ## Technical Context
 
@@ -85,7 +85,7 @@ tests/fixtures/cloud-foundry/
 5. `PROD`는 별도 production approval이 있어야 한다.
 6. 실행 직전 재검증과 idempotency check가 통과해야 adapter를 1회 호출한다.
 7. operation, health와 route evidence가 모두 성공이어야 최종 성공이다.
-8. `DEFINED` 동안 gate 0에서 `NOT_IMPLEMENTED`로 차단하며 어떤 `cf` process도 만들지 않는다.
+8. activation 이전 `DEFINED` lifecycle에는 `NOT_IMPLEMENTED`로 차단했으며, 활성화된 executor도 위 1~7 gate 실패 시 어떤 변경성 `cf` process도 만들지 않는다.
 
 ## Complexity Tracking
 

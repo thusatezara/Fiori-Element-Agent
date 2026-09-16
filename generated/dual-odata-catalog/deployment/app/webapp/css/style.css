@@ -1,0 +1,26 @@
+.catalogColumns {
+  gap: 1rem;
+}
+
+.catalogPanel {
+  flex: 1 1 30rem;
+  min-width: 20rem;
+  border: 1px solid var(--sapGroup_ContentBorderColor);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: var(--sapGroup_ContentBackground);
+}
+
+.filterRow {
+  gap: 1rem;
+}
+
+.filterBox {
+  flex: 1 1 20rem;
+}
+
+@media (max-width: 600px) {
+  .catalogPanel {
+    min-width: 100%;
+  }
+}

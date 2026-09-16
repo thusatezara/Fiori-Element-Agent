@@ -1,6 +1,6 @@
 # Quickstart: Protocol 300 문서·안전 계약 검증
 
-현재 protocol 상태는 `DEFINED`다. 이 guide에서는 실제 `cf` command, login, target 변경 또는 deployment를 실행하지 않는다.
+현재 protocol 상태는 `IMPLEMENTED`다. 실제 deployment는 exact target의 read-only preflight snapshot을 만든 후 그 snapshot과 artifact checksum에 결속된 승인이 있을 때만 실행한다.
 
 ## Prerequisites
 
@@ -41,6 +41,8 @@ rg -n "DEFINED|NOT_IMPLEMENTED|실제.*cf|credential|production approval" specs/
 
 Expected: 실제 CF process 실행 금지, exact target/approval/PROD gate와 secret 저장 금지가 명시된다.
 
-## 5. 구현 후 activation
+## 5. 실행과 recovery
 
-fake process adapter 기반 contract/preflight/approval/idempotency/health/recovery test와 전체 `npm test`가 통과한 동일 변경에서만 `src/deployment/cloud-foundry/protocol.mjs`에 executor를 등록하고 `IMPLEMENTED`로 전환한다. 실제 배포 검증은 그 이후에도 실행 시점의 API, org, space, stage와 명시적 외부 변경 승인을 다시 받아야 한다.
+`createDeploymentPreflight`로 snapshot을 생성한 뒤 `deployToCloudFoundry`에 snapshot-bound approval을 전달한다. `PROD`에는 별도 `DEPLOY_CF_PROD` 승인이 필요하다. 실패 또는 관찰 불가 상태에서는 자동 retry, undeploy 또는 rollback을 수행하지 않으며 신규 승인을 요구하는 recovery guidance만 반환한다.
+
+오류는 `DEPLOYMENT_BLOCKED`, `FAILED` 또는 `UNKNOWN`으로 구분한다. 성공은 operation, application health와 route가 모두 확인된 경우에만 `SUCCEEDED`다.

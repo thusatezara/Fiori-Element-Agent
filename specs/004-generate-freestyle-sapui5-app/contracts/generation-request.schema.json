@@ -38,7 +38,19 @@
     "transitions": { "type": "array", "maxItems": 15, "items": { "type": "object" } },
     "stateFields": { "type": "array", "items": { "type": "object" } },
     "validations": { "type": "array", "items": { "type": "object" } },
-    "operations": { "type": "array", "items": { "type": "object" } }
+    "operations": { "type": "array", "items": { "type": "object" } },
+    "pageShell": {
+      "type": "object",
+      "description": "Optional approved overrides for the mandatory DynamicPage shell.",
+      "properties": {
+        "type": { "const": "DYNAMIC_PAGE" },
+        "titleKey": { "type": "string" },
+        "headerContext": { "type": "array", "items": { "type": "string" } },
+        "headerExpanded": { "type": "boolean", "default": true },
+        "headerPinnable": { "type": "boolean", "default": true }
+      },
+      "additionalProperties": false
+    }
   },
   "additionalProperties": true
 }

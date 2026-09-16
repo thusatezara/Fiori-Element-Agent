@@ -1,4 +1,5 @@
 import { runGeneration } from "../orchestration/generate.mjs";
+export { main as generateBackend } from "./commands/generate-backend.mjs";
 
 export function parseArgs(argv) {
     const options = {};

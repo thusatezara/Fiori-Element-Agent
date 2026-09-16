@@ -37,6 +37,35 @@ export async function writeApplicationAtomically(outputDirectory, files) {
     }
 }
 
+export async function createOutputTransaction(outputDirectory) {
+    await assertOutputDoesNotExist(outputDirectory);
+    await mkdir(dirname(outputDirectory), { recursive: true });
+    const stagingDirectory = `${outputDirectory}.tmp-${process.pid}-${Date.now()}`;
+    await mkdir(stagingDirectory, { recursive: false });
+    let settled = false;
+    return {
+        stagingDirectory,
+        async write(files) {
+            if (settled) throw new Error("Output transaction is already settled.");
+            for (const [filePath, contents] of files) {
+                const target = join(stagingDirectory, filePath);
+                await mkdir(dirname(target), { recursive: true });
+                await writeFile(target, contents, "utf8");
+            }
+        },
+        async commit() {
+            if (settled) throw new Error("Output transaction is already settled.");
+            await renameWithRetry(stagingDirectory, outputDirectory);
+            settled = true;
+        },
+        async rollback() {
+            if (settled) return;
+            await rm(stagingDirectory, { recursive: true, force: true });
+            settled = true;
+        }
+    };
+}
+
 async function renameWithRetry(source, destination) {
     for (let attempt = 0; attempt < 10; attempt += 1) {
         try {

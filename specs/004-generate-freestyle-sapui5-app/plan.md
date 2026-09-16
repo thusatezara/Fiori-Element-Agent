@@ -6,13 +6,13 @@
 
 ## Summary
 
-001에서 승인된 `FREESTYLE` handoff와 OData V4 service snapshot을 입력받아 manifest routing, XML Views, controllers와 client-side state model을 직접 구성한 SAPUI5 앱을 생성한다. metadata는 data source와 binding path 검증에만 사용하고 UI annotation은 layout 또는 interaction 생성에 사용하지 않는다. 승인된 navigation, validation, error recovery만 생성하며 backend transaction을 client logic으로 대체하지 않는다.
+001에서 승인된 `FREESTYLE` handoff와 OData V4 service snapshot을 입력받아 manifest routing, `sap.f.DynamicPage` 기반 XML Views, controllers와 client-side state model을 직접 구성한 SAPUI5 앱을 생성한다. 각 화면은 `DynamicPageTitle`, pinnable `DynamicPageHeader`와 content aggregation을 명시적으로 가져 Standard 화면과 일관된 page shell을 제공한다. metadata는 data source와 binding path 검증에만 사용하고 UI annotation은 layout 또는 interaction 생성에 사용하지 않는다. 승인된 navigation, validation, error recovery만 생성하며 backend transaction을 client logic으로 대체하지 않는다.
 
 ## Technical Context
 
 **Language/Version**: Node.js 20 이상, ECMAScript modules; 생성물은 JavaScript 기반 SAPUI5 XML View MVC 앱
 
-**Primary Dependencies**: 001 공통 CLI/domain 및 002 공통 generation pipeline, Node.js built-in XML/JSON handling; 생성물은 stable UI5 CLI 4, `sap.m`, `sap.ui.core`, `@sap/ux-ui5-tooling`
+**Primary Dependencies**: 001 공통 CLI/domain 및 002 공통 generation pipeline, Node.js built-in XML/JSON handling; 생성물은 stable UI5 CLI 4, `sap.f`, `sap.m`, `sap.ui.core`, `@sap/ux-ui5-tooling`
 
 **Storage**: 새 project directory와 generation report; 생성 앱의 임시 UI state는 JSONModel, 업무 데이터는 OData V4 model
 
@@ -24,7 +24,7 @@
 
 **Performance Goals**: fixture 기준 생성 5초 이내(설치 제외), 최대 5개 View와 15개 transition
 
-**Constraints**: OData V4, XML Views, async module pattern, annotation 기반 UI 생성 금지, backend rule/authorization/transaction 대체 금지, output 덮어쓰기 금지
+**Constraints**: OData V4, XML Views, 모든 업무 화면의 `DynamicPage`/Title/Header/Content shell, async module pattern, annotation 기반 UI 생성 금지, backend rule/authorization/transaction 대체 금지, output 덮어쓰기 금지
 
 **Scale/Scope**: 하나의 앱, 1~5개 화면, route graph 하나, app-level JSONModel 하나, 승인된 OData operations
 
@@ -78,6 +78,7 @@ templates/freestyle/
 └── webapp/
     ├── manifest.json.hbs
     ├── Component.js.hbs
+    ├── view/App.view.xml.hbs
     ├── view/View.view.xml.hbs
     ├── view/Review.view.xml.hbs
     ├── controller/View.controller.js.hbs
@@ -91,7 +92,7 @@ tests/
 └── generate.test.mjs
 ```
 
-**Structure Decision**: screen/transition/state plan을 먼저 검증한 뒤 화면별 XML/controller pair를 생성한다. data access, UI state와 navigation 책임을 파일 단위로 분리한다.
+**Structure Decision**: screen/transition/state plan을 먼저 검증한 뒤 화면별 XML/controller pair를 생성한다. 각 XML View는 `DynamicPage` root 아래 i18n heading과 snapped·expanded context를 가진 `DynamicPageTitle`, 화면 context를 가진 pinnable `DynamicPageHeader`, 업무 control을 가진 content를 동일한 순서로 구성한다. 화면 전역 primary action은 title action에 둔다. data access, UI state와 navigation 책임은 파일 단위로 분리한다.
 
 **Application Output**: 기본 생성 경로는 `generated/<project-name>/`이며, 사용자가 지정한 output은 001의 workspace boundary와 collision guard를 따른다.
 

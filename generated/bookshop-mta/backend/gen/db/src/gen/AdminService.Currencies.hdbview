@@ -1,0 +1,4 @@
+VIEW AdminService_Currencies AS SELECT
+  Currencies_0.code,
+  Currencies_0.name
+FROM bookshop_Currencies AS Currencies_0

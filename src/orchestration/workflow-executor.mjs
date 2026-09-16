@@ -44,6 +44,7 @@ export async function executeProtocolStep(step, handoff) {
             reasons: [`Missing completed dependencies: ${missingDependencies.join(", ")}.`]
         };
     }
-    const result = await descriptor.executor(handoff.inputs);
+    const invocation = descriptor.invocation === "HANDOFF" ? handoff : handoff.inputs;
+    const result = await descriptor.executor(invocation);
     return { status: "COMPLETED", protocolId: descriptor.id, result };
 }

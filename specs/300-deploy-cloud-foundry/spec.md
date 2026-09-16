@@ -4,9 +4,9 @@
 
 **Created**: 2026-09-11
 
-**Specification Status**: `READY_FOR_IMPLEMENTATION`
+**Specification Status**: `IMPLEMENTED`
 
-**Protocol Status**: `DEFINED` — runtime 미구현
+**Protocol Status**: `IMPLEMENTED` — approval-bound runtime 검증 완료
 
 **Risk**: External change
 
@@ -95,7 +95,7 @@
 - **FR-018**: 시스템은 timeout 또는 관찰 불가 상태를 `UNKNOWN`으로 보고하고 성공이나 실패로 추측하지 않아야 한다.
 - **FR-019**: 시스템은 실패/unknown 시 자동 retry, undeploy 또는 rollback을 수행하지 않고 영향과 사용자 승인 prerequisite가 있는 recovery guidance를 제공해야 한다.
 - **FR-020**: 시스템은 Work Zone publication이나 scope 밖 landscape 변경을 수행하지 않아야 한다.
-- **FR-021**: Protocol 300 registry 상태가 `DEFINED`인 동안 어떤 실제 `cf` command도 실행하지 않고 executor를 등록하지 않아야 한다.
+- **FR-021**: Protocol 300은 모든 구현·안전 test 통과 전에는 executor를 등록하지 않아야 하며, 활성화 후에도 exact target, artifact, snapshot-bound approval 및 execution-time preflight를 통과한 경우에만 실제 `cf deploy`를 실행해야 한다.
 
 ### 주요 정보 객체
 
@@ -124,4 +124,4 @@
 - 인증은 사용자가 준비한 실행 환경의 active session으로만 제공되며 protocol payload에 전달하지 않는다.
 - CLI/plugin 지원 version과 approval 유효기간은 구현 전 policy module 및 test로 고정한다.
 - rollback 가능 여부는 배포 전 captured non-secret baseline과 platform operation 상태에 따라 달라지며 자동 수행하지 않는다.
-- Protocol 300 구현과 모든 safety test가 완료되기 전 registry 상태는 `DEFINED`로 유지한다.
+- Protocol 300 구현과 모든 safety test가 완료되어 registry 상태는 `IMPLEMENTED`이며, 실행 시점의 approval과 preflight gate는 계속 적용한다.

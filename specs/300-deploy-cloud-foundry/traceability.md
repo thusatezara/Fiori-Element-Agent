@@ -11,4 +11,4 @@
 | SC-005 | US3 | T019~T024 | success evidence and deterministic result status |
 | SC-006~SC-007 | cross-cutting | T006, T016, T026~T028 | credential scan and no unapproved recovery/execution |
 
-Protocol 300은 T028 전까지 `DEFINED`, `executor=null`이며 실제 CF 변경은 명시적 target 및 approval 없이 수행하지 않는다.
+Protocol 300은 T028의 모든 safety gate를 통과해 `IMPLEMENTED`로 전환되었으며, 실제 CF 변경은 exact target과 snapshot-bound approval 없이 수행하지 않는다.

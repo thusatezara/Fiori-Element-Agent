@@ -1,0 +1,4 @@
+VIEW AdminService_Genres AS SELECT
+  Genres_0.ID,
+  Genres_0.name
+FROM bookshop_Genres AS Genres_0
