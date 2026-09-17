@@ -5,11 +5,13 @@ import { fileURLToPath } from "node:url";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "webapp");
 const contentTypes = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8", ".xml": "application/xml; charset=utf-8", ".css": "text/css; charset=utf-8", ".properties": "text/plain; charset=utf-8", ".png": "image/png", ".svg": "image/svg+xml" };
-const proxies = [{ prefix: "/admin/", base: "https://cc779debtrial-dev-bookshop-srv.cfapps.us10-001.hana.ondemand.com/admin/" }, { prefix: "/northwind/", base: "https://services.odata.org/northwind/" }];
+const proxies = [{ prefix: "/admin/", base: "https://9e20a855trial-dev-bookshop-srv.cfapps.us10-001.hana.ondemand.com/admin/" }, { prefix: "/northwind/", base: "https://services.odata.org/northwind/" }];
 
 async function proxy(req, res, match) {
   const target = new URL(req.url.slice(match.prefix.length), match.base);
-  const response = await fetch(target, { method: req.method, headers: { accept: req.headers.accept || "application/json" } });
+  const headers = { accept: req.headers.accept || "application/json" };
+  if (req.headers.authorization) headers.authorization = req.headers.authorization;
+  const response = await fetch(target, { method: req.method, headers });
   res.statusCode = response.status;
   for (const [name, value] of response.headers) if (!["connection", "content-length", "content-encoding", "transfer-encoding"].includes(name.toLowerCase())) res.setHeader(name, value);
   res.end(Buffer.from(await response.arrayBuffer()));

@@ -1,6 +1,6 @@
 _schema-version: "3.3"
 ID: "dual-odata-catalog"
-version: "1.0.0"
+version: "1.0.1"
 modules:
   - name: "dual-odata-catalog"
     type: "nodejs"

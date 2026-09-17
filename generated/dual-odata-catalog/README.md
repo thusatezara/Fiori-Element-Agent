@@ -14,6 +14,8 @@ npm start
 - `/admin/` → Bookshop Cloud Foundry service
 - `/northwind/` → public Northwind service
 
+화면은 Cloud Foundry `html5-apps-repo/app-host` 인스턴스 `dual-odata-catalog-repo-host`에 HTML5 Application으로 업로드됩니다. HTML5 Repository 자체에는 CF route가 생성되지 않으므로 브라우저 진입점은 SAP Build Work Zone 또는 managed/standalone App Router 구독이 제공해야 합니다. Bookshop CAP service는 XSUAA 보호 상태이므로 `/admin/` 요청에는 유효한 `Authorization: Bearer <token>`이 필요합니다.
+
 ## 검증
 
 ```powershell
@@ -24,6 +26,6 @@ npm run build
 
 ## Cloud Foundry packaging
 
-Protocol 200은 원본 source를 변경하지 않고 `deployment/` 아래에 target-neutral `mta.yaml`, 정적 Node.js host와 checksummed `.mtar`를 생성합니다. 배포 모듈의 allowlisted reverse proxy가 `/admin/`과 `/northwind/`의 읽기 요청을 연결합니다. Protocol 300은 exact target preflight와 snapshot-bound approval 후에만 배포합니다.
+HTML5 Repository 배포 descriptor와 archive는 `deployment-html5/` 아래에 있습니다. `xs-app.json`은 `/admin/`을 CAP destination으로, `/northwind/`를 public destination으로 라우팅하고, `sap.cloud.service`는 Work Zone tile discovery에 사용할 `dual.odata.catalog`으로 설정됩니다. Protocol 300은 exact target preflight와 snapshot-bound approval 후에만 배포합니다.
 
 현재 project는 읽기 전용 조회와 상세 navigation만 포함하며 생성·수정·삭제 기능은 포함하지 않습니다.

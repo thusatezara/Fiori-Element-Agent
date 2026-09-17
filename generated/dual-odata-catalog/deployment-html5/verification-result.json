@@ -1,0 +1,49 @@
+{
+  "status": "SUCCEEDED",
+  "deploymentKind": "HTML5_APPLICATION_REPOSITORY",
+  "target": {
+    "api": "https://api.cf.us10-001.hana.ondemand.com",
+    "org": "9e20a855trial",
+    "space": "dev",
+    "stage": "DEV"
+  },
+  "mta": {
+    "id": "dual-odata-catalog",
+    "version": "1.0.2",
+    "operationId": "7cb446de-b23b-11f1-bdc9-eeee0a96899c",
+    "status": "PASSED"
+  },
+  "checks": [
+    {
+      "name": "html5-repository-upload",
+      "status": "PASSED",
+      "message": "comacmedualcatalog 1.0.2 is uploaded to dual-odata-catalog-repo-host."
+    },
+    {
+      "name": "html5-repository-status",
+      "status": "PASSED",
+      "message": "Repository status is UPLOADED; 70.43 KB of 100.00 MB is used."
+    },
+    {
+      "name": "destination-service",
+      "status": "PASSED",
+      "message": "dual-odata-catalog-destination update succeeded with HTML5Runtime_enabled and backend destinations."
+    },
+    {
+      "name": "xsuaa",
+      "status": "PASSED",
+      "message": "Existing bookshop-auth XSUAA application service is reused for authenticated routes."
+    },
+    {
+      "name": "standalone-cloud-foundry-route",
+      "status": "SKIPPED",
+      "message": "No CF application route is expected for a managed HTML5 Repository deployment; Work Zone or a managed/standalone App Router supplies the runtime entry point."
+    }
+  ],
+  "repositoryApplication": {
+    "manifestId": "com.acme.dualcatalog",
+    "listedName": "comacmedualcatalog",
+    "version": "1.0.2",
+    "visibility": "public"
+  }
+}

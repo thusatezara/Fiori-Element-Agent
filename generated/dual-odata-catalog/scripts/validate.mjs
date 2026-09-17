@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 const root = resolve(import.meta.dirname, "..");
 const requiredFiles = [
   "webapp/manifest.json",
+  "webapp/xs-app.json",
   "webapp/Component.js",
   "webapp/view/App.view.xml",
   "webapp/view/Home.view.xml",
@@ -18,6 +19,7 @@ const requiredFiles = [
 await Promise.all(requiredFiles.map((file) => access(resolve(root, file))));
 
 const manifest = JSON.parse(await readFile(resolve(root, "webapp/manifest.json"), "utf8"));
+const xsApp = JSON.parse(await readFile(resolve(root, "webapp/xs-app.json"), "utf8"));
 const homeView = await readFile(resolve(root, "webapp/view/Home.view.xml"), "utf8");
 const bookDetailView = await readFile(resolve(root, "webapp/view/BookDetail.view.xml"), "utf8");
 const productDetailView = await readFile(resolve(root, "webapp/view/ProductDetail.view.xml"), "utf8");
@@ -31,6 +33,17 @@ if (manifest["sap.app"].dataSources.northwindService.settings.odataVersion !== "
 }
 if (!manifest["sap.ui5"]?.dependencies?.libs?.["sap.f"]) {
   throw new Error("The application must declare sap.f for the DynamicPage shell");
+}
+if (manifest["sap.cloud"]?.service !== "dual.odata.catalog") {
+  throw new Error("The application must declare the Work Zone business service identity");
+}
+for (const destination of ["bookshop-api", "northwind-api"]) {
+  if (!xsApp.routes.some((route) => route.destination === destination)) {
+    throw new Error(`Missing App Router destination route: ${destination}`);
+  }
+}
+if (!xsApp.routes.some((route) => route.service === "html5-apps-repo-rt")) {
+  throw new Error("Missing HTML5 Application Repository runtime route");
 }
 for (const [name, view] of [["Home", homeView], ["BookDetail", bookDetailView], ["ProductDetail", productDetailView]]) {
   for (const control of ["<f:DynamicPage", "<f:DynamicPageTitle", "<f:DynamicPageHeader", "<f:content>"]) {

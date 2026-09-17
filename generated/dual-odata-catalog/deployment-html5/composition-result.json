@@ -1,0 +1,64 @@
+{
+  "resultVersion": "1.0",
+  "protocol": {
+    "id": "200",
+    "version": "1.0"
+  },
+  "status": "READY",
+  "artifactId": "ed83bfcc-219b-4052-ab9f-b495ecfd7791",
+  "archivePath": "C:\\Users\\stati\\Documents\\ChatGPT\\Fiori Elements Agent\\generated\\dual-odata-catalog\\deployment-html5\\mta_archives\\dual-odata-catalog_1.0.2.mtar",
+  "archiveChecksum": "b1e34537a4871793a73d4f7fd52c52899c30d5e5a806a43b0f475beca0d364ec",
+  "descriptorFingerprint": "4bfdc128b393af33e68d369ca81d4264c4f5da25bc521e578b713c56028237ca",
+  "sourceResultIds": [
+    "4bb327b2-5d6a-4114-b288-b17e4cd640dd"
+  ],
+  "serviceRequirements": [
+    {
+      "name": "dual-odata-catalog-repo-host",
+      "offering": "html5-apps-repo",
+      "plan": "app-host"
+    },
+    {
+      "name": "dual-odata-catalog-destination",
+      "offering": "destination",
+      "plan": "lite",
+      "configuration": {
+        "HTML5Runtime_enabled": true
+      }
+    },
+    {
+      "name": "bookshop-auth",
+      "offering": "xsuaa",
+      "plan": "application"
+    }
+  ],
+  "applicationId": "dual-odata-catalog",
+  "sapCloudService": "dual.odata.catalog",
+  "validation": [
+    {
+      "name": "descriptor",
+      "status": "PASSED"
+    },
+    {
+      "name": "references",
+      "status": "PASSED"
+    },
+    {
+      "name": "secret-scan",
+      "status": "PASSED"
+    },
+    {
+      "name": "archive",
+      "status": "PASSED"
+    },
+    {
+      "name": "html5-repository-content",
+      "status": "PASSED"
+    },
+    {
+      "name": "managed-router-route",
+      "status": "PASSED"
+    }
+  ],
+  "blockingReasons": []
+}

@@ -20,7 +20,7 @@
   },
   "services": [
     {
-      "collectionUrl": "https://cc779debtrial-dev-bookshop-srv.cfapps.us10-001.hana.ondemand.com/admin/Books",
+      "collectionUrl": "https://9e20a855trial-dev-bookshop-srv.cfapps.us10-001.hana.ondemand.com/admin/Books",
       "odataVersion": "4.0",
       "entitySet": "Books",
       "key": "ID",
@@ -59,9 +59,9 @@
   "validation": {
     "metadata": "PASSED",
     "static": "PASSED",
-    "tests": "PASSED (4/4 generated project, 19/19 repository regression)",
+    "tests": "PASSED (6/6 generated project)",
     "build": "PASSED (SAPUI5 1.120.0, sap_horizon)",
-    "browser": "PASSED (Books 5, Products 20, both detail routes)",
+    "browser": "PARTIAL (HTML5 Repository upload verified; no standalone CF route by design; Bookshop requires an XSUAA bearer token)",
     "runtimeConsoleErrors": 0,
     "productionDependencyAudit": "PASSED (0 vulnerabilities)"
   },
@@ -76,13 +76,23 @@
   "packaging": {
     "protocol": "200-compose-mta-solution",
     "status": "READY",
-    "descriptor": "deployment/mta.yaml",
-    "archive": "deployment/mta_archives/dual-odata-catalog_1.0.0.mtar",
-    "validation": ["descriptor", "references", "secret-scan", "archive-checksum"]
+    "descriptor": "deployment-html5/mta.yaml",
+    "archive": "deployment-html5/mta_archives/dual-odata-catalog_1.0.2.mtar",
+    "validation": ["descriptor", "references", "secret-scan", "archive", "html5-repository-content", "managed-router-route"]
+  },
+  "html5ApplicationRepository": {
+    "appHost": "dual-odata-catalog-repo-host",
+    "appHostStatus": "UPLOADED",
+    "application": "com.acme.dualcatalog",
+    "version": "1.0.2",
+    "sapCloudService": "dual.odata.catalog",
+    "workZoneReady": true,
+    "standaloneRoute": false
   },
   "risks": [
     "Bookshop trial endpoint의 수명과 인증 정책은 외부 환경에 의존함",
-    "배포 시 두 remote service를 destination 또는 application router로 연결해야 함",
+    "Standalone 화면 route에서 Bookshop 데이터를 조회하려면 XSUAA bearer token 또는 approuter/Work Zone 인증 경로가 필요함",
+    "Work Zone 또는 managed/standalone App Router 구독이 있어야 브라우저 URL이 생성되며, HTML5 Repository 자체에는 CF route가 없음",
     "개발 도구 dependency에는 npm audit 기준 moderate 7건, high 4건이 있으나 production dependency audit은 0건임"
   ]
 }

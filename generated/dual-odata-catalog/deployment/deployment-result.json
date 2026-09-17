@@ -1,0 +1,46 @@
+{
+  "resultVersion": "1.0",
+  "resultId": "8d1ab369-d419-47ec-963c-559ccdb20af3",
+  "protocol": {
+    "id": "300",
+    "version": "1.0"
+  },
+  "status": "SUCCEEDED",
+  "target": {
+    "api": "https://api.cf.us10-001.hana.ondemand.com",
+    "org": "9e20a855trial",
+    "space": "dev",
+    "stage": "DEV"
+  },
+  "targetFingerprint": "4506cf12baa8abe7b290400935b3de2dd9a6a4b9942479036b48473f7b72ead0",
+  "operationId": "fc1f6c97-b233-11f1-8e4f-eeee0a9e667e",
+  "applicationId": "dual-odata-catalog",
+  "sapCloudService": "dual-odata-catalog",
+  "artifactDigest": "cdcc82d5f85729d821bbc2f3059fe1e037535b665e3c74c72cf669671e3505b5",
+  "subaccount": "9e20a855trial",
+  "verifiedAt": "2026-09-17T01:08:16.516Z",
+  "changedResources": [
+    {
+      "type": "application",
+      "name": "dual-odata-catalog",
+      "change": "DEPLOYED",
+      "route": "9e20a855trial-dev-dual-odata-catalog.cfapps.us10-001.hana.ondemand.com"
+    }
+  ],
+  "validation": [
+    {
+      "name": "operation",
+      "status": "PASSED"
+    },
+    {
+      "name": "application-health",
+      "status": "PASSED"
+    },
+    {
+      "name": "route",
+      "status": "PASSED"
+    }
+  ],
+  "blockingReasons": [],
+  "recoveryGuidance": []
+}

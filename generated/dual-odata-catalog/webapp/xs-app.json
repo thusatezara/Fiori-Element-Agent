@@ -1,0 +1,24 @@
+{
+  "welcomeFile": "/index.html",
+  "authenticationMethod": "route",
+  "routes": [
+    {
+      "source": "^/admin/(.*)$",
+      "target": "/admin/$1",
+      "destination": "bookshop-api",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^/northwind/(.*)$",
+      "target": "/northwind/$1",
+      "destination": "northwind-api",
+      "authenticationType": "none"
+    },
+    {
+      "source": "^(.*)$",
+      "target": "$1",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "xsuaa"
+    }
+  ]
+}

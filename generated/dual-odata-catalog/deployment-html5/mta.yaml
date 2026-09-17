@@ -1,0 +1,105 @@
+_schema-version: "3.2"
+ID: "dual-odata-catalog"
+version: "1.0.2"
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+
+modules:
+  - name: "dual-odata-catalog"
+    type: "html5"
+    path: "app"
+    build-parameters:
+      build-result: "dist"
+      build-artifact-name: "dual-odata-catalog"
+      builder: "custom"
+      commands:
+        - "npm ci"
+        - "npm run build:cf"
+      supported-platforms: []
+
+  - name: "dual-odata-catalog-app-content"
+    type: "com.sap.application.content"
+    path: "."
+    requires:
+      - name: "dual-odata-catalog-repo-host"
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: "resources"
+      requires:
+        - name: "dual-odata-catalog"
+          artifacts:
+            - "dual-odata-catalog.zip"
+          target-path: "resources/"
+
+  - name: "dual-odata-catalog-destination-content"
+    type: "com.sap.application.content"
+    requires:
+      - name: "dual-odata-catalog-destination"
+        parameters:
+          content-target: true
+      - name: "dual-odata-catalog-repo-host"
+        parameters:
+          service-key:
+            name: "dual-odata-catalog-repo-host-key"
+      - name: "dual-odata-catalog-auth"
+        parameters:
+          service-key:
+            name: "dual-odata-catalog-auth-key"
+    parameters:
+      content:
+        instance:
+          destinations:
+            - Name: "dual-odata-catalog-html5-repo-host"
+              ServiceInstanceName: "dual-odata-catalog-repo-host"
+              ServiceKeyName: "dual-odata-catalog-repo-host-key"
+              sap.cloud.service: "dual.odata.catalog"
+            - Name: "dual-odata-catalog-auth"
+              Authentication: "OAuth2UserTokenExchange"
+              ServiceInstanceName: "bookshop-auth"
+              ServiceKeyName: "dual-odata-catalog-auth-key"
+              sap.cloud.service: "dual.odata.catalog"
+          existing_destinations_policy: "update"
+    build-parameters:
+      no-source: true
+
+resources:
+  - name: "dual-odata-catalog-destination"
+    type: "org.cloudfoundry.managed-service"
+    parameters:
+      service: "destination"
+      service-plan: "lite"
+      config:
+        HTML5Runtime_enabled: true
+        init_data:
+          instance:
+            existing_destinations_policy: "update"
+            destinations:
+              - Name: "bookshop-api"
+                Authentication: "NoAuthentication"
+                HTML5.DynamicDestination: true
+                HTML5.ForwardAuthToken: true
+                ProxyType: "Internet"
+                Type: "HTTP"
+                URL: "https://9e20a855trial-dev-bookshop-srv.cfapps.us10-001.hana.ondemand.com/"
+              - Name: "northwind-api"
+                Authentication: "NoAuthentication"
+                ProxyType: "Internet"
+                Type: "HTTP"
+                URL: "https://services.odata.org/northwind/"
+
+  - name: "dual-odata-catalog-repo-host"
+    type: "org.cloudfoundry.managed-service"
+    parameters:
+      service: "html5-apps-repo"
+      service-plan: "app-host"
+      service-keys:
+        - name: "dual-odata-catalog-repo-host-key"
+
+  - name: "dual-odata-catalog-auth"
+    type: "org.cloudfoundry.existing-service"
+    parameters:
+      service-name: "bookshop-auth"
+      service-keys:
+        - name: "dual-odata-catalog-auth-key"

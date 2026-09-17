@@ -1,7 +1,7 @@
 {
-  "snapshotId": "f7805ca5-fd85-4035-854f-a97627f4e56e",
+  "snapshotId": "7a6e228d-6069-4055-9cdf-a98251d46883",
   "targetFingerprint": "4506cf12baa8abe7b290400935b3de2dd9a6a4b9942479036b48473f7b72ead0",
-  "artifactChecksum": "cdcc82d5f85729d821bbc2f3059fe1e037535b665e3c74c72cf669671e3505b5",
+  "artifactChecksum": "b1e34537a4871793a73d4f7fd52c52899c30d5e5a806a43b0f475beca0d364ec",
   "target": {
     "api": "https://api.cf.us10-001.hana.ondemand.com",
     "org": "9e20a855trial",
@@ -34,8 +34,20 @@
     {
       "name": "space-role",
       "status": "PASSED"
+    },
+    {
+      "name": "service:html5-apps-repo/app-host",
+      "status": "PASSED"
+    },
+    {
+      "name": "service:destination/lite",
+      "status": "PASSED"
+    },
+    {
+      "name": "service:xsuaa/application",
+      "status": "PASSED"
     }
   ],
-  "createdAt": "2026-09-17T01:05:20.964Z",
+  "createdAt": "2026-09-17T01:56:03.497Z",
   "status": "READY_FOR_APPROVAL"
 }
