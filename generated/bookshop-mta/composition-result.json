@@ -5,10 +5,10 @@
     "version": "1.0"
   },
   "status": "READY",
-  "artifactId": "736e29ce-a4c0-48f7-90b0-dcf577d45b24",
-  "archivePath": "C:\\Users\\stati\\Documents\\ChatGPT\\Fiori Elements Agent\\generated\\bookshop-mta\\mta_archives\\bookshop_1.0.0.mtar",
-  "archiveChecksum": "c59a45d5b40387e75f90fcdc4ad00cd5f68a3148ee2e181c3184d55c92d705db",
-  "descriptorFingerprint": "0aa1cc32e9dbfd2b4ee49b0f140721fca60721da1929b0d388bd968ad639852c",
+  "artifactId": "cc36b97e-530e-41b2-8f90-56dd5466503c",
+  "archivePath": "C:\\Users\\stati\\Documents\\ChatGPT\\Fiori Elements Agent\\generated\\bookshop-mta\\mta_archives\\bookshop_1.0.1.mtar",
+  "archiveChecksum": "2fcc2963b8907b039f37e84a452bbadea425e45c284b41b46363bfa6d6811194",
+  "descriptorFingerprint": "af6c3ebdeab93c72631871dd6e36f38c4d3855e828f47367a9aeb927883a857b",
   "sourceResultIds": [
     "8a7a5d67-8e6a-4a7e-95d4-c436e972eea1"
   ],
@@ -36,6 +36,10 @@
     },
     {
       "name": "archive",
+      "status": "PASSED"
+    },
+    {
+      "name": "xsuaa-security",
       "status": "PASSED"
     }
   ],

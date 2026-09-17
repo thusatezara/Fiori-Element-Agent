@@ -1,6 +1,6 @@
 _schema-version: "3.3"
 ID: "bookshop"
-version: "1.0.0"
+version: "1.0.1"
 parameters:
   enable-parallel-deployments: true
 build-parameters:
@@ -29,6 +29,7 @@ modules:
       builder: "npm"
     requires:
       - name: "bookshop-db"
+      - name: "bookshop-auth"
     provides:
       - name: "bookshop-srv-api"
         properties:
@@ -39,3 +40,9 @@ resources:
     parameters:
       service: "hana"
       service-plan: "hdi-shared"
+  - name: "bookshop-auth"
+    type: "org.cloudfoundry.managed-service"
+    parameters:
+      service: "xsuaa"
+      service-plan: "application"
+      path: "./xs-security.json"

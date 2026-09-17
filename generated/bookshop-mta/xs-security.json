@@ -1,0 +1,7 @@
+{
+  "xsappname": "bookshop",
+  "tenant-mode": "dedicated",
+  "description": "Authentication for the bookshop CAP service",
+  "scopes": [],
+  "role-templates": []
+}

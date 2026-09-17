@@ -1,0 +1,76 @@
+{
+  "resultVersion": "1.0",
+  "resultId": "8a8d7889-02f0-4da1-81f1-6c02f8f3fcb4",
+  "protocol": {
+    "id": "300",
+    "version": "1.0"
+  },
+  "status": "SUCCEEDED",
+  "operationId": "3bb0186b-b22b-11f1-8e4f-eeee0a9e667e",
+  "target": {
+    "api": "https://api.cf.us10-001.hana.ondemand.com",
+    "org": "9e20a855trial",
+    "space": "dev",
+    "stage": "DEV"
+  },
+  "targetFingerprint": "4506cf12baa8abe7b290400935b3de2dd9a6a4b9942479036b48473f7b72ead0",
+  "applicationId": "bookshop",
+  "sapCloudService": "bookshop",
+  "artifactDigest": "2fcc2963b8907b039f37e84a452bbadea425e45c284b41b46363bfa6d6811194",
+  "subaccount": "9e20a855trial",
+  "verifiedAt": "2026-09-17T00:06:03.5677285Z",
+  "changedResources": [
+    {
+      "type": "application",
+      "name": "bookshop-srv",
+      "state": "STARTED",
+      "instances": "1/1"
+    },
+    {
+      "type": "service",
+      "name": "bookshop-hana",
+      "offering": "hana-cloud",
+      "plan": "hana-free",
+      "state": "create succeeded"
+    },
+    {
+      "type": "service",
+      "name": "bookshop-db",
+      "offering": "hana",
+      "plan": "hdi-shared",
+      "state": "create succeeded"
+    },
+    {
+      "type": "service",
+      "name": "bookshop-auth",
+      "offering": "xsuaa",
+      "plan": "application",
+      "state": "create succeeded"
+    }
+  ],
+  "validation": [
+    {
+      "name": "mta-operation",
+      "status": "PASSED"
+    },
+    {
+      "name": "application-health",
+      "status": "PASSED"
+    },
+    {
+      "name": "route",
+      "status": "PASSED",
+      "message": "https://9e20a855trial-dev-bookshop-srv.cfapps.us10-001.hana.ondemand.com returned HTTP 401 for an unauthenticated request as expected."
+    },
+    {
+      "name": "hdi-deployment",
+      "status": "PASSED"
+    },
+    {
+      "name": "xsuaa-binding",
+      "status": "PASSED"
+    }
+  ],
+  "blockingReasons": [],
+  "recoveryGuidance": []
+}
